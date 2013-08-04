@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<applications xmlns="http://www.wabacus.com"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.wabacus.com ../xsd/wabacus.applications.xsd">
+
+    <!--报名汇总-->
+
+    <page id="t_apply_total">
+
+        <report id="report1" extends="t_apply_list.report1" title="报名人员汇总">
+            <print type="lodop" preview="true">
+                <![CDATA[
+							relative{/template/dataexport/apply_total.html}
+						]]>
+            </print>
+            <dataexports>
+                <dataexport  type="richexcel" filename="员工信息列表和细览信息"  template="relative{/template/dataexport/apply_total.html}"></dataexport>
+            </dataexports>
+            <interceptor>
+                <imports>
+                    <import>com.ggs.bean.User</import>
+                    <import>com.ggs.dao.DataDao</import>
+                    <import>com.ggs.util.DateUtil</import>
+                </imports>
+                <preaction>
+                        User user = (User)rrequest.getRequest().getSession().getAttribute("admin");
+                        String city_name=DataDao.getCity(user.getCityid());
+                        String tech_name=rrequest.getStringAttribute("tech_name","");
+                        if(tech_name==null || tech_name.trim().equals("")){
+                            tech_name="■药士 ■药师    ■主管药师";
+                        }else{
+                            tech_name=DataDao.getDataCode(tech_name);
+                            if(tech_name.equals("10")){
+                                tech_name="■药士 □药师    □主管药师";
+                            }else if(tech_name.equals("11")){
+                                tech_name="□药士 ■药师    □主管药师";
+                            }else if(tech_name.equals("20")){
+                                tech_name="□药士 □药师    ■主管药师";
+                            }
+                         }
+
+                    String spec_class=rrequest.getStringAttribute("spec_class","");
+                    if(spec_class==null || spec_class.trim().equals("")){
+                        spec_class="■药学 ■中药学";
+                    }else{
+                        spec_class=DataDao.getDataCode(spec_class);
+                        if(spec_class.equals("10")){
+                            spec_class="■药学 □中药学";
+
+                        }else if(spec_class.equals("20")){
+                            spec_class="□药学 ■中药学";
+                        }
+                    }
+                    String write_date=DateUtil.getDatebyFormat("yyyy年MM月dd日");
+                    rrequest.getRequest().setAttribute("city_name",city_name);
+                    rrequest.getRequest().setAttribute("tech_name",tech_name);
+                    rrequest.getRequest().setAttribute("spec_class",spec_class);
+                    rrequest.getRequest().setAttribute("write_date",write_date);
+                </preaction>
+            </interceptor>
+            <display>
+                <col column="{sequence:1}" label="序号" width="40" />
+                <col column="id" displaytype="hidden"/>
+                <col column="name" label="姓名" width="60"/>
+                <col column="sex" label="性别" width="40"/>
+                <col column="birthday" label="出生年月" width="80" />
+                <col column="work_date" label="参加工作时间"  width="80"/>
+                <col column="idcard" label="身份证号码" width="130" valuestyleproperty="style='mso-number-format:\@' "/>
+                <col column="company" label="工作单位" />
+                <col column="grad_scholl" label="毕业院校"/>
+                <col column="grad_spec" label="毕业专业" />
+                <col column="grad_date" label="毕业时间" width="80"/>
+                <col column="education" label="学历" width="40"/>
+                <col column="now_tech_name" label="现技术职务" />
+                <col column="conftime" label="现技术职务确认时间" width="80" />
+                <col column="cont_edu" label="继续教育合格年度" width="40" />
+                <col column="mobile" label="联系方式" width="100"/>
+                <col column="remark" label="备注"/>
+            </display>
+                </report>
+    </page>
+    <page id="t_apply_total_detail">
+        <report id="report1" extends="t_apply_list_detail.report1"></report>
+        <report id="report2" extends="t_apply_list_detail.report2"></report>
+    </page>
+</applications>

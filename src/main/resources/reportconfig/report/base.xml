@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<applications xmlns="http://www.wabacus.com"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.wabacus.com ../xsd/wabacus.applications.xsd">
+
+    <!--报名表-->
+    <page id="basePage">
+        <report id="list"  type="list"
+                dataexport="richexcel"  interceptor="com.ggs.intercept.AbsInterceptor">
+            <display></display>
+            <sql></sql>
+        </report>
+        <report id="editList"  type="editablelist" rowselect="checkbox"
+                dataexport="richexcel"  interceptor="com.ggs.intercept.AbsInterceptor" contextmenu="false">
+            <display></display>
+            <sql></sql>
+        </report>
+        <report id="form" type="form" interceptor="com.ggs.intercept.AbsInterceptor" contextmenu="false">
+            <display></display>
+            <sql></sql>
+        </report>
+        <report id="editList2"  type="editablelist2" rowselect="checkbox"
+                dataexport="richexcel" interceptor="com.ggs.intercept.AbsInterceptor" contextmenu="false">
+            <display></display>
+            <sql></sql>
+        </report>
+    </page>
+</applications>

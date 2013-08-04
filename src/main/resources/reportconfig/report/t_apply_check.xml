@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<applications xmlns="http://www.wabacus.com"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.wabacus.com ../xsd/wabacus.applications.xsd">
+
+
+    <!--网上预审-->
+    <page id="t_apply_check">
+        <report id="report1" extends="t_apply_list.report1" title="报名信息" rowselect="checkbox">
+            <buttons>
+                <button name="batchChkBtn" label="批量审核" class="com.wabacus.system.buttons.ServerSQLActionButton"
+                        position="title" confirmessage="确认所有选中审核通过？"
+                        styleproperty="class='cls-button2'">
+                    <![CDATA[
+								insert into t_apply_check(id,applyid,status,createid)
+								    values(seq_t_apply_check.nextval,@{id},31,session{user_id});
+								    update t_apply set status=31 where id=@{id};
+							]]>
+                </button>
+            </buttons>
+            <sql>
+            <select>
+                <value>
+                    <![CDATA[
+                            select * from v_apply where {#condition#} and iscommit=1
+                        ]]>
+                </value>
+                <condition name="createid" hidden="true" defaultvalue="session{user_id}">
+                    <value>
+                        <![CDATA[
+                                               createid=#data# or createid in(
+                                    select id from t_user
+                                        where usertype=0
+                                        and(
+                                        (areaid =(select areaid from t_user where  id=#data# and datarole=1))
+                                         or (cityid =(select cityid from t_user where  id=#data# and datarole=2))
+                                        or (provid =(select provid from t_user where  id=#data# and datarole=3))))
+                                ]]>
+                    </value>
+                </condition>
+                <condition name="status" hidden="true">
+                    <value>
+                        <![CDATA[
+                                        status=#data#
+                                    ]]>
+                    </value>
+                </condition>
+            </select>
+            </sql>
+                </report>
+    </page>
+
+    <page id="t_apply_check_detail">
+        <jsp id="apply">/main/apply_check.jsp</jsp>
+    </page>
+
+    <!--报名列表-->
+    <page id="t_apply_check_query">
+        <report id="report1" extends="t_apply_list.report1" type="list">
+         </report>
+    </page>
+
+    <!--报名列表-->
+    <page id="t_apply_check_query_detail">
+        <jsp id="apply_again">/main/apply_check_again.jsp</jsp>
+    </page>
+
+</applications>

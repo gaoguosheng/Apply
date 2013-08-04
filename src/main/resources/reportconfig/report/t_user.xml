@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<applications xmlns="http://www.wabacus.com"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.wabacus.com ../xsd/wabacus.applications.xsd">
+<page id="t_user_list">
+  <report id="report1"  extends="basePage.editList" title="用户管理">
+      <header><![CDATA[<font color="red">说明：</font><font color="blue">添加的用户默认初始密码为123456</font>]]></header>
+      <buttons>
+          <button name="resetPwdButton" label="重置密码" class="com.wabacus.system.buttons.ServerSQLActionButton"
+                  position="title" confirmessage="确认重置所有选中密码为123456？"
+                  successprompt="重置成功" failedprompt="重置失败"  styleproperty="class='cls-button2'">
+              <![CDATA[
+								update t_user(pwd='idRWzxMryPo=') where id=@{id__old};
+							]]>
+          </button>
+      </buttons>
+    <display>
+      <col column="{sequence:1}" label="序号" />
+      <col column="id" displaytype="hidden"/>
+      <col column="username" label="用户名"/>
+      <col column="realname" label="姓名"/>
+      <col column="prov_name" label="省份"/>
+      <col column="city_name" label="城市"/>
+      <col column="area_name" label="区域"/>
+        <col column="role_name" label="角色"/>
+        <col column="datarole_name" label="数据权限"/>
+    </display>
+    <sql>
+        <select>
+            <value><![CDATA[select * from v_user where usertype=1 and username !='system' and {#condition#} ]]></value>
+            <condition name="username"  label="用户名" labelposition="left">
+                <value> <![CDATA[(username like '%#data#%' )]]></value>
+            </condition>
+            <condition name="realname"  label="姓名" labelposition="left">
+                <value> <![CDATA[(realname like '%#data#%')]]></value>
+            </condition>
+        </select>
+      <insert pageurl="report{t_user_form.report1}" popupparams="{initsize:'max'}" />
+      <update pageurl="report{t_user_form.report1}" urlparams="id=@{id}"  popupparams="{initsize:'max'}" />
+      <delete><![CDATA[delete from t_user where id=@{id}]]></delete>
+    </sql>
+  </report>
+</page>
+
+<page id="t_user_form">
+  <report id="report1"  extends="basePage.form" title="用户管理">
+    <display>
+      <col column="id" displaytype="hidden"/>
+      <col column="username" label="用户名" />
+      <col column="realname" label="姓名"/>
+      <col column="pwd" displaytype="hidden" defaultvalue="idRWzxMryPo="/>
+        <col column="usertype" label="用户类型" br="true">
+            <inputbox type="radiobox" defaultvalue="1">
+               <!-- <option value="0" label="考生"></option>-->
+                <option value="1" label="管理人员"></option>
+            </inputbox>
+        </col>
+
+        <col column="provid" label="省份">
+            <inputbox type="selectbox">
+                <option source="@{select id,name from t_province}" label="name" value="id"></option>
+            </inputbox>
+        </col>
+        <col column="cityid" label="城市">
+            <inputbox type="selectbox" depends="provid">
+                <option source="@{select id,name from t_city where pid=#provid#}" label="name" value="id"></option>
+            </inputbox>
+        </col>
+        <col column="areaid" label="区域" br="true">
+            <inputbox type="selectbox" depends="cityid">
+                <option source="@{select id,name from t_area where pid=#cityid#}" label="name" value="id"></option>
+            </inputbox>
+        </col>
+        <col column="phone" label="电话"/>
+        <col column="email" label="邮箱"/>
+        <col column="qq" label="QQ" br="true"/>
+
+        <col column="roleid" label="角色" >
+            <inputbox type="selectbox">
+                <option source="@{select id,name from t_role}" label="name" value="id"></option>
+            </inputbox>
+        </col>
+        <col column="datarole" label="数据权限">
+            <inputbox type="selectbox">
+                <option value="0" label="默认"></option>
+                <option value="1" label="区级"></option>
+                <option value="2" label="市级"></option>
+                <option value="3" label="省级"></option>
+            </inputbox>
+        </col>
+    </display>
+    <sql>
+      <select>
+      <value><![CDATA[      select * from t_user where {#condition#}       ]]></value>
+      <condition name="id" hidden="true">
+      <value><![CDATA[id=#data#]]></value>
+      </condition>
+      </select>
+      <insert>
+      <![CDATA[
+      insert into t_user(id=sequence{seq_t_user},
+@{username},@{realname},@{pwd},@{roleid},@{usertype},@{provid},@{cityid},@{areaid},@{datarole},@{email},@{phone},@{qq})
+      ]]>
+      </insert>
+      <update>
+      <![CDATA[
+      update t_user(@{username},@{realname},@{pwd},@{roleid},@{usertype},@{provid},@{cityid},@{areaid},@{datarole},@{email},@{phone},@{qq})
+      where id=@{id}
+      ]]>
+      </update>
+    </sql>
+  </report>
+</page>
+
+<page id="t_user_list_detail">
+  <report id="report1" extends="t_user_form.report1"  type="detail">
+      <format>
+          <imports>
+              <import>com.ggs.dao.DataDao</import>
+          </imports>
+          <value>
+              <![CDATA[
+                      roleid=DataDao.getRoleName(roleid);
+                      usertype = DataDao.getUserType(usertype);
+                      provid=DataDao.getProvince(provid);
+                      cityid=DataDao.getCity(cityid);
+                      areaid=DataDao.getArea(areaid);
+                      datarole=DataDao.getDataRole(datarole);
+                      ]]>
+          </value>
+      </format>
+    </report>
+</page>
+
+<page id="t_user_student_list">
+    <report id="report1" extends="t_user_list.report1">
+        <header><![CDATA[<font color="red">说明：</font><font color="blue">可批量为考生重置密码为123456</font>]]></header>
+        <display>
+            <col column="{sequence:1}" label="序号" />
+            <col column="id" displaytype="hidden"/>
+            <col column="realname" label="姓名"/>
+            <col column="sex" label="性别"/>
+            <col column="username" label="身份证号"/>
+            <col column="prov_name" label="省份"/>
+            <col column="city_name" label="城市"/>
+            <col column="area_name" label="区域"/>
+            <col column="phone" label="手机"/>
+        </display>
+        <sql>
+            <select>
+                <value>
+                    <![CDATA[
+                      select * from v_user where  usertype=0 and {#condition#}
+                      ]]>
+                </value>
+                <condition name="createid" hidden="true" defaultvalue="session{user_id}">
+                    <value>
+                        <![CDATA[
+                                               id in(
+                                    select id from t_user
+                                        where usertype=0
+                                        and(
+                                        (areaid =(select areaid from t_user where  id=#data# and datarole=1))
+                                         or (cityid =(select cityid from t_user where  id=#data# and datarole=2))
+                                        or (provid =(select provid from t_user where  id=#data# and datarole=3))))
+                                ]]>
+                    </value>
+                </condition>
+            </select>
+        </sql>
+     </report>
+</page>
+<page id="t_user_student_list_detail">
+    <report id="report1" extends="t_user_list_detail.report1"/>
+</page>
+</applications>

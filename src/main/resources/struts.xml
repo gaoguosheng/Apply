@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+    "http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+	<!-- 总配置文件 -->
+	<!-- 常量 -->
+	<constant name="struts.action.extension" value="action"></constant>
+	<constant name="struts.devMode" value="true"></constant>
+	<!-- 基包 -->
+	<package name="myPkg" extends="struts-default" abstract="true">
+	</package>
+	
+	<package name="default" extends="myPkg" namespace="/">
+		<!-- 登录 -->
+		<action name="login"	class="com.ggs.web.LoginAction"/>
+        <!-- 数据字典 -->
+        <action name="data"	class="com.ggs.web.DataAction"/>
+	</package>
+    <package name="main" extends="myPkg" namespace="/main">
+        <!-- 主Action -->
+        <action name="main"	class="com.ggs.web.MainAction"/>
+        <!--报名业务 -->
+        <action name="apply"	class="com.ggs.web.ApplyAction"/>
+    </package>
+</struts>

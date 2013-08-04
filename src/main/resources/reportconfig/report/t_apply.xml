@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<applications xmlns="http://www.wabacus.com"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.wabacus.com ../xsd/wabacus.applications.xsd">
+
+
+    <!-- 报名信息表单-->
+    <page id="t_apply_form">
+        <report id="report1" extends="basePage.form" title="报名信息">
+            <display>
+                <col column="id" displaytype="hidden"/>
+                <col column="iscommit" valuestyleproperty="style='display:none;'" defaultvalue="0"/>
+                <col column="city_name" label="考生属地" labelstyleproperty="width='150px'"/>
+                <col column="fn" label="档案号" br="true" labelstyleproperty="width='150px'"/>
+                <col column="name" label="*姓名">
+                    <inputbox jsvalidate="isNotEmpty(#label#不允许为空)" styleproperty="readonly"/>
+                </col>
+                <col column="photo" label="*照片(100KB)" br="true" labelstyleproperty="rowspan=4" valuestyleproperty="rowspan=4">
+                    <inputbox jsvalidate="isNotEmpty(#label#不允许为空)" type="file" maxsize="102400" allowedtypes="jpg" displaytype="image" deletetype="1"
+                              savepath="relative{\upload\}" rooturl="/upload/" newfilename="{timestamp}" styleproperty="width='100px'  height='120px'">
+                    </inputbox>
+                </col>
+                <col column="sex" label="*性别" br="true">
+                    <inputbox type="radiobox">
+                        <option label="男" value="男"></option>
+                        <option label="女" value="女"></option>
+                    </inputbox>
+                </col>
+                <col column="birthday" label="*出生年月" br="true">
+                    <inputbox type="datepicker" jsvalidate="isNotEmpty(#label#不允许为空)"></inputbox>
+                </col>
+                <col column="idcard" label="*身份证号码" br="true">
+                    <inputbox jsvalidate="isNotEmpty(#label#不允许为空)" styleproperty="readonly"/>
+                </col>
+                <col column="work_date" label="*参加工作时间" >
+                    <inputbox type="datepicker" jsvalidate="isNotEmpty(#label#不允许为空)"></inputbox>
+                </col>
+                <col column="company" label="*工作单位" br="true">
+                    <inputbox jsvalidate="isNotEmpty(#label#不允许为空)"/>
+                </col>
+                <col column="mobile" label="*手机号码" >
+                    <inputbox jsvalidate="isNotEmpty(#label#不允许为空)"/>
+                </col>
+                <col column="phone" label="固定电话" br="true"/>
+                <col column="education" label="*学历">
+                    <inputbox type="selectbox">
+                        <option source="@{select * from v_data where datatype='Education'}" label="name" value="id"></option>
+                    </inputbox>
+                </col>
+                <col column="edu_sys" label="*学制(年)" br="true">
+                    <inputbox type="selectbox">
+                        <option source="@{select * from v_data where datatype='EduSys'}" label="name" value="id"></option>
+                    </inputbox>
+                </col>
+                <col column="grad_date" label="*毕业时间" >
+                    <inputbox type="datepicker" jsvalidate="isNotEmpty(#label#不允许为空)"></inputbox>
+                </col>
+
+                <col column="study_mode" label="*学习形式"  br="true">
+                    <inputbox type="selectbox">
+                        <option source="@{select * from v_data where datatype='StudyMode'}" label="name" value="id"></option>
+                    </inputbox>
+                </col>
+                <col column="grad_scholl" label="*毕业院校">
+                    <inputbox jsvalidate="isNotEmpty(#label#不允许为空)"/>
+                </col>
+                <col column="grad_spec" label="*毕业专业" br="true" >
+                    <inputbox jsvalidate="isNotEmpty(#label#不允许为空)"/>
+                </col>
+
+                <col column="cont_edu" label="继续教育(年)" >
+                    <inputbox type="selectbox">
+                        <option source="@{select * from v_data where datatype='ContEdu'}" label="name" value="id"></option>
+                    </inputbox>
+                </col>
+                <col column="old_fn" label="档案号（中级第二年度考生必填此项）" br="true"/>
+                <col column="test_level" label="*报考级别" >
+                    <inputbox type="selectbox" styleproperty="onchange='f_selTestSubject()'">
+                        <option source="@{select distinct test_level_name,test_level from V_VALID_RULE}" label="test_level_name" value="test_level"></option>
+                    </inputbox>
+                </col>
+                <col column="tech_name" label="*报考资格" br="true" >
+                    <inputbox type="selectbox" depends="test_level">
+                        <option source="@{select distinct tech_name_name,tech_name from V_VALID_RULE where test_level=#test_level#}" label="tech_name_name" value="tech_name"></option>
+                    </inputbox>
+                </col>
+                <col column="spec_class" label="*报考专业" >
+                    <inputbox type="selectbox" depends="test_level;tech_name" styleproperty="onchange='f_selTestSubject()'">
+                        <option source="@{select distinct spec_class_name,spec_class from V_VALID_RULE where test_level=#test_level# and tech_name=#tech_name#}" label="spec_class_name" value="spec_class"></option>
+                    </inputbox>
+                </col>
+
+                <col column="test_subject" label="*报考科目(按ctrl键+鼠标多选)" br="true" >
+                    <inputbox type="selectbox" jsvalidate="isNotEmpty(报考科目不允许为空)" depends="test_level;tech_name;spec_class" multiply="true" separator=",">
+                        <option source="@{select * from V_VALID_RULE where test_level=#test_level#  and tech_name=#tech_name#  and spec_class=#spec_class# order by test_subject_code}" label="test_subject_name" value="test_subject"></option>
+                    </inputbox>
+                </col>
+                <col column="now_tech_name" label="现专业技术职务名称"/>
+                <col column="now_spec_class" label="现技术职务专业" br="true"/>
+                <col column="conftime" label="确认时间" >
+                    <inputbox type="datepicker"></inputbox>
+                </col>
+                <col column="certid" label="证书号" br="true"/>
+                <col column="appr_no" label="审批文号" />
+                <col column="appr_dept" label="审批部门" br="true"/>
+                <col column="job_resume" label="*工作简历" br="true" valuestyleproperty="colspan=3">
+                    <inputbox type="richtextbox"  jsvalidate="isNotEmpty(#label#不允许为空)" styleproperty="style='width:100%;'"></inputbox>
+                </col>
+            </display>
+            <sql>
+                <select>
+                    <value>
+                        <![CDATA[
+                        select * from v_apply where {#condition#}
+                        ]]>
+                    </value>
+                    <condition name="id" hidden="true">
+                        <value>
+                            <![CDATA[id=#data#]]>
+                        </value>
+                    </condition>
+                </select>
+            </sql>
+        </report>
+    </page>
+
+    <!--报名列表-->
+    <page id="t_apply_list">
+        <report id="report1" extends="basePage.editList" title="报名信息" rowselect="single|true">
+            <header>
+                <![CDATA[
+                        <font color="red">说明：</font><font color='blue'>双击表格一行可查看该报名详细信息。</font>
+                        ]]>
+            </header>
+            <display>
+                <col column="{sequence:1}" label="序号" width="40" />
+                <col column="id" displaytype="hidden"/>
+                <col column="committime" label="提交时间" width="120"/>
+                <col column="name" label="姓名" width="80"/>
+                <col column="sex" label="性别" width="40"/>
+                <col column="birthday" label="出生年月" width="80" />
+                <col column="work_date" label="参加工作时间" displaytype="hidden" />
+                <col column="idcard" label="身份证号码" width="150"/>
+                <col column="company" label="工作单位"  displaytype="hidden"/>
+                <col column="grad_scholl" label="毕业院校和专业" width="120"/>
+                <col column="grad_spec" label="毕业专业" width="120" displaytype="hidden"/>
+                <col column="grad_date" label="毕业时间" displaytype="hidden"/>
+                <col column="education" label="学历" width="40"/>
+                <col column="now_tech_name" label="现技术职务" displaytype="hidden"/>
+                <col column="conftime" label="确认时间" displaytype="hidden"/>
+                <col column="cont_edu" label="继续教育(年)" displaytype="hidden"/>
+                <col column="mobile" label="手机" displaytype="hidden"/>
+                <col column="status_name" label="审核状态" width="80"/>
+                <col column="checktime" label="审核时间" width="120"/>
+            </display>
+            <sql>
+                <select>
+                    <value>
+                        <![CDATA[
+                            select * from v_apply where {#condition#} order by committime
+                        ]]>
+                    </value>
+                    <condition name="createid" hidden="true" defaultvalue="session{user_id}">
+                        <value>
+                        <![CDATA[
+                                               createid=#data# or createid in(
+                                    select id from t_user
+                                        where usertype=0
+                                        and(
+                                        (areaid =(select areaid from t_user where  id=#data# and datarole=1))
+                                         or (cityid =(select cityid from t_user where  id=#data# and datarole=2))
+                                        or (provid =(select provid from t_user where  id=#data# and datarole=3))))
+                                ]]>
+                        </value>
+                    </condition>
+                    <condition name="status" hidden="true">
+                        <value>
+                            <![CDATA[
+                                   (
+                                   (status=#data#)
+                                     or  (status>#data# and mod(#data#,2)=1)
+                                     or (status=#data#  and mod(#data#,2)=0)
+                                     )
+                                    ]]>
+                        </value>
+                    </condition>
+                    <condition name="test_level" label="报考层次" labelposition="left">
+                            <inputbox type="selectbox">
+                                <option value="" label="全部"></option>
+                                <option source="@{select distinct test_level,test_level_name from V_VALID_RULE}" label="test_level_name" value="test_level"></option>
+                            </inputbox>
+                        <value>
+                            <![CDATA[
+                                       test_level=#data#
+                                    ]]>
+                        </value>
+                    </condition>
+                    <condition name="tech_name" label="报考资格" labelposition="left">
+                        <inputbox type="selectbox">
+                            <option value="" label="全部"></option>
+                            <option source="@{select distinct tech_name_name,tech_name from V_VALID_RULE }" label="tech_name_name" value="tech_name"></option>
+                        </inputbox>
+                        <value>
+                            <![CDATA[
+                                       tech_name=#data#
+                                    ]]>
+                        </value>
+                    </condition>
+                    <condition name="spec_class" label="报考专业" labelposition="left">
+                        <inputbox type="selectbox" >
+                            <option value="" label="全部"></option>
+                            <option source="@{select distinct spec_class_name,spec_class from V_VALID_RULE }" label="spec_class_name" value="spec_class"></option>
+                        </inputbox>
+                        <value>
+                            <![CDATA[
+                                      spec_class=#data#
+                                    ]]>
+                        </value>
+                    </condition>
+                </select>
+
+            </sql>
+            <format>
+                <imports>
+                    <import>com.ggs.dao.DataDao</import>
+                </imports>
+                <value>
+                    <![CDATA[
+                                      education=DataDao.getDataName(education);
+                                       cont_edu =DataDao.getDataName(cont_edu);
+                    ]]>
+                </value>
+            </format>
+        </report>
+    </page>
+
+    <!--报名表详细页面-->
+    <page id="t_apply_list_detail">
+         <report id="report1" extends="t_apply_form.report1"  type="detail" title="报名信息">
+            <format>
+                <imports>
+                    <import>com.ggs.dao.DataDao</import>
+                </imports>
+                <value>
+                    <![CDATA[
+                    education=DataDao.getDataName(education);
+                    test_subject=DataDao.getTestSubjectName(test_level,tech_name,spec_class,test_subject);
+
+                    test_level=DataDao.getDataName(test_level);
+                    tech_name=DataDao.getDataName(tech_name);
+                    spec_class=DataDao.getDataName(spec_class);
+
+                    edu_sys =DataDao.getDataName(edu_sys);
+                    study_mode    =DataDao.getDataName(study_mode);
+                    cont_edu =DataDao.getDataName(cont_edu);
+                    photo="<img src='"+photo+"' width='100px' height='120px'>";
+
+                     if(phone==null || phone.trim().equals(""))phone="无";
+                     if(old_fn==null || old_fn.trim().equals(""))old_fn="无";
+                     if(now_tech_name==null || now_tech_name.trim().equals(""))now_tech_name="无";
+                     if(now_spec_class==null || now_spec_class.trim().equals(""))now_spec_class="无";
+                     if(conftime==null || conftime.trim().equals(""))conftime="无";
+                     if(certid==null || certid.trim().equals(""))certid="无";
+                     if(appr_no==null || appr_no.trim().equals(""))appr_no="无";
+                     if(appr_dept==null || appr_dept.trim().equals(""))appr_dept="无";
+
+
+
+                    ]]>
+                </value>
+            </format>
+        </report>
+        <report id="report2" title="审核记录" pagesize="-1">
+            <display>
+                <col column="id" displaytype="hidden"/>
+                <col column="applyid" displaytype="hidden"/>
+                <col column="createtime" label="时间"/>
+                <col column="realname" label="审核单位"/>
+                <col column="status_name" label="审核情况"/>
+                <col column="causetype_name" label="不通过原因类型"/>
+                <col column="cause" label="备注"/>
+            </display>
+            <sql>
+                <select>
+                    <value>
+                        <![CDATA[
+                            select * from v_apply_check where {#condition#}
+                        ]]>
+                    </value>
+                 <condition name="id" hidden="true">
+                        <value>
+                            <![CDATA[
+                                applyid=#data#
+                            ]]>
+                        </value>
+                    </condition>
+                </select>
+            </sql>
+        </report>
+    </page>
+
+    <!--报名列表-->
+    <page id="t_apply_query">
+        <report id="report1" extends="t_apply_list.report1" type="list"/>
+    </page>
+
+    <!--报名列表-->
+    <page id="t_apply_query_detail">
+        <report id="report1" extends="t_apply_list_detail.report1" />
+        <report id="report2" extends="t_apply_list_detail.report2" />
+    </page>
+
+</applications>

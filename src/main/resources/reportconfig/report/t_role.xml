@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<applications xmlns="http://www.wabacus.com"
+			   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+			   xsi:schemaLocation="http://www.wabacus.com ../xsd/wabacus.applications.xsd">
+
+
+    <page id="t_role_list">
+        <report id="report1" extends="basePage.editList2" title="角色管理">
+            <display>
+                <col column="{sequence:1}" label="序号" />
+                <col column="id" displaytype="hidden"/>
+                <col column="name" label="角色名称">
+                    <inputbox jsvalidate="isNotEmpty(#label#不允许为空)"></inputbox>
+                </col>
+                <col column="remark" label="备注"></col>
+            </display>
+            <sql>
+                <select>
+                    <value>select * from t_role</value>
+                </select>
+                <insert>
+                    <value>insert into t_role(id=sequence{seq_t_role},@{name},@{remark})</value>
+                </insert>
+                <update>
+                    <value>update t_role(@{name},@{remark}) where id=@{id}</value>
+                </update>
+                <delete>
+                    <value>
+                        delete from t_role_menu where roleid=@{id};
+                        delete from t_role where id=@{id};
+                    </value>
+                </delete>
+            </sql>
+        </report>
+    </page>
+</applications>

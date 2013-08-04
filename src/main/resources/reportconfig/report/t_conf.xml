@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<applications xmlns="http://www.wabacus.com"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.wabacus.com ../xsd/wabacus.applications.xsd">
+<page id="t_conf_list">
+  <report id="report1"   extends="basePage.editList2" title="系统配置">
+    <display>
+      <col column="{sequence:1}" label="序号" />
+      <col column="name" label="键"/>
+      <col column="value" label="值"/>
+      <col column="remark" label="备注"/>
+    </display>
+    <sql>
+      <select>
+      <value><![CDATA[      select * from t_conf       ]]></value>
+      </select>
+      <update>
+      <![CDATA[
+      update t_conf(@{value},@{remark})
+      where name=@{name}
+      ]]>
+      </update>
+    </sql>
+  </report>
+</page>
+
+</applications>

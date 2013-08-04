@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<applications xmlns="http://www.wabacus.com"
+			   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+			   xsi:schemaLocation="http://www.wabacus.com ../xsd/wabacus.applications.xsd">
+
+
+
+    <!--数据字典-->
+    <page id="t_data_list">
+        <report id="report1" extends="basePage.editList2" title="数据字典">
+            <display>
+                <col column="{sequence:1}" label="序号" />
+                <col column="id" displaytype="hidden"/>
+                <col column="code" label="代码">
+                    <inputbox jsvalidate="isNotEmpty(#label#不允许为空)"></inputbox>
+                </col>
+                <col column="name" label="名称">
+                    <inputbox jsvalidate="isNotEmpty(#label#不允许为空)"></inputbox>
+                </col>
+                <col column="del" label="状态" >
+                    <inputbox type="selectbox" defaultvalue="0">
+                        <option label="正常" value="0"></option>
+                        <option label="停用" value="1"></option>
+                    </inputbox>
+                </col>
+                <col column="remark" label="备注"/>
+                <col column="datatype" label="类型" displaytype="hidden" defaultvalue="url{datatype}"/>
+            </display>
+            <sql>
+                <select>
+                    <value>select * from t_data where {#condition#} order by code</value>
+                    <condition name="datatype" hidden="true">
+                        <value>
+                            <![CDATA[(datatype=#data# )]]>
+                        </value>
+                    </condition>
+                </select>
+                <insert>
+                    insert into t_data(id=sequence{seq_t_data},@{code},@{name},@{datatype},@{del},@{remark});
+                </insert>
+                <update>
+                    update t_data(@{code},@{name},@{del},@{remark}) where id=@{id};
+                </update>
+                <delete>
+                    <value>delete from t_data where id=@{id}</value>
+                </delete>
+            </sql>
+            <format>
+                <value>
+                    del==null?"":del;
+                    if(del.equals("1")) del="停用";
+                    else del="正常";
+                </value>
+            </format>
+        </report>
+    </page>
+
+
+</applications>

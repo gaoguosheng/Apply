@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<applications xmlns="http://www.wabacus.com"
+			   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+			   xsi:schemaLocation="http://www.wabacus.com ../xsd/wabacus.applications.xsd">
+
+
+
+
+    <!--菜单管理-->
+    <page id="t_menu_list">
+        <report id="report1" type="editabledetail" title="菜单管理">
+            <display>
+                <col column="id" displaytype="hidden" />
+                <col column="pid" label="父id" defaultvalue="url{pid}" displaytype="hidden"/>
+                <col column="name" label="权限菜单名称" >
+                    <inputbox jsvalidate="isNotEmpty(#label#不允许为空)"></inputbox>
+                </col>
+                <col column="menutype" label="权限菜单类型" br="true">
+                    <inputbox type="selectbox">
+                        <option label="菜单权限" value="0"></option>
+                        <option label="按钮权限" value="8"></option>
+                    </inputbox>
+                </col>
+                <col column="uri" label="链接" br="true" valuestyleproperty="colspan=3">
+                    <inputbox styleproperty="style='width:300px'"></inputbox>
+                 </col>
+                <col column="pageid" label="PAGEID"  />
+                <col column="compid" label="componentId" br="true" defaultvalue="report1"/>
+                <col column="parttype" label="parttype" >
+                    <inputbox type="selectbox">
+                        <option label="无" value=""></option>
+                        <option label="button" value="button"></option>
+                        <option label="data" value="data"></option>
+                    </inputbox>
+                </col>
+                <col column="partid" label="partid" br="true">
+                    <inputbox type="selectbox">
+                        <option label="无" value=""></option>
+                        <option label="search" value="type{search}"></option>
+                        <option label="richexcel" value="type{richexcel}"></option>
+                        <option label="add" value="type{add}"></option>
+                        <option label="modify" value="type{modify}"></option>
+                        <option label="save" value="type{save}"></option>
+                        <option label="edit" value="{editablelist-edit}"></option>
+                        <option label="delete" value="type{delete}"></option>
+                    </inputbox>
+                 </col>
+                <col column="orderno" label="序号" defaultvalue="0"/>
+            </display>
+            <sql>
+                <select>
+                    <value>select * from t_menu where  {#condition#}</value>
+                    <condition name="id" hidden="true">
+                        <value><![CDATA[id =#data#]]></value>
+                    </condition>
+                </select>
+                <insert>
+                    insert into
+                    t_menu(id=sequence{seq_t_menu},@{name},@{pid},@{menutype},@{uri},@{pageid},@{compid},@{parttype},@{partid},@{orderno});
+                </insert>
+                <update>
+                    update
+                    t_menu(@{name},@{pid},@{menutype},@{uri},@{pageid},@{compid},@{parttype},@{partid},@{orderno})
+                    where
+                    id=@{id};
+                </update>
+                <delete>
+                    delete from t_menu where id=@{id};
+                </delete>
+            </sql>
+        </report>
+    </page>
+
+</applications>

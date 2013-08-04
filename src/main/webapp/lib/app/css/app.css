@@ -1,0 +1,16 @@
+body{
+    overflow: hidden;
+    margin: 0px;
+    padding: 0px;
+}
+body,p,div,span,table{
+    font-family: arial;
+    font-size: 10pt;
+}
+.header-bg {
+    height:80px;
+    overflow: hidden;
+    background:-webkit-gradient(linear, 0 0, 0 bottom, from(#E6E6E6), to(#ffffff));
+    filter: progid:DXImageTransform.Microsoft.gradient(startcolorstr=#E6E6E6,endcolorstr=#ffffff,gradientType=0);
+}
+

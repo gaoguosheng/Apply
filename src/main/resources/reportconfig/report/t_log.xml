@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<applications xmlns="http://www.wabacus.com"
+			   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+			   xsi:schemaLocation="http://www.wabacus.com ../xsd/wabacus.applications.xsd">
+
+
+    <!--日志-->
+    <page id="t_log_list">
+        <report id="report1" title="日志管理" extends="basePage.editList">
+            <display>
+                <col column="{sequence:1}" label="序号" />
+                <col column="id" displaytype="hidden"/>
+                <col column="createtime" label="时间"/>
+                <col column="name" label="姓名"/>
+                <col column="optype" label="操作类型"/>
+                <col column="opobj" label="操作对象"/>
+            </display>
+            <sql>
+                <select>
+                    <value><![CDATA[      select * from t_log     order by id desc  ]]></value>
+                </select>
+            </sql>
+        </report>
+    </page>
+    <page id="t_log_list_detail">
+        <report id="report1" title="查看日志详细" type="detail">
+            <display>
+                <col column="id" displaytype="hidden"/>
+                <col column="createtime" label="时间"/>
+                <col column="name" label="姓名" br="true"/>
+                <col column="optype" label="操作类型"/>
+                <col column="opobj" label="操作对象" br="true"/>
+                <col column="content" label="操作内容" br="true" valuestyleproperty="colspan=3"/>
+            </display>
+            <sql>
+                <select>
+                    <value><![CDATA[      select * from t_log  where {#condition#}     ]]></value>
+                    <condition name="id" hidden="true">
+                        <value><![CDATA[id=#data# ]]></value>
+                    </condition>
+                </select>
+            </sql>
+        </report>
+    </page>
+</applications>
