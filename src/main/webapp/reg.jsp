@@ -41,9 +41,9 @@
                 <tr>
                     <td align="right" >* 工作所在地：</td>
                     <td >
-                        <select name="provid" id="provid"></select>
-                        <select name="cityid" id="cityid"></select>
-                        <select name="areaid" id="areaid"></select>
+                        <select name="provid" id="provid" required="required"></select>&nbsp;&nbsp;
+                        <select name="cityid" id="cityid" required="required" ></select>&nbsp;&nbsp;
+                        <select name="areaid" id="areaid" required="required" ></select>
                     </td>
                 </tr>
                 <tr>
@@ -119,6 +119,8 @@
 
         function f_reg(){
             $("#task").val("saveStudent");
+            $("#r_realname").val($.trim($("#r_realname").val()));
+            $("#r_username").val($.trim($("#r_username").val()));
             var t = $("#regForm").form("validate");
             if(!t){
                 return false;
@@ -172,6 +174,7 @@
                     for(var i=0;i<json.length;i++){
                         $("#provid").append("<option value='"+json[i].id+"'>"+json[i].name+"</option>");
                     }
+                    f_getCityList( ($("#provid")[0].value));
                 }
             });
         }
@@ -221,9 +224,8 @@
             $("#nAccBtn").click(f_notAccept);
             $("#r_username").blur(f_checkUserName);
             window.setTimeout(function(){
-                f_getCityList($("#provid").val());
                 $(".easyui-validatebox").unbind("focus");
-            },1000);
+            },500);
 
         })
 

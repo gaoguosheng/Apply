@@ -46,6 +46,20 @@
                                     ]]>
                     </value>
                 </condition>
+                <condition name="name" label="姓名" labelposition="left">
+                    <value>
+                        <![CDATA[
+                                       name like '%#data#%'
+                                ]]>
+                    </value>
+                </condition>
+                <condition name="idcard" label="身份证号码" labelposition="left">
+                    <value>
+                        <![CDATA[
+                                       idcard like '%#data#%'
+                                ]]>
+                    </value>
+                </condition>
             </select>
             </sql>
                 </report>

@@ -141,7 +141,7 @@
                 <col column="sex" label="性别" width="40"/>
                 <col column="birthday" label="出生年月" width="80" />
                 <col column="work_date" label="参加工作时间" displaytype="hidden" />
-                <col column="idcard" label="身份证号码" width="150"/>
+                <col column="idcard" label="身份证号码" width="150" valuestyleproperty="style='mso-number-format:\@' "/>
                 <col column="company" label="工作单位"  displaytype="hidden"/>
                 <col column="grad_scholl" label="毕业院校和专业" width="120"/>
                 <col column="grad_spec" label="毕业专业" width="120" displaytype="hidden"/>
@@ -183,6 +183,20 @@
                                      or (status=#data#  and mod(#data#,2)=0)
                                      )
                                     ]]>
+                        </value>
+                    </condition>
+                    <condition name="name" label="姓名" labelposition="left">
+                        <value>
+                            <![CDATA[
+                                       name like '%#data#%'
+                                ]]>
+                        </value>
+                    </condition>
+                    <condition name="idcard" label="身份证号码" labelposition="left">
+                        <value>
+                            <![CDATA[
+                                       idcard like '%#data#%'
+                                ]]>
                         </value>
                     </condition>
                     <condition name="test_level" label="报考层次" labelposition="left">

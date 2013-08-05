@@ -54,11 +54,18 @@
             </table>
         </form>
         <div  align="center">
-            <div>建议使用1280*768 以上分辨率、IE浏览器(推荐8.0以上)浏览</div>
+            <div style="margin: 5px;">建议使用1280*768 以上分辨率、IE浏览器(推荐8.0以上)浏览</div>
             <div>Copyright © 2013 . All Rights Reserved</div>
         </div>
     </div>
     <div id="regDialog"></div>
+    <div id="msgDiaog" class="easyui-dialog" title="${softTitle}" resizable="false" draggable="true" closable="true" data-options="iconCls:'icon-user'" style="width:600px;height:300px;padding:10px">
+        <div style="line-height: 30px;margin: 10px;">
+            <h3 style="color: red;" align="center">紧急通知</h3>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;由于报名系统首次投入运行，系统存在小问题，请8月5日上午10点10分前报名的考生登陆系统核查自己的信息，若发现自己信息丢失，请重新报名。给大家带来不便，敬请谅解。
+        </div>
+        <div align="right" style="margin: 10px;">2013年8月5日</div>
+    </div>
 
     <script type="text/javascript">
         function f_submitForm(){

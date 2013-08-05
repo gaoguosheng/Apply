@@ -51,7 +51,7 @@
       <col column="pwd" displaytype="hidden" defaultvalue="idRWzxMryPo="/>
         <col column="usertype" label="用户类型" br="true">
             <inputbox type="radiobox" defaultvalue="1">
-               <!-- <option value="0" label="考生"></option>-->
+                <option value="0" label="考生"></option>
                 <option value="1" label="管理人员"></option>
             </inputbox>
         </col>
@@ -166,7 +166,24 @@
                                 ]]>
                     </value>
                 </condition>
+                <condition name="realname" label="姓名" labelposition="left">
+                    <value>
+                        <![CDATA[
+                                       realname like '%#data#%'
+                                ]]>
+                    </value>
+                </condition>
+                <condition name="username" label="身份证号码" labelposition="left">
+                    <value>
+                        <![CDATA[
+                                       username like '%#data#%'
+                                ]]>
+                    </value>
+                </condition>
             </select>
+            <update pageurl="report{t_user_form.report1}" urlparams="id=@{id}"  popupparams="{initsize:'max'}" />
+            <delete><![CDATA[delete from t_user where id=@{id}]]></delete>
+
         </sql>
      </report>
 </page>
