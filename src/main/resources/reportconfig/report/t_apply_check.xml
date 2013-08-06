@@ -23,7 +23,7 @@
             <select>
                 <value>
                     <![CDATA[
-                            select * from v_apply where {#condition#} and iscommit=1
+                            select * from v_apply where {#condition#} and iscommit=1 order by committime
                         ]]>
                 </value>
                 <condition name="createid" hidden="true" defaultvalue="session{user_id}">

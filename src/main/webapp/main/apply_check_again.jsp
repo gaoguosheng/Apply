@@ -53,7 +53,7 @@
             </tr>--%>
             <tr>
                 <td align="right">填写理由：</td>
-                <td><textarea id="cause" name="cause"  style="width: 300px;"></textarea></td>
+                <td><textarea id="cause" name="cause"  style="width: 600px;height: 80px;"></textarea></td>
             </tr>
             <tr>
                 <td>&nbsp;</td>

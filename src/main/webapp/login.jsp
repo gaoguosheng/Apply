@@ -9,7 +9,7 @@
 <html>
 <head>
     <%@include file="/inc/lib.jsp"%>
-    <title>考生登录 - ${softName}</title>
+    <title>考生登陆 - ${softName}</title>
 </head>
 <body style="background-image: url('img/top_3.gif')">
     <div class="easyui-dialog" title="${softTitle}" resizable="false" draggable="false" closable="false" data-options="iconCls:'icon-user'" style="width:680px;height:380px;padding:10px">
@@ -44,7 +44,7 @@
                                 <td>&nbsp;</td>
                                 <td>
                                     <a id="loginBtn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-ok'">登陆</a>
-                                    <a id="regBtn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-add'">首次报名</a>
+                                    <a id="regBtn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-add'">注册报名</a>
                                     <a id="lostBtn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-help'">忘记密码</a>
                                 </td>
                             </tr>

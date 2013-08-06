@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<applications xmlns="http://www.wabacus.com"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.wabacus.com ../xsd/wabacus.applications.xsd">
+
+    <!--报名列表-->
+    <page id="t_apply_repeat">
+        <report id="report1" extends="t_apply_list.report1">
+            <sql>
+                <select>
+                    <value>
+                        <![CDATA[
+                            select * from v_apply where {#condition#}
+                            and idcard in(select idcard from t_apply group by idcard having count(*)>1)
+                            order by committime,idcard,id
+                        ]]>
+                    </value>
+                    <condition name="createid" hidden="true" defaultvalue="session{user_id}">
+                        <value>
+                            <![CDATA[
+                                               createid=#data# or createid in(
+                                    select id from t_user
+                                        where usertype=0
+                                        and(
+                                        (areaid =(select areaid from t_user where  id=#data# and datarole=1))
+                                         or (cityid =(select cityid from t_user where  id=#data# and datarole=2))
+                                        or (provid =(select provid from t_user where  id=#data# and datarole=3))))
+                                ]]>
+                        </value>
+                    </condition>
+                    <condition name="status" hidden="true">
+                        <value>
+                            <![CDATA[
+                                   (
+                                   (status=#data#)
+                                     or  (status>#data# and mod(#data#,2)=1)
+                                     or (status=#data#  and mod(#data#,2)=0)
+                                     )
+                                    ]]>
+                        </value>
+                    </condition>
+                    <condition name="name" label="姓名" labelposition="left">
+                        <value>
+                            <![CDATA[
+                                       name like '%#data#%'
+                                ]]>
+                        </value>
+                    </condition>
+                    <condition name="idcard" label="身份证号码" labelposition="left">
+                        <value>
+                            <![CDATA[
+                                       idcard like '%#data#%'
+                                ]]>
+                        </value>
+                    </condition>
+                </select>
+                <delete>
+                    delete from t_apply where id=@{id}
+                </delete>
+
+            </sql>
+        </report>
+    </page>
+
+    <!--报名列表-->
+    <page id="t_apply_repeat_detail">
+        <report id="report1" extends="t_apply_list_detail.report1" />
+        <report id="report2" extends="t_apply_list_detail.report2" />
+    </page>
+
+
+
+
+
+    <!--报名列表-->
+    <page id="t_apply_repeat_create">
+        <report id="report1" extends="t_apply_list.report1">
+            <display>
+                <col column="{sequence:1}" label="序号" width="40" />
+                <col column="id" displaytype="hidden"/>
+                <col column="createname" label="创建者" width="80"/>
+                <col column="committime" label="提交时间" width="120"/>
+                <col column="name" label="姓名" width="80"/>
+                <col column="sex" label="性别" width="40"/>
+                <col column="idcard" label="身份证号码" width="150" valuestyleproperty="style='mso-number-format:\@' "/>
+                <col column="company" label="工作单位"  displaytype="hidden"/>
+                <col column="grad_scholl" label="毕业院校和专业" width="120"/>
+                <col column="grad_spec" label="毕业专业" width="120" displaytype="hidden"/>
+                <col column="grad_date" label="毕业时间" displaytype="hidden"/>
+                <col column="education" label="学历" width="40"/>
+                <col column="now_tech_name" label="现技术职务" displaytype="hidden"/>
+                <col column="conftime" label="确认时间" displaytype="hidden"/>
+                <col column="cont_edu" label="继续教育(年)" displaytype="hidden"/>
+                <col column="mobile" label="手机" displaytype="hidden"/>
+                <col column="status_name" label="审核状态" width="80"/>
+                <col column="checktime" label="审核时间" width="120"/>
+            </display>
+            <sql>
+                <select>
+                    <value>
+                        <![CDATA[
+                            select a.*,b.realname createname from v_apply a
+                             left join t_user b on a.createid=b.id
+                            where {#condition#}
+                            and createid in(select createid from t_apply group by createid having count(*)>1)
+                            order by committime,createid,id
+                        ]]>
+                    </value>
+                    <condition name="createid" hidden="true" defaultvalue="session{user_id}">
+                        <value>
+                            <![CDATA[
+                                               createid=#data# or createid in(
+                                    select id from t_user
+                                        where usertype=0
+                                        and(
+                                        (areaid =(select areaid from t_user where  id=#data# and datarole=1))
+                                         or (cityid =(select cityid from t_user where  id=#data# and datarole=2))
+                                        or (provid =(select provid from t_user where  id=#data# and datarole=3))))
+                                ]]>
+                        </value>
+                    </condition>
+                    <condition name="status" hidden="true">
+                        <value>
+                            <![CDATA[
+                                   (
+                                   (status=#data#)
+                                     or  (status>#data# and mod(#data#,2)=1)
+                                     or (status=#data#  and mod(#data#,2)=0)
+                                     )
+                                    ]]>
+                        </value>
+                    </condition>
+                    <condition name="name" label="姓名" labelposition="left">
+                        <value>
+                            <![CDATA[
+                                       name like '%#data#%'
+                                ]]>
+                        </value>
+                    </condition>
+                    <condition name="idcard" label="身份证号码" labelposition="left">
+                        <value>
+                            <![CDATA[
+                                       idcard like '%#data#%'
+                                ]]>
+                        </value>
+                    </condition>
+                    <condition name="createname" label="创建者" labelposition="left">
+                        <value>
+                            <![CDATA[
+                                       createname like '%#data#%'
+                                ]]>
+                        </value>
+                    </condition>
+                </select>
+                <delete>
+                    delete from t_apply where id=@{id}
+                </delete>
+            </sql>
+        </report>
+    </page>
+
+    <!--报名列表-->
+    <page id="t_apply_repeat_create_detail">
+        <report id="report1" extends="t_apply_list_detail.report1" />
+        <report id="report2" extends="t_apply_list_detail.report2" />
+    </page>
+
+</applications>

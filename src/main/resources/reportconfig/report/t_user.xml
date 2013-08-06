@@ -182,7 +182,13 @@
                 </condition>
             </select>
             <update pageurl="report{t_user_form.report1}" urlparams="id=@{id}"  popupparams="{initsize:'max'}" />
-            <delete><![CDATA[delete from t_user where id=@{id}]]></delete>
+            <delete>
+                <![CDATA[
+                delete from t_apply_check where applyid in (select id from t_apply where createid=@{id});
+                delete from   t_apply where createid=@{id};
+                delete from t_user where id=@{id};
+                ]]>
+            </delete>
 
         </sql>
      </report>

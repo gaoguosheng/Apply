@@ -98,12 +98,12 @@
                 </col>
                 <col column="now_tech_name" label="现专业技术职务名称"/>
                 <col column="now_spec_class" label="现技术职务专业" br="true"/>
-                <col column="conftime" label="确认时间" >
+                <col column="conftime" label="现专业技术职务确认时间" >
                     <inputbox type="datepicker"></inputbox>
                 </col>
-                <col column="certid" label="证书号" br="true"/>
-                <col column="appr_no" label="审批文号" />
-                <col column="appr_dept" label="审批部门" br="true"/>
+                <col column="certid" label="现专业技术职务证书号" br="true"/>
+                <col column="appr_no" label="现专业技术职务审批文号" />
+                <col column="appr_dept" label="现专业技术职务审批部门" br="true"/>
                 <col column="job_resume" label="*工作简历" br="true" valuestyleproperty="colspan=3">
                     <inputbox type="richtextbox"  jsvalidate="isNotEmpty(#label#不允许为空)" styleproperty="style='width:100%;'"></inputbox>
                 </col>

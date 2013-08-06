@@ -59,7 +59,9 @@ function f_apply_save(iscommit){
     var my_iscommit = document.getElementById(my_pageid+"_guid_report1_wxcol_iscommit");
     if(iscommit){
         my_iscommit.value=1;
+        $(":input[value='提交']").attr("disabled",true);
     }else{
+        $(":input[value='保存']").attr("disabled",true);
        var valid=$("#"+my_pageid+"_guid_report1_metadata");
         $(valid).removeAttr("validatemethod_"+my_pageid+"_guid_report1_wxcol_photo");
         $(valid).removeAttr("validatemethod_"+my_pageid+"_guid_report1_wxcol_grad_scholl");
@@ -96,7 +98,9 @@ function f_apply_commit_save(iscommit){
     var my_iscommit = document.getElementById(my_pageid+"_guid_report1_wxcol_iscommit");
     if(iscommit){
         my_iscommit.value=1;
+        $(":input[value='提交']").attr("disabled",true);
     }else{
+        $(":input[value='保存']").attr("disabled",true);
         var valid=$("#"+my_pageid+"_guid_report1_metadata");
         $(valid).removeAttr("validatemethod_"+my_pageid+"_guid_report1_wxcol_photo");
         $(valid).removeAttr("validatemethod_"+my_pageid+"_guid_report1_wxcol_grad_scholl");
