@@ -285,7 +285,7 @@
         <report id="report1" extends="t_apply_list.report1" title="打印报名表" dataexport="none">
             <header>
                 <![CDATA[
-                        <font color="red">声明：</font><font color='blue'>网上预审通过后，在打印报名周期内可双击表格行打印报名表</font>
+                        <font color="red">声明：</font><font color='blue'>网上预审通过后，在现场确认周期前可双击表格行打印报名表</font>
                         ]]>
             </header>
             <sql>
@@ -294,9 +294,9 @@
                         <![CDATA[
                             select * from v_apply
                                 where {#condition#} and iscommit=1 and status=11
-                                and to_char(sysdate,'yyyy-mm-dd')
-                                 between (select value from t_conf where name='PRINT_APPLY_STDATE')
-                                    and (select value from t_conf where name='PRINT_APPLY_EDDATE')
+                                and to_char(sysdate,'yyyy-mm-dd')<
+                                (select value from t_conf where name='PRINT_APPLY_STDATE')
+
 
                         ]]>
                     </value>
@@ -321,7 +321,10 @@
 							relative{/template/dataexport/apply.html}
 						]]>
             </print>
-            <report id="report1" extends="t_apply_list_detail.report1"  template="relative{/template/dataexport/apply.html}"/>
+
+            <report id="report1" extends="t_apply_list_detail.report1"  template="relative{/template/dataexport/apply.html}" dataexport="richexcel">
+
+                    </report>
         </vpanel>
     </page>
     <!-- 打印承诺书-->
@@ -332,7 +335,9 @@
 							relative{/template/dataexport/apply_commit.html}
 						]]>
             </print>
-            <report id="report1" extends="t_apply_list_detail.report1"   template="relative{/template/dataexport/apply_commit.html}"/>
+            <report id="report1" extends="t_apply_list_detail.report1"   template="relative{/template/dataexport/apply_commit.html}">
+
+        </report>
         </vpanel>
     </page>
 

@@ -15,7 +15,7 @@
 						]]>
             </print>
             <dataexports>
-                <dataexport  type="richexcel" filename="员工信息列表和细览信息"  template="relative{/template/dataexport/apply_total.html}"></dataexport>
+                <dataexport  type="richexcel" filename="报名人员汇总"  template="relative{/template/dataexport/apply_total.html}"></dataexport>
             </dataexports>
             <interceptor>
                 <imports>

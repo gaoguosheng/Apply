@@ -141,7 +141,7 @@
                 <div title="时间导航" style="padding: 5px;line-height: 28px;" closable="true" >
                     <div class="time_nav_title">报名时间段：</div>
                     <div>${sys_conf.APPLY_STDATE} 至 ${sys_conf.APPLY_EDDATE}</div>
-                    <div class="time_nav_title">打印报名表时间段：</div>
+                    <div class="time_nav_title">现场确认时间段：</div>
                     <div>${sys_conf.PRINT_APPLY_STDATE} 至 ${sys_conf.PRINT_APPLY_EDDATE}</div>
                     <div class="time_nav_title">打印准考证时间段：</div>
                     <div>${sys_conf.PRINT_TEST_STDATE} 至 ${sys_conf.PRINT_TEST_EDDATE}</div>

@@ -289,10 +289,10 @@
             <display>
                 <col column="id" displaytype="hidden"/>
                 <col column="applyid" displaytype="hidden"/>
-                <col column="createtime" label="时间"/>
-                <col column="realname" label="审核单位"/>
-                <col column="status_name" label="审核情况"/>
-                <col column="causetype_name" label="不通过原因类型"/>
+                <col column="createtime" label="时间" width="150"/>
+                <col column="realname" label="审核单位" width="100"/>
+                <col column="status_name" label="审核情况" width="120"/>
+                <col column="causetype_name" label="不通过原因类型" width="150"/>
                 <col column="cause" label="备注"/>
             </display>
             <sql>
