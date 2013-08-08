@@ -331,10 +331,13 @@ public class ApplyDao {
      * 修改用户资料
      * */
     public boolean updateUser(User user){
-        int counter  =this.dbUtil.update("update t_user set phone=?,email=?,qq=? where id=?",
+        int counter  =this.dbUtil.update("update t_user set phone=?,email=?,qq=?,provid=?,cityid=?,areaid=? where id=?",
                 user.getPhone(),
                 user.getEmail(),
                 user.getQq(),
+                user.getProvid(),
+                user.getCityid(),
+                user.getAreaid(),
                 user.getId());
         return counter>0?true:false;
     }
@@ -360,6 +363,14 @@ public class ApplyDao {
         int counter = dbUtil.queryForInt(sql.toString(),applyid,userid,userid,userid) ;
         return counter>0?true:false;
 
+    }
+
+    /**
+     * 检查是否有存在提交的报名表
+     * */
+    public boolean checkApplyCommit(String userid){
+        int counter = dbUtil.queryForInt("select count(*) from t_apply where iscommit=1 and createid=?",userid);
+        return counter>0?true:false;
     }
 
 }

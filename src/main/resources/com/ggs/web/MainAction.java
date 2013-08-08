@@ -33,5 +33,12 @@ public class MainAction extends BaseAction implements ModelDriven<User>{
         session.setAttribute("admin",user);
         this.outSuccess(t);
     }
+    /**
+     * 检查是否有存在提交的报名表
+     * */
+    public void checkApplyCommit(){
+        boolean t = this.applyDao.checkApplyCommit(this.getAdmin().getId());
+        this.outSuccess(t);
+    }
 
 }

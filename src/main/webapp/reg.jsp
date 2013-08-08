@@ -41,8 +41,8 @@
                 <tr>
                     <td align="right" >* 工作所在地：</td>
                     <td >
-                        <select name="provid" id="provid" required="required"></select>&nbsp;&nbsp;
-                        <select name="cityid" id="cityid" required="required" ></select>&nbsp;&nbsp;
+                        <select name="provid" id="provid" required="required"></select>&nbsp;&nbsp; &nbsp;&nbsp;
+                        <select name="cityid" id="cityid" required="required" ></select>&nbsp;&nbsp; &nbsp;&nbsp;
                         <select name="areaid" id="areaid" required="required" ></select>
                     </td>
                 </tr>
