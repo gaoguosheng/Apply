@@ -285,7 +285,7 @@
                 </value>
             </format>
         </report>
-        <report id="report2" title="审核记录" pagesize="-1">
+        <report id="report2" title="审核记录" pagesize="-1" cellresize="0">
             <display>
                 <col column="id" displaytype="hidden"/>
                 <col column="applyid" displaytype="hidden"/>
@@ -293,7 +293,7 @@
                 <col column="realname" label="审核单位" width="100"/>
                 <col column="status_name" label="审核情况" width="120"/>
                 <col column="causetype_name" label="不通过原因类型" width="150"/>
-                <col column="cause" label="备注"/>
+                <col column="cause" label="备注" align="left"/>
             </display>
             <sql>
                 <select>
