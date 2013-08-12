@@ -96,13 +96,13 @@
                         <option source="@{select * from V_VALID_RULE where test_level=#test_level#  and tech_name=#tech_name#  and spec_class=#spec_class# order by test_subject_code}" label="test_subject_name" value="test_subject"></option>
                     </inputbox>
                 </col>
-                <col column="now_tech_name" label="现专业技术职务名称"/>
-                <col column="now_spec_class" label="现技术职务专业" br="true"/>
-                <col column="conftime" label="现专业技术职务确认时间" >
+                <col column="now_tech_name" label="现专业技术职务资格名称"/>
+                <col column="now_spec_class" label="现专业技术职务专业名称" br="true"/>
+                <col column="conftime" label="现专业技术职务批准日期" >
                     <inputbox type="datepicker"></inputbox>
                 </col>
-                <col column="certid" label="现专业技术职务证书号" br="true"/>
-                <col column="appr_no" label="现专业技术职务审批文号" />
+                <col column="certid" label="现专业技术职务证书编号" br="true"/>
+                <col column="appr_no" label="现专业技术职务批准文号" />
                 <col column="appr_dept" label="现专业技术职务审批部门" br="true"/>
                 <col column="job_resume" label="*工作简历" br="true" valuestyleproperty="colspan=3">
                     <inputbox type="richtextbox"  jsvalidate="isNotEmpty(#label#不允许为空)" styleproperty="style='width:100%;'"></inputbox>
