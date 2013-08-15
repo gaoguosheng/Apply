@@ -217,12 +217,12 @@ public class DataDao {
      * */
     public static String getTestSubjectName(String test_level,String tech_name,String spec_class,String test_subject){
         StringBuilder result = new StringBuilder();
-        String sql = "select distinct test_subject_name from V_Test_RULE where test_level="+test_level+"  and tech_name="+tech_name+"  and spec_class="+spec_class+"  and test_subject in ("+test_subject+")";
+        String sql = "select distinct test_subject_code,test_subject_name from V_Test_RULE where test_level="+test_level+"  and tech_name="+tech_name+"  and spec_class="+spec_class+"  and test_subject in ("+test_subject+") order by test_subject_code";
         List<Map<String,String>> itemList = dbUtil.queryForList(sql);
         for(Map<String,String> item:itemList){
             String test_subject_name = item.get("test_subject_name");
             result.append(test_subject_name);
-            result.append("<br/>");
+            result.append(" ");
         }
         return result.toString();
     }
