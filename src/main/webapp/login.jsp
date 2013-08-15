@@ -12,7 +12,7 @@
     <title>考生登陆 - ${softName}</title>
 </head>
 <body style="background-image: url('img/top_3.gif')">
-    <div class="easyui-dialog" title="${softTitle}" resizable="false" draggable="false" closable="false" data-options="iconCls:'icon-user'" style="width:680px;height:380px;padding:10px">
+    <div class="easyui-dialog" title="${softTitle}" resizable="false" draggable="false" closable="false" data-options="iconCls:'icon-user'" style="width:700px;height:420px;padding:10px">
         <div align="center" style="font-size: 16pt;font-weight: bold;">${softName}</div>
         <form id="loginForm" method="post">
             <table align="center" width="100%" border="0"  cellpadding="5" class="normalFont">
@@ -54,8 +54,12 @@
             </table>
         </form>
         <div  align="center">
-            <div style="margin: 5px;">建议使用1280*768 以上分辨率、IE浏览器(推荐8.0以上)浏览</div>
+            <div>建议使用1280*768 以上分辨率、IE浏览器(推荐8.0以上)浏览</div>
             <div>Copyright © 2013 . All Rights Reserved</div>
+            <hr style="height: 1px;"/>
+            <div style="text-align: left">注意事项：<br/>
+                1、系统报名信息填报错误、密码重置及修改信息等业务问题，请咨询当地市局药监局人教处（科）；<br/>
+                2、系统无法访问、打印出错等技术问题请联系0591-86295224。</div>
         </div>
     </div>
     <div id="regDialog"></div>
