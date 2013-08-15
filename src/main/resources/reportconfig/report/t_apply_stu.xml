@@ -192,7 +192,7 @@
                     update t_apply(
                     @{name},@{sex},@{birthday},@{idcard},@{work_date},@{company},@{mobile},@{phone},@{photo},
                     @{education},@{grad_spec},@{grad_date},@{edu_sys},@{grad_scholl},@{study_mode},
-                    @{test_level},@{cont_edu},@{spec_class},@{fn},@{test_subject},@{old_fn},
+                    @{test_level},@{cont_edu},@{spec_class},@{test_subject},@{old_fn},
                     @{tech_name},@{now_tech_name},@{conftime},@{certid},@{appr_no},@{appr_dept},@{now_spec_class},
                     @{job_resume},
                     @{iscommit}
@@ -267,7 +267,7 @@
                     insert into t_apply(id=sequence{seq_t_apply},
                     @{name},@{sex},@{birthday},@{idcard},@{work_date},@{company},@{mobile},@{phone},@{photo},
                     @{education},@{grad_spec},@{grad_date},@{edu_sys},@{grad_scholl},@{study_mode},
-                    @{test_level},@{cont_edu},@{spec_class},@{fn},@{test_subject},@{old_fn},
+                    @{test_level},@{cont_edu},@{spec_class},@{test_subject},@{old_fn},
                     @{tech_name},@{conftime},@{certid},@{appr_no},@{appr_dept},@{now_tech_name},@{now_spec_class},
                     @{job_resume},
                     createid=session{user_id} ,@{iscommit}
