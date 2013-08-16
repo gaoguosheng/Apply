@@ -140,7 +140,7 @@
             <col column="id" displaytype="hidden"/>
             <col column="realname" label="姓名"/>
             <col column="sex" label="性别"/>
-            <col column="username" label="身份证号"/>
+            <col column="username" label="身份证号码" valuestyleproperty="style='mso-number-format:\@' "/>
             <col column="prov_name" label="省份"/>
             <col column="city_name" label="城市"/>
             <col column="area_name" label="区域"/>
