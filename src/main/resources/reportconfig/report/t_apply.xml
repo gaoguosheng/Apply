@@ -17,7 +17,7 @@
                     <inputbox jsvalidate="isNotEmpty(#label#不允许为空)" styleproperty="readonly"/>
                 </col>
                 <col column="photo" label="*照片(100KB)" br="true" labelstyleproperty="rowspan=4" valuestyleproperty="rowspan=4">
-                    <inputbox jsvalidate="isNotEmpty(#label#不允许为空)" type="file" maxsize="102400" allowedtypes="jpg" displaytype="image" deletetype="1"
+                    <inputbox jsvalidate="isNotEmpty(#label#不允许为空)" type="file" maxsize="100" allowedtypes="jpg" displaytype="image" deletetype="1"
                               savepath="relative{\upload\}" rooturl="/upload/" newfilename="{timestamp}" styleproperty="width='100px'  height='120px'">
                     </inputbox>
                 </col>
