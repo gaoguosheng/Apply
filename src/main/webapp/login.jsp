@@ -1,3 +1,5 @@
+<%@ page import="com.ggs.dao.DataDao" %>
+<%@ page import="com.ggs.util.DateUtil" %>
 <%--
   Created by IntelliJ IDEA.
   User: ggs
@@ -12,7 +14,7 @@
     <title>考生登陆 - ${softName}</title>
 </head>
 <body style="background-image: url('img/top_3.gif')">
-    <div class="easyui-dialog" title="${softTitle}" resizable="false" draggable="false" closable="false" data-options="iconCls:'icon-user'" style="width:700px;height:420px;padding:10px">
+    <div class="easyui-dialog" title="${softTitle}" resizable="false" draggable="false" closable="false" data-options="iconCls:'icon-user'" style="width:700px;height:380px;padding:10px">
         <div align="center" style="font-size: 16pt;font-weight: bold;">${softName}</div>
         <form id="loginForm" method="post">
             <table align="center" width="100%" border="0"  cellpadding="5" class="normalFont">
@@ -56,20 +58,20 @@
         <div  align="center">
             <div>建议使用1280*768 以上分辨率、IE浏览器(推荐8.0以上)浏览</div>
             <div>Copyright © 2013 . All Rights Reserved</div>
-            <hr style="height: 1px;"/>
+           <%-- <hr style="height: 1px;"/>
             <div style="text-align: left">注意事项：<br/>
                 1、系统报名信息填报错误、密码重置及修改信息等业务问题，请咨询当地市局药监局人教处（科）；<br/>
-                2、系统无法访问、打印出错等技术问题请联系0591-86295224。</div>
+                2、系统无法访问、打印出错等技术问题请联系0591-86295224。</div>--%>
         </div>
     </div>
     <div id="regDialog"></div>
-    <div id="msgDiaog" class="easyui-dialog" title="${softTitle}" resizable="false" draggable="true" closable="true" data-options="iconCls:'icon-user'" style="width:600px;height:300px;padding:10px">
+<%--    <div id="msgDiaog" class="easyui-dialog" title="${softTitle}" resizable="false" draggable="true" closable="true" data-options="iconCls:'icon-user'" style="width:600px;height:300px;padding:10px">
         <div style="line-height: 30px;margin: 10px;">
             <h3 style="color: red;" align="center">紧急通知</h3>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;由于报名系统首次投入运行，系统存在小问题，请8月5日上午10点10分前报名的考生登陆系统核查自己的信息，若发现自己信息丢失，请重新报名。给大家带来不便，敬请谅解。
         </div>
         <div align="right" style="margin: 10px;">2013年8月5日</div>
-    </div>
+    </div>--%>
 
     <script type="text/javascript">
         function f_submitForm(){
@@ -166,7 +168,15 @@
             $("#lostBtn").click(function(){f_lostPwd();});
             $("#username").focus();
 
+            var   APPLY_STDATE="<%=DataDao.getConf("APPLY_STDATE")%>";
+            var   APPLY_EDDATE="<%=DataDao.getConf("APPLY_EDDATE")%>";
+            var nowDate="<%= DateUtil.getNowDateString()%>";
 
+            if(nowDate>=APPLY_STDATE && nowDate<=APPLY_EDDATE){
+                $("#regBtn").show();
+            }else{
+                $("#regBtn").hide();
+            }
 
         })
     </script>
