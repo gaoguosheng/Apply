@@ -7,9 +7,11 @@
  */
 
 var my_pageid=f_getQueryString("PAGEID");
+var my_applyid=f_getQueryString("id");
 var is_save_succ=0;
 $(function(){
     window.setTimeout(f_selTestSubject,300);
+    window.setTimeout(f_check_commit,500);
 });
 
 function f_selTestSubject(){
@@ -130,4 +132,22 @@ function f_apply_commit_save(iscommit){
     }
 
 }
+
+function f_check_commit(){
+    var result;
+    $.ajax({
+        type: "POST",
+        url: "check_commit.jsp",
+        async:false,
+        data: {applyid:my_applyid},
+        success: function(msg){
+            result=msg;
+        }
+    });
+    if(result==0){
+        $(":input[value='提交']").attr("disabled",true);
+    }
+
+}
+
 

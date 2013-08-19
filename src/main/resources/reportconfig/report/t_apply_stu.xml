@@ -127,7 +127,7 @@
                         <![CDATA[
                             select t.*,'未提交' commit_status_name from v_apply t where {#condition#} and iscommit=0 and status=0
                                                           
-														  and to_date(to_char(sysdate,'yyyy-mm-dd'),'yyyy-mm-dd')<= to_date((select value from t_conf where name='PRINT_APPLY_STDATE'),'yyyy-mm-dd')-2
+
 
                         ]]>
                     </value>
