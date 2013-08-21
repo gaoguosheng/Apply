@@ -297,8 +297,8 @@
                         <![CDATA[
                             select * from v_apply
                                 where {#condition#} and iscommit=1 and status=11
-                                and to_char(sysdate,'yyyy-mm-dd')<
-                                (select value from t_conf where name='PRINT_APPLY_STDATE')
+                                and to_char(sysdate,'yyyy-mm-dd')<=
+                                (select value from t_conf where name='PRINT_APPLY_EDDATE')
 
 
                         ]]>
