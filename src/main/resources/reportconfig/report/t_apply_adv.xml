@@ -166,4 +166,117 @@
         <report id="report2" extends="t_apply_list_detail.report2" />
     </page>
 
+
+    <!--报名列表-->
+    <page id="t_apply_modify">
+        <report id="report1" extends="t_apply_list.report1">
+            <sql>
+                <select>
+                    <value>
+                        <![CDATA[
+                            select * from v_apply where {#condition#}
+                            and iscommit=1
+                            order by committime
+                        ]]>
+                    </value>
+                    <condition name="createid" hidden="true" defaultvalue="session{user_id}">
+                        <value>
+                            <![CDATA[
+                                               createid=#data# or createid in(
+                                    select id from t_user
+                                        where usertype=0
+                                        and(
+                                        (areaid =(select areaid from t_user where  id=#data# and datarole=1))
+                                         or (cityid =(select cityid from t_user where  id=#data# and datarole=2))
+                                        or (provid =(select provid from t_user where  id=#data# and datarole=3))))
+                                ]]>
+                        </value>
+                    </condition>
+                    <condition name="status" hidden="true">
+                        <value>
+                            <![CDATA[
+                                   (
+                                   (status=#data#)
+                                     or  (status>#data# and mod(#data#,2)=1)
+                                     or (status=#data#  and mod(#data#,2)=0)
+                                     )
+                                    ]]>
+                        </value>
+                    </condition>
+                    <condition name="name" label="姓名" labelposition="left">
+                        <value>
+                            <![CDATA[
+                                       name like '%#data#%'
+                                ]]>
+                        </value>
+                    </condition>
+                    <condition name="idcard" label="身份证号码" labelposition="left">
+                        <value>
+                            <![CDATA[
+                                       idcard like '%#data#%'
+                                ]]>
+                        </value>
+                    </condition>
+                </select>
+                <update pageurl="report{t_apply_modify_form.report1}" urlparams="id=@{id}"
+                        popupparams="{initsize:'max'}" />
+                <delete>
+                    delete from t_apply where id=@{id}
+                </delete>
+
+            </sql>
+        </report>
+    </page>
+
+
+    <page id="t_apply_modify_form" js="/lib/app/js/apply.js">
+        <report id="report1" extends="t_apply_form.report1" title="填写报名信息">
+            <header>
+                <![CDATA[
+                        <font color="red">声明：</font>
+                        <font color='blue'>
+                        当前报名信息为草稿数据，考生可以在草稿报名信息菜单点击编辑修改。
+                        <div>1、上一年度参加中级技术职务任职资格考试未通过者在报考剩余科目时，须填写上年度档案号，否则成绩不予滚动。</div>
+                        <div>2、单位意见由报考人员所在单位填写并盖章。</div>
+                        <div>3、&ldquo;教育情况&rdquo;中&ldquo;学历&rdquo;、&ldquo;毕业专业&rdquo;只填写与本考试有关的学历、专业。如本科读的是&ldquo;药学&rdquo;及相关专业，但又读了&ldquo;工商管理&rdquo;硕士，则只填写&ldquo;本科&rdquo;及&ldquo;药学&rdquo;相关专业</div>
+                        <div>4、*号内容为必填项目，&ldquo;现专业技术职务以及相关内容&rdquo;只限有专业技术职务的报名人员必填。</div>
+                        </font>
+                        ]]>
+            </header>
+            <sql>
+                <select>
+                    <value>
+                        <![CDATA[
+                        select * from v_apply where {#condition#}
+                        ]]>
+                    </value>
+                    <condition name="id" hidden="true">
+                        <value>
+                            <![CDATA[id=#data#]]>
+                        </value>
+                    </condition>
+                </select>
+                <update>
+                    <![CDATA[
+                    update t_apply(
+                    @{name},@{sex},@{birthday},@{idcard},@{work_date},@{company},@{mobile},@{phone},@{photo},
+                    @{education},@{grad_spec},@{grad_date},@{edu_sys},@{grad_scholl},@{study_mode},
+                    @{test_level},@{cont_edu},@{spec_class},@{test_subject},@{old_fn},
+                    @{tech_name},@{now_tech_name},@{conftime},@{certid},@{appr_no},@{appr_dept},@{now_spec_class},
+                    @{job_resume}
+                    )
+                     where id=@{id}
+                     ]]>
+                </update>
+            </sql>
+        </report>
+    </page>
+
+    <!--报名列表-->
+    <page id="t_apply_modify_detail">
+        <report id="report1" extends="t_apply_list_detail.report1" />
+        <report id="report2" extends="t_apply_list_detail.report2" />
+    </page>
+
+
 </applications>
