@@ -127,7 +127,7 @@
 
     <!--报名列表-->
     <page id="t_apply_list">
-        <report id="report1" extends="basePage.editList" title="报名信息" rowselect="single|true">
+        <report id="report1" extends="basePage.editList" title="报名信息" >
             <header>
                 <![CDATA[
                         <font color="red">说明：</font><font color='blue'>双击表格一行可查看该报名详细信息。</font>
@@ -316,7 +316,17 @@
 
     <!--报名列表-->
     <page id="t_apply_query">
-        <report id="report1" extends="t_apply_list.report1" type="list"/>
+        <report id="report1" extends="t_apply_list.report1">
+            <buttons>
+                <button name="resetStatus0Button" label="改为待审核" class="com.wabacus.system.buttons.ServerSQLActionButton"
+                        position="title" confirmessage="是否确认改为待审核"
+                        successprompt="操作成功" failedprompt="操作失败"  styleproperty="class='cls-button2'">
+                    <![CDATA[
+								update t_apply(status=0) where id=@{id__old};
+							]]>
+                </button>
+            </buttons>
+        </report>
     </page>
 
     <!--报名列表-->
