@@ -34,7 +34,7 @@
                     </inputbox>
                 </col>
                 <col column="partid" label="partid" br="true">
-                    <inputbox type="selectbox">
+                    <!--<inputbox type="selectbox">
                         <option label="无" value=""></option>
                         <option label="search" value="type{search}"></option>
                         <option label="richexcel" value="type{richexcel}"></option>
@@ -43,7 +43,7 @@
                         <option label="save" value="type{save}"></option>
                         <option label="edit" value="{editablelist-edit}"></option>
                         <option label="delete" value="type{delete}"></option>
-                    </inputbox>
+                    </inputbox>-->
                  </col>
                 <col column="orderno" label="序号" defaultvalue="0"/>
             </display>

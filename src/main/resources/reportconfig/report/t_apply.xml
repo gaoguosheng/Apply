@@ -232,6 +232,21 @@
                                     ]]>
                         </value>
                     </condition>
+                    <condition name="cityid" label="城市" labelposition="left">
+                        <inputbox type="selectbox">
+                            <option  label="全部" value=""></option>
+                            <option source="@{select * from t_city}" label="name" value="id"></option>
+                        </inputbox>
+                        <value>
+                            <![CDATA[
+                                       createid in(
+                                            select id from t_user
+                                                where usertype=0
+                                                and  cityid =#data#
+                                        )
+                                ]]>
+                        </value>
+                    </condition>
                 </select>
 
             </sql>
@@ -318,11 +333,25 @@
     <page id="t_apply_query">
         <report id="report1" extends="t_apply_list.report1">
             <buttons>
-                <button name="resetStatus0Button" label="改为待审核" class="com.wabacus.system.buttons.ServerSQLActionButton"
-                        position="title" confirmessage="是否确认改为待审核"
+                <button name="resetStatus0Button" label="改为待预审" class="com.wabacus.system.buttons.ServerSQLActionButton"
+                        position="title" confirmessage="是否确认改为待预审"
                         successprompt="操作成功" failedprompt="操作失败"  styleproperty="class='cls-button2'">
                     <![CDATA[
 								update t_apply(status=0) where id=@{id__old};
+							]]>
+                </button>
+                <button name="resetStatus11Button" label="改为待现场" class="com.wabacus.system.buttons.ServerSQLActionButton"
+                        position="title" confirmessage="是否确认改为待现场确认"
+                        successprompt="操作成功" failedprompt="操作失败"  styleproperty="class='cls-button2'">
+                    <![CDATA[
+								update t_apply(status=11) where id=@{id__old};
+							]]>
+                </button>
+                <button name="resetStatus21Button" label="改为待复审" class="com.wabacus.system.buttons.ServerSQLActionButton"
+                        position="title" confirmessage="是否确认改为待资格复审"
+                        successprompt="操作成功" failedprompt="操作失败"  styleproperty="class='cls-button2'">
+                    <![CDATA[
+								update t_apply(status=21) where id=@{id__old};
 							]]>
                 </button>
             </buttons>

@@ -60,6 +60,54 @@
                                 ]]>
                     </value>
                 </condition>
+                <condition name="test_level" label="报考层次" labelposition="left">
+                    <inputbox type="selectbox">
+                        <option value="" label="全部"></option>
+                        <option source="@{select distinct test_level,test_level_name from V_VALID_RULE}" label="test_level_name" value="test_level"></option>
+                    </inputbox>
+                    <value>
+                        <![CDATA[
+                                       test_level=#data#
+                                    ]]>
+                    </value>
+                </condition>
+                <condition name="tech_name" label="报考资格" labelposition="left">
+                    <inputbox type="selectbox">
+                        <option value="" label="全部"></option>
+                        <option source="@{select distinct tech_name_name,tech_name from V_VALID_RULE }" label="tech_name_name" value="tech_name"></option>
+                    </inputbox>
+                    <value>
+                        <![CDATA[
+                                       tech_name=#data#
+                                    ]]>
+                    </value>
+                </condition>
+                <condition name="spec_class" label="报考专业" labelposition="left">
+                    <inputbox type="selectbox" >
+                        <option value="" label="全部"></option>
+                        <option source="@{select distinct spec_class_name,spec_class from V_VALID_RULE }" label="spec_class_name" value="spec_class"></option>
+                    </inputbox>
+                    <value>
+                        <![CDATA[
+                                      spec_class=#data#
+                                    ]]>
+                    </value>
+                </condition>
+                <condition name="cityid" label="城市" labelposition="left">
+                    <inputbox type="selectbox">
+                        <option  label="全部" value=""></option>
+                        <option source="@{select * from t_city}" label="name" value="id"></option>
+                    </inputbox>
+                    <value>
+                        <![CDATA[
+                                       createid in(
+                                            select id from t_user
+                                                where usertype=0
+                                                and  cityid =#data#
+                                        )
+                                ]]>
+                    </value>
+                </condition>
             </select>
             </sql>
                 </report>
