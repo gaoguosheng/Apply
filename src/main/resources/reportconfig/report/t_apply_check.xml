@@ -8,17 +8,7 @@
     <!--网上预审-->
     <page id="t_apply_check">
         <report id="report1" extends="t_apply_list.report1" title="报名信息" rowselect="checkbox">
-            <buttons>
-                <button name="batchChkBtn" label="批量审核" class="com.wabacus.system.buttons.ServerSQLActionButton"
-                        position="title" confirmessage="确认所有选中审核通过？"
-                        styleproperty="class='cls-button2'">
-                    <![CDATA[
-								insert into t_apply_check(id,applyid,status,createid)
-								    values(seq_t_apply_check.nextval,@{id},31,session{user_id});
-								    update t_apply set status=31 where id=@{id};
-							]]>
-                </button>
-            </buttons>
+
             <sql>
             <select>
                 <value>
@@ -114,6 +104,46 @@
     </page>
 
     <page id="t_apply_check_detail">
+        <jsp id="apply">/main/apply_check.jsp</jsp>
+    </page>
+
+    <!--现场确认-->
+    <page id="t_apply_check21">
+        <report id="report1" extends="t_apply_check.report1">
+        <buttons>
+            <button name="batchChkBtn" label="批量审核" class="com.wabacus.system.buttons.ServerSQLActionButton"
+                    position="title" confirmessage="确认所有选中现场确认通过？"
+                    styleproperty="class='cls-button2' ">
+                <![CDATA[
+								insert into t_apply_check(id,applyid,status,createid)
+								    values(seq_t_apply_check.nextval,@{id},21,session{user_id});
+								    update t_apply set status=21 where id=@{id};
+							]]>
+            </button>
+        </buttons>
+        </report>
+    </page>
+    <page id="t_apply_check21_detail">
+        <jsp id="apply">/main/apply_check.jsp</jsp>
+    </page>
+
+    <!--现场确认-->
+    <page id="t_apply_check31">
+        <report id="report1" extends="t_apply_check.report1">
+            <buttons>
+                <button name="batchChkBtn" label="批量审核" class="com.wabacus.system.buttons.ServerSQLActionButton"
+                        position="title" confirmessage="确认所有选中复核通过？"
+                        styleproperty="class='cls-button2'">
+                    <![CDATA[
+								insert into t_apply_check(id,applyid,status,createid)
+								    values(seq_t_apply_check.nextval,@{id},31,session{user_id});
+								    update t_apply set status=31 where id=@{id};
+							]]>
+                </button>
+            </buttons>
+        </report>
+    </page>
+    <page id="t_apply_check31_detail">
         <jsp id="apply">/main/apply_check.jsp</jsp>
     </page>
 
