@@ -105,7 +105,8 @@
       <update>
       <![CDATA[
       update t_user(@{username},@{realname},@{pwd},@{roleid},@{usertype},@{provid},@{cityid},@{areaid},@{datarole},@{email},@{phone},@{qq})
-      where id=@{id}
+      where id=@{id};
+      update t_apply set name=@{realname},idcard=@{username} where createid=@{id}    ;
       ]]>
       </update>
     </sql>
