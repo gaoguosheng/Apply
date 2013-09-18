@@ -128,7 +128,7 @@
                 <div style="float: left;margin: 5px;"><b style="font-size: 12pt;color:darkblue">${softName}</b></div>
                 <div align="right" style="margin-right: 20px;">
                     <img src="${ctx}/img/home.png">  <a href="main.jsp" target="mainFrame" class="easyui-linkbutton"  data-options="plain:true">桌面</a>
-                    <img src="${ctx}/img/user_friend.png">  <a href="#" class="easyui-menubutton">${sessionScope.admin.realname}</a>
+                    <img src="${ctx}/img/user_friend.png">  <a href="#" class="easyui-linkbutton"  data-options="plain:true">${sessionScope.admin.realname}</a>
                     <a href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-edit'" onclick="f_showPwdDialog();">修改密码</a>
                     <a href="#" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-edit'" onclick="f_showModifyUserDialog();">修改资料</a>
                     <img src="${ctx}/img/information.png"> <a href="#" class="easyui-linkbutton" data-options="plain:true">消息(0)</a>

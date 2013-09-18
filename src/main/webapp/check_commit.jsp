@@ -17,7 +17,7 @@
     //在报名截止期间的报名表
     sql.append(" and (((to_char(sysdate,'yyyy-mm-dd') between (select value from t_conf where name='APPLY_STDATE') and (select value from t_conf where name='APPLY_EDDATE'))");
     //现场报名前预审不通过人员的报名表
-    sql.append(" or (to_date(to_char(sysdate, 'yyyy-mm-dd'), 'yyyy-mm-dd') <= to_date((select value from t_conf where name ='PRINT_APPLY_STDATE'), 'yyyy-mm-dd') - 2 and (select count(*) from t_apply_check where applyid=t.id)>0)))");
+    sql.append(" or (to_date(to_char(sysdate, 'yyyy-mm-dd'), 'yyyy-mm-dd') <= to_date((select value from t_conf where name ='PRINT_APPLY_STDATE'), 'yyyy-mm-dd') and (select count(*) from t_apply_check where applyid=t.id)>0)))");
     int counter = dbUtil.queryForInt(sql.toString());
     out.print(counter);
 %>

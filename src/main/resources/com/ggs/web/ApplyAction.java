@@ -3,9 +3,13 @@ package com.ggs.web;
 import com.ggs.bean.Apply;
 import com.ggs.bean.User;
 import com.ggs.dao.ApplyDao;
+import com.ggs.dao.DataDao;
 import com.opensymphony.xwork2.ModelDriven;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -75,4 +79,51 @@ public class ApplyAction extends BaseAction implements ModelDriven<Apply> {
         this.outSuccess(this.applyDao.applyCommit(this.model.getApplyid()));
     }
 
+    /**
+     * 获取考场列表
+     * */
+    public void getExamSiteList(){
+        List <Map<String,String>>itemList = this.applyDao.getExamSiteList();
+        List jsonList = new ArrayList();
+        for(Map<String,String>item:itemList){
+            Map<String,String>json = new HashMap<String,String>();
+            json.put("id",item.get("id"));
+            json.put("name",item.get("name"));
+            json.put("pId",item.get("pid"));
+            json.put("remark",item.get("remark"));
+            jsonList.add(json);
+        }
+        this.outJson(jsonList);
+    }
+
+    /**
+     * 获取城市列表
+     * */
+    public void getCityList(){
+        List <Map<String,String>>itemList = DataDao.getCityList("350000");
+        List jsonList = new ArrayList();
+        for(Map<String,String>item:itemList){
+            Map<String,String>json = new HashMap<String,String>();
+            json.put("id",item.get("id"));
+            json.put("name",item.get("name"));
+            jsonList.add(json);
+        }
+        this.outJson(jsonList);
+    }
+    /**
+     * 保存考场地市表
+     * */
+    public void saveSiteCitys(){
+        String siteid = this.getParam("siteid");
+        String cityids = this.getParam("cityids");
+        this.applyDao.saveSiteCitys(siteid,cityids);
+    }
+    /**
+     * 通过考场查询地市列表
+     * */
+    public void getSiteCitysBySiteid(){
+        String siteid = this.getParam("siteid");
+        List itemList = DataDao.getSiteCitysBySiteid(siteid);
+        this.outJson(itemList);
+    }
 }

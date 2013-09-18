@@ -3,7 +3,7 @@
 			   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 			   xsi:schemaLocation="http://www.wabacus.com xsd/wabacus.cfg.xsd">
 	<system>
-		<item name="webroot" value="/Apply"/><!-- 应用的根URL -->
+		<item name="webroot" value="/"/><!-- 应用的根URL -->
 		<item name="webroot-abspath" value=""/><!-- 默认为context.getRealPath("/")获取的值，可以直接配置根路径 -->
 		<item name="showreport-url" value="/ShowReport.wx"/><!--显示报表数据的URL，就是在web.xml中配置的<url-pattern/>的值可以带参数-->
 		<item name="encode" value="UTF-8"/>
@@ -21,7 +21,7 @@
         <datasource name="ds" type="com.wabacus.config.database.datasource.C3P0DataSource"
                     dbtype="com.wabacus.config.database.type.Oracle">
             <property name="driver">oracle.jdbc.driver.OracleDriver</property>
-            <property name="url">jdbc:oracle:thin:@localhost:1521:orcl</property>
+            <property name="url">jdbc:oracle:thin:@localhost:1521:xe</property>
             <property name="user">Apply</property>
             <property name="password">Apply</property>
             <property name="max_size">20</property>

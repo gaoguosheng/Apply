@@ -227,5 +227,28 @@ public class DataDao {
         return result.toString();
     }
 
+    /**
+     * 获取考场名称
+     * */
+    public static String getExamSiteName(String id){
+        Map<String,String> item = dbUtil.queryForMap("select name from t_exam_site where id=?",id);
+        return item.get("name");
+    }
 
- }
+    /**
+     * 获取考点名称
+     * */
+    public static String getExamAddrName(String id){
+        Map<String,String> item = dbUtil.queryForMap("select name from t_exam_addr where id=?",id);
+        return item.get("name");
+    }
+
+    /**
+     * 通过考场查询地市列表
+     * */
+    public static List getSiteCitysBySiteid(String siteid){
+        return dbUtil.queryForList("select * from T_EXAM_SITE_CITY where siteid=?",siteid);
+    }
+
+
+}

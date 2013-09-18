@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<applications xmlns="http://www.wabacus.com"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.wabacus.com ../xsd/wabacus.applications.xsd">
+<page id="t_exam_room_list">
+  <report id="report1"  extends="basePage.editList2" title="考室管理">
+    <display>
+      <col column="{sequence:1}" label="序号" />
+      <col column="id" displaytype="hidden"/>
+        <col column="siteid" label="考场">
+            <inputbox type="selectbox">
+                <option source="@{select * from t_exam_site}" label="name" value="id"></option>
+            </inputbox>
+        </col>
+        <col column="addrid" label="考点">
+            <inputbox type="selectbox"  depends="siteid">
+                <option source="@{select * from t_exam_addr where siteid=#siteid#}" label="name" value="id"></option>
+            </inputbox>
+        </col>
+      <col column="code" label="代码"/>
+      <col column="name" label="名称"/>
+      <col column="maxuser" label="容纳人数"/>
+      <col column="remark" label="备注"/>
+    </display>
+    <sql>
+      <select>
+      <value><![CDATA[      select * from t_exam_room       ]]></value>
+      </select>
+      <insert>
+      <![CDATA[
+      insert into t_exam_room(id=sequence{seq_t_exam_room},
+@{code},@{name},@{maxuser},@{remark},@{addrid},@{siteid})
+      ]]>
+      </insert>
+      <update>
+      <![CDATA[
+      update t_exam_room(@{code},@{name},@{maxuser},@{remark},@{addrid},@{siteid})
+      where id=@{id}
+      ]]>
+      </update>
+      <delete><![CDATA[delete from t_exam_room where id=@{id}]]></delete>
+    </sql>
+      <format>
+          <imports>
+              <import>com.ggs.dao.DataDao</import>
+          </imports>
+          <value>
+              <![CDATA[
+                     siteid=DataDao.getExamSiteName(siteid);
+                     addrid=DataDao.getExamAddrName(addrid);
+                    ]]>
+          </value>
+      </format>
+  </report>
+</page>
+
+</applications>

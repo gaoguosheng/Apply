@@ -72,7 +72,7 @@
         </div>
         <div align="right" style="margin: 10px;">2013年8月5日</div>
     </div>--%>
-    <div id="msgDiaog" class="easyui-dialog" title="${softTitle}" resizable="false" draggable="true" closable="true" data-options="iconCls:'icon-user'" style="width:700px;height:500px;padding:10px">
+    <%--<div id="msgDiaog" class="easyui-dialog" title="${softTitle}" resizable="false" draggable="true" closable="true" data-options="iconCls:'icon-user'" style="width:700px;height:500px;padding:10px">
         <div style="line-height: 30px;margin: 10px;">
             <h3 style="color: red;" align="center">通知</h3>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;为方便考生报名，现决定延长考生提交审核时间。已于本月16日前（含16日）提交报名资料的考生，可在本月23日15点前继续提交报名信息，之后将关闭修改和提交。预审通过的考生可于本月30日前打印报名表，之后将关闭打印。
@@ -142,7 +142,7 @@
             </table>
         </div>
         <div align="right" style="margin: 10px;">2013年8月20日</div>
-    </div>
+    </div>--%>
 
     <script type="text/javascript">
         function f_submitForm(){

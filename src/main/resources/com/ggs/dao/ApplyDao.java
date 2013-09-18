@@ -373,4 +373,25 @@ public class ApplyDao {
         return counter>0?true:false;
     }
 
+    /**
+     * 获取考场列表
+     * */
+    public List getExamSiteList(){
+        return this.dbUtil.queryForList("select * from t_exam_site");
+    }
+
+    /**
+     * 保存考场地市表
+     * */
+    public void saveSiteCitys(String siteid,String cityids){
+        String []cityid = cityids.split(",");
+        String []sql = new String[cityid.length];
+        for(int i=0;i<cityid.length;i++){
+            sql[i]="insert into T_EXAM_SITE_CITY(siteid,cityid) values ("+siteid+","+cityid[i]+")";
+        }
+        this.dbUtil.batchUpdate(sql);
+    }
+
+
+
 }
