@@ -37,6 +37,18 @@
 <page id="t_exam_site_stu_list">    
     <report id="report1" type="list"
             dataexport="richexcel"  title="考场考生情况表">
+        <print type="lodop" preview="true"/>
+
+        <buttons>
+            <button autoreportdata="false" name="btn_create_test_no"  class="com.wabacus.system.buttons.ServerSQLActionButton" position="title"
+                     confirmessage="是否(重新)生成准考证？" label="生成准考证" styleproperty="class='cls-button2'" successprompt="操作成功" failedprompt="操作失败">
+                    call p_create_test_no;
+            </button>
+            <button  autoreportdata="false" name="btn_random_room_users"  class="com.wabacus.system.buttons.ServerSQLActionButton" position="title"
+                     confirmessage="是否(重新)随机排班？" label="随机排班" styleproperty="class='cls-button2'"  successprompt="操作成功" failedprompt="操作失败">
+                call p_random_room_users;
+            </button>
+        </buttons>
         <dataexports>
             <dataexport  type="richexcel" filename="考场考生情况表"  template="relative{/template/dataexport/site_stu.html}"></dataexport>
         </dataexports>
@@ -58,9 +70,10 @@
         </interceptor>
         <display>
             <col column="{sequence:1}" label="序号" width="40" />
+
             <col column="site_name" label="考场"/>
             <col column="addr_name" label="考点"/>
-            <col column="room_name" label="教室"/>
+            <col column="room_name" label="考室"/>
             <col column="seatnum" label="座号"/>
             <col column="name" label="姓名"/>
             <col column="sex" label="性别"/>
@@ -87,17 +100,207 @@
                 </condition>
                 <condition name="addrid" label="考点" labelposition="left">
                     <inputbox type="selectbox"  depends="siteid">
-                        <option value="" label="全部"></option>
                         <option source="@{select * from t_exam_addr where siteid=#siteid#}" label="name" value="id"></option>
                     </inputbox>
                     <value><![CDATA[addrid=#data# ]]></value>
                 </condition>
+                <condition name="roomid" label="考室" labelposition="left">
+                    <inputbox type="selectbox"  depends="addrid">                        >
+                        <option source="@{select * from t_exam_room where addrid=#addrid#}" label="name" value="id"></option>
+                    </inputbox>
+                    <value><![CDATA[roomid=#data# ]]></value>
+                </condition>
                 <condition name="name" label="姓名" labelposition="left">
                     <value><![CDATA[name like '%#data#%' ]]></value>
+                </condition>
+                <condition name="idcard" label="身份证号" labelposition="left">
+                    <value><![CDATA[idcard like '%#data#%' ]]></value>
+                </condition>
+                <condition name="test_no" label="准考证号" labelposition="left">
+                    <value><![CDATA[test_no like '%#data#%' ]]></value>
                 </condition>
             </select>
         </sql>
     </report>    
 </page>
+
+  <!--考室考生管理-->
+ <page id="room_user_list">
+
+     <vpanel id="vp1" parenttitle="主从报表一">
+
+         <report id="report1"  type="list" title="考室列表" pagesize="5">
+             <display>
+                 <col column="{sequence:1}" label="序号" />
+                 <col column="id" displaytype="hidden"/>
+                 <col column="siteid" label="考场">
+                     <inputbox type="selectbox">
+                         <option source="@{select * from t_exam_site}" label="name" value="id"></option>
+                     </inputbox>
+                 </col>
+                 <col column="addrid" label="考点">
+                     <inputbox type="selectbox"  depends="siteid">
+                         <option source="@{select * from t_exam_addr where siteid=#siteid#}" label="name" value="id"></option>
+                     </inputbox>
+                 </col>
+                 <col column="code" label="代码"/>
+                 <col column="name" label="名称"/>
+                 <col column="remark" label="备注"/>
+             </display>
+             <sql>
+                 <select>
+                     <value><![CDATA[      select * from t_exam_room       ]]></value>
+                 </select>
+                 <insert>
+                     <![CDATA[
+      insert into t_exam_room(id=sequence{seq_t_exam_room},
+@{code},@{name},@{remark},@{addrid},@{siteid})
+      ]]>
+                 </insert>
+                 <update>
+                     <![CDATA[
+      update t_exam_room(@{code},@{name},@{remark},@{addrid},@{siteid})
+      where id=@{id}
+      ]]>
+                 </update>
+                 <delete><![CDATA[delete from t_exam_room where id=@{id}]]></delete>
+             </sql>
+             <format>
+                 <imports>
+                     <import>com.ggs.dao.DataDao</import>
+                 </imports>
+                 <value>
+                     <![CDATA[
+                     siteid=DataDao.getExamSiteName(siteid);
+                     addrid=DataDao.getExamAddrName(addrid);
+                    ]]>
+                 </value>
+             </format>
+         </report>
+
+         <report id="report2" type="editablelist" title="已分配考生列表" depends="report1"
+                 dependsparams="roomid=@{id}" rowselect="checkbox" pagesize="10">
+                 <display>
+                     <col column="seatnum" label="座号"/>
+                     <col column="userid" displaytype="hidden"></col>
+                     <col column="name" label="姓名"/>
+                     <col column="sex" label="性别"/>
+                     <col column="city_name" label="城市"/>
+                     <col column="test_no" label="准考证号" valuestyleproperty="style='mso-number-format:\@' "/>
+                     <col column="idcard" label="身份证号" valuestyleproperty="style='mso-number-format:\@' "/>
+                     <col column="test_level_name" label="报考级别"/>
+                     <col column="tech_name_name" label="报考资格"/>
+                     <col column="spec_class_name" label="专业"/>
+                 </display>
+             <sql>
+                 <select>
+                     <value>
+                         <![CDATA[
+                            select * from v_exam_site_stu where {#condition#}   order by siteid,addrid,roomid,seatnum
+                            ]]>
+                     </value>
+                     <condition name="roomid" label="考室" labelposition="left" hidden="true">
+                         <value><![CDATA[roomid=#data# ]]></value>
+                     </condition>
+                 </select>
+                 <delete>
+                     delete from t_exam_room_user  where roomid=url{roomid} and userid=@{userid};
+                 </delete>
+             </sql>
+         </report>
+
+     </vpanel>
+ </page>
+
+
+    <!--未分配考室考生管理-->
+    <page id="no_room_user_list">
+
+        <vpanel id="vp1" parenttitle="主从报表一">
+
+            <report id="report1"  type="list" title="可用考室列表" pagesize="5">
+                <display>
+                    <col column="{sequence:1}" label="序号" />
+                    <col column="id" displaytype="hidden"/>
+                    <col column="siteid" label="考场">
+                        <inputbox type="selectbox">
+                            <option source="@{select * from t_exam_site}" label="name" value="id"></option>
+                        </inputbox>
+                    </col>
+                    <col column="addrid" label="考点">
+                        <inputbox type="selectbox"  depends="siteid">
+                            <option source="@{select * from t_exam_addr where siteid=#siteid#}" label="name" value="id"></option>
+                        </inputbox>
+                    </col>
+                    <col column="code" label="代码"/>
+                    <col column="name" label="名称"/>
+                    <col column="remark" label="备注"/>
+                </display>
+                <sql>
+                    <select>
+                        <value><![CDATA[      select * from V_USED_EXAM_ROOM       ]]></value>
+                    </select>
+                    <insert>
+                        <![CDATA[
+      insert into t_exam_room(id=sequence{seq_t_exam_room},
+@{code},@{name},@{remark},@{addrid},@{siteid})
+      ]]>
+                    </insert>
+                    <update>
+                        <![CDATA[
+      update t_exam_room(@{code},@{name},@{remark},@{addrid},@{siteid})
+      where id=@{id}
+      ]]>
+                    </update>
+                    <delete><![CDATA[delete from t_exam_room where id=@{id}]]></delete>
+                </sql>
+                <format>
+                    <imports>
+                        <import>com.ggs.dao.DataDao</import>
+                    </imports>
+                    <value>
+                        <![CDATA[
+                     siteid=DataDao.getExamSiteName(siteid);
+                     addrid=DataDao.getExamAddrName(addrid);
+                    ]]>
+                    </value>
+                </format>
+            </report>
+
+            <report id="report2" type="editablelist" title="未分配考生列表" depends="report1"
+                    dependsparams="roomid=@{id}" rowselect="checkbox" pagesize="10">
+                <buttons>
+                    <button name="btn_add_romm_user" label="分配考室" class="com.wabacus.system.buttons.ServerSQLActionButton"
+                            position="title" confirmessage="是否确认将所有选中考生分配该考室？"
+                            successprompt="操作成功" failedprompt="操作失败"  styleproperty="class='cls-button2'">
+                        <![CDATA[
+                                insert into t_exam_room_user (roomid,userid) select url{roomid},@{createid__old} from dual;
+							]]>
+                    </button>
+                </buttons>
+                <display>
+                    <col column="createid" displaytype="hidden"></col>
+                    <col column="name" label="姓名"/>
+                    <col column="sex" label="性别"/>
+                    <col column="city_name" label="城市"/>
+                    <col column="test_no" label="准考证号" valuestyleproperty="style='mso-number-format:\@' "/>
+                    <col column="idcard" label="身份证号" valuestyleproperty="style='mso-number-format:\@' "/>
+                    <col column="test_level_name" label="报考级别"/>
+                    <col column="tech_name_name" label="报考资格"/>
+                    <col column="spec_class_name" label="专业"/>
+                </display>
+                <sql>
+                    <select>
+                        <value>
+                            <![CDATA[
+                            select * from V_NO_ROOM_USER
+                            ]]>
+                        </value>
+                    </select>
+                </sql>
+            </report>
+
+        </vpanel>
+    </page>
 
 </applications>
