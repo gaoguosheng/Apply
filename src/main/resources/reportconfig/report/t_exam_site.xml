@@ -9,6 +9,7 @@
       <col column="id" displaytype="hidden"/>
         <col column="code" label="代码"/>
       <col column="name" label="名称"/>
+        <col column="maxuser" label="教室人数"/>
       <col column="remark" label="备注"/>
     </display>
     <sql>
@@ -18,12 +19,12 @@
       <insert>
       <![CDATA[
       insert into t_exam_site(id=sequence{seq_t_exam_site},
-@{name},@{remark},@{code})
+@{name},@{remark},@{code},@{maxuser})
       ]]>
       </insert>
       <update>
       <![CDATA[
-      update t_exam_site(@{name},@{remark},@{code})
+      update t_exam_site(@{name},@{remark},@{code},@{maxuser})
       where id=@{id}
       ]]>
       </update>
@@ -57,24 +58,25 @@
         </interceptor>
         <display>
             <col column="{sequence:1}" label="序号" width="40" />
-<!--
             <col column="site_name" label="考场"/>
             <col column="addr_name" label="考点"/>
--->
+            <col column="room_name" label="教室"/>
+            <col column="seatnum" label="座号"/>
             <col column="name" label="姓名"/>
             <col column="sex" label="性别"/>
+            <col column="city_name" label="城市"/>
             <col column="test_no" label="准考证号" valuestyleproperty="style='mso-number-format:\@' "/>
             <col column="idcard" label="身份证号" valuestyleproperty="style='mso-number-format:\@' "/>
             <col column="test_level_name" label="报考级别"/>
             <col column="tech_name_name" label="报考资格"/>
             <col column="spec_class_name" label="专业"/>
-            <col column="photo" label="照片"/>
+
         </display>
         <sql>
             <select>
                 <value>
                     <![CDATA[
-                            select * from v_exam_site_stu where {#condition#}
+                            select * from v_exam_site_stu where {#condition#}   order by siteid,addrid,roomid,seatnum
                             ]]>
                 </value>
                 <condition name="siteid" label="考场" labelposition="left">
@@ -95,13 +97,6 @@
                 </condition>
             </select>
         </sql>
-        <format>
-            <value>
-                <![CDATA[
-                        photo="<img src='"+photo+"' width='100px' height='120px'>";
-                        ]]>
-            </value>
-        </format>
     </report>    
 </page>
 

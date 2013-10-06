@@ -116,7 +116,8 @@ public class ApplyAction extends BaseAction implements ModelDriven<Apply> {
     public void saveSiteCitys(){
         String siteid = this.getParam("siteid");
         String cityids = this.getParam("cityids");
-        this.applyDao.saveSiteCitys(siteid,cityids);
+        String specids = this.getParam("specids");
+        this.applyDao.saveSiteCitys(siteid,cityids,specids);
     }
     /**
      * 通过考场查询地市列表

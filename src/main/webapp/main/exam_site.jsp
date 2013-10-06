@@ -56,9 +56,11 @@
                         var nodes = treeObj.getNodes();
                         treeObj.checkAllNodes(false);
                         for(var i=0;i<nodes.length;i++){
+                            $("#spec_"+nodes[i].id).val(0);
                             for(var j=0;j<checkNodes.length;j++){
                                 if(nodes[i].id==checkNodes[j].cityid){
                                     treeObj.checkNode(nodes[i], true, true);
+                                    $("#spec_"+nodes[i].id).val(checkNodes[j].spec_type);
                                 }
                             }
 
@@ -69,7 +71,8 @@
 
             $.fn.zTree.init($("#cityTree"), {
                 view: {
-                    selectedMulti: true
+                    selectedMulti: true,
+                    addDiyDom: addDiyDom
                 },
                 check: {
                     enable: true
@@ -97,16 +100,20 @@
                     return false;
                 }
                 var cityids = "";
+                var specids="";
                 for(var i=0;i<nodes.length;i++){
                     cityids+=nodes[i].id;
+                    specids+=$("#spec_"+nodes[i].id).val();
                     if(i<nodes.length-1)
                         cityids+=",";
+                        specids+=",";
                 }
+
 
                 $.ajax({
                     type: "POST",
                     url: "apply!saveSiteCitys.action",
-                    data:{siteid:siteid,cityids:cityids},
+                    data:{siteid:siteid,cityids:cityids,specids:specids},
                     success: function(msg){
                         f_alert("保存成功");
                     }
@@ -119,6 +126,16 @@
         });
 
 
+        function addDiyDom(treeId, treeNode) {
+            if (treeNode.parentNode && treeNode.parentNode.id!=2) return;
+            var aObj = $("#" + treeNode.tId + "_a");
+
+                var editStr = "<select class='selDemo' id='spec_" +treeNode.id+ "'><option value=0>全部</option><option value=1>初级</option><option value=2>中级</option></select>";
+                aObj.after(editStr);
+                var btn = $("#spec_"+treeNode.id);
+                if (btn) btn.bind("change", function(){alert("diy Select value="+btn.attr("value")+" for " + treeNode.name);});
+
+        }
 
     </script>
 </head>
@@ -132,7 +149,7 @@
                 </div>
             </td>
             <td width="200"  valign="top">
-                <div>地市：</div>
+                <div>地市、专业类型：</div>
                 <div id="cityTreeDiv" class="zTreeDemoBackground left" style="overflow: auto;border:#BDDFFF solid 1px;">
                     <ul id="cityTree" class="ztree"></ul>
                 </div>

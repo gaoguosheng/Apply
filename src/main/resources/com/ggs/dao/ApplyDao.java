@@ -383,11 +383,13 @@ public class ApplyDao {
     /**
      * 保存考场地市表
      * */
-    public void saveSiteCitys(String siteid,String cityids){
+    public void saveSiteCitys(String siteid,String cityids, String specids){
         String []cityid = cityids.split(",");
-        String []sql = new String[cityid.length];
+        String []specid = specids.split(",");
+        String []sql = new String[cityid.length+1];
+        sql[0]="delete from T_EXAM_SITE_CITY where siteid="+siteid;
         for(int i=0;i<cityid.length;i++){
-            sql[i]="insert into T_EXAM_SITE_CITY(siteid,cityid) values ("+siteid+","+cityid[i]+")";
+            sql[i+1]="insert into T_EXAM_SITE_CITY(siteid,cityid,spec_type) values ("+siteid+","+cityid[i]+","+specid[i]+")";
         }
         this.dbUtil.batchUpdate(sql);
     }

@@ -13,6 +13,8 @@
                 <col column="test_year"  label="开考年度" />
                 <col column="spec_class" label="专业类别" />
                 <col column="test_subject" label="考试科目" />
+                <col column="test_date" label="考试日期" />
+                <col column="test_time" label="考试时间" />
             </display>
             <sql>
                 <select>
@@ -108,31 +110,12 @@
                 </col>
                 <col column="qualified" label="合格线（分）" defaultvalue="60"></col>
                 <col column="limityear" label="有效期限（年）" defaultvalue="1" br="true"></col>
-                <col column="apply_stdate" label="报名起始日期">
-                    <inputbox type="datepicker"></inputbox>
+                <col column="test_date"  label="考试日期" br="true" valuestyleproperty="colspan=3" >
+                    <inputbox jsvalidate="isNotEmpty(#label#不允许为空)"></inputbox>
                 </col>
-                <col column="apply_eddate" label="报名结束日期" br="true">
-                    <inputbox type="datepicker"></inputbox>
+                <col column="test_time"  label="考试时间" br="true" valuestyleproperty="colspan=3" >
+                    <inputbox jsvalidate="isNotEmpty(#label#不允许为空)"></inputbox>
                 </col>
-                <col column="print_apply_stdate" label="打印报名表起始日期" >
-                    <inputbox type="datepicker"></inputbox>
-                </col>
-                <col column="print_apply_eddate" label="打印报名表结束日期" br="true">
-                    <inputbox type="datepicker"></inputbox>
-                </col>
-                <col column="print_test_stdate" label="打印准考证起始日期">
-                    <inputbox type="datepicker"></inputbox>
-                </col>
-                <col column="print_test_eddate" label="打印准考证结束日期" br="true">
-                    <inputbox type="datepicker"></inputbox>
-                </col>
-                <col column="score_stdate" label="成绩查询起始日期">
-                    <inputbox type="datepicker"></inputbox>
-                </col>
-                <col column="score_eddate" label="成绩查询结束日期" br="true">
-                    <inputbox type="datepicker"></inputbox>
-                </col>
-
             </display>
             <sql>
                 <select>
@@ -149,8 +132,7 @@
                     <value>
                         <![CDATA[insert into t_test_rule(id=sequence{seq_t_test_rule},
                         @{test_year},@{test_level},@{tech_name},@{spec_class},@{test_subject}, @{qualified},@{limityear},
-                        @{apply_stdate},@{apply_eddate}, @{print_apply_stdate},@{print_apply_eddate},
-                        @{print_test_stdate},@{print_test_eddate},@{score_stdate},@{score_eddate})
+                        @{test_date},@{test_time})
                         ]]>
                     </value>
                 </insert>
@@ -158,8 +140,7 @@
                     <value>
                         <![CDATA[update t_test_rule(
                         @{test_year},@{test_level},@{tech_name},@{spec_class},@{test_subject},  @{qualified},@{limityear},
-                        @{apply_stdate},@{apply_eddate}, @{print_apply_stdate},@{print_apply_eddate},
-                        @{print_test_stdate},@{print_test_eddate},@{score_stdate},@{score_eddate})
+                        @{test_date},@{test_time})
                         where id=@{id}
                         ]]>
                     </value>

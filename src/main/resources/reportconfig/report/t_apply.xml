@@ -10,6 +10,7 @@
         <report id="report1" extends="basePage.form" title="报名信息">
             <display>
                 <col column="id" displaytype="hidden"/>
+                <col column="test_no" valuestyleproperty="style='display:none;'" />
                 <col column="iscommit" valuestyleproperty="style='display:none;'" defaultvalue="0"/>
                 <col column="city_name" label="考生属地" labelstyleproperty="width='150px'"/>
                 <col column="fn" label="档案号" br="true" labelstyleproperty="width='150px'"/>
