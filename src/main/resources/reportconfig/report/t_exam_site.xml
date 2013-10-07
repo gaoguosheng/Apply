@@ -9,7 +9,7 @@
       <col column="id" displaytype="hidden"/>
         <col column="code" label="代码"/>
       <col column="name" label="名称"/>
-        <col column="maxuser" label="教室人数"/>
+        <col column="maxuser" label="可容纳人数"/>
       <col column="remark" label="备注"/>
     </display>
     <sql>
@@ -36,7 +36,7 @@
  <!--考场考生情况表-->
 <page id="t_exam_site_stu_list">    
     <report id="report1" type="list"
-            dataexport="richexcel"  title="考场考生情况表">
+            dataexport="word"  title="考场考生情况表">
         <print type="lodop" preview="true"/>
 
         <buttons>
@@ -44,13 +44,17 @@
                      confirmessage="是否(重新)生成准考证？" label="生成准考证" styleproperty="class='cls-button2'" successprompt="操作成功" failedprompt="操作失败">
                     call p_create_test_no;
             </button>
+            <button  autoreportdata="false" name="btn_create_site_rooms"  class="com.wabacus.system.buttons.ServerSQLActionButton" position="title"
+                     confirmessage="是否根据系统自动分析(重新)创建考室？" label="创建考室" styleproperty="class='cls-button2'"  successprompt="操作成功" failedprompt="操作失败">
+                call p_create_site_rooms;
+            </button>
             <button  autoreportdata="false" name="btn_random_room_users"  class="com.wabacus.system.buttons.ServerSQLActionButton" position="title"
-                     confirmessage="是否(重新)随机排班？" label="随机排班" styleproperty="class='cls-button2'"  successprompt="操作成功" failedprompt="操作失败">
+                     confirmessage="是否(重新)随机分配考室？" label="分配考室" styleproperty="class='cls-button2'"  successprompt="操作成功" failedprompt="操作失败">
                 call p_random_room_users;
             </button>
         </buttons>
         <dataexports>
-            <dataexport  type="richexcel" filename="考场考生情况表"  template="relative{/template/dataexport/site_stu.html}"></dataexport>
+            <dataexport  type="word" filename="考场考生情况表"  template="/template/dataexport/site_stu.jsp"></dataexport>
         </dataexports>
         <interceptor>
             <imports>
@@ -60,11 +64,14 @@
             <preaction>
                 String siteid=rrequest.getStringAttribute("siteid","");
                 String addrid=rrequest.getStringAttribute("addrid","");
+                String roomid=rrequest.getStringAttribute("roomid","");
                 String site_name=DataDao.getExamSiteName(siteid);
                 String addr_name=DataDao.getExamAddrName(addrid);
+                String room_name=DataDao.getExamRoomName(roomid);
                 String cur_year=DateUtil.getDatebyFormat("yyyy");
                 rrequest.getRequest().setAttribute("site_name",site_name);
                 rrequest.getRequest().setAttribute("addr_name",addr_name);
+                rrequest.getRequest().setAttribute("room_name",room_name);
                 rrequest.getRequest().setAttribute("cur_year",cur_year);
             </preaction>
         </interceptor>
@@ -143,27 +150,15 @@
                          <option source="@{select * from t_exam_addr where siteid=#siteid#}" label="name" value="id"></option>
                      </inputbox>
                  </col>
-                 <col column="code" label="代码"/>
-                 <col column="name" label="名称"/>
+
+                 <col column="name" label="考室"/>
+                 <col column="maxuser" label="容纳人数"/>
                  <col column="remark" label="备注"/>
              </display>
              <sql>
                  <select>
-                     <value><![CDATA[      select * from t_exam_room       ]]></value>
+                     <value><![CDATA[      select * from v_exam_room       ]]></value>
                  </select>
-                 <insert>
-                     <![CDATA[
-      insert into t_exam_room(id=sequence{seq_t_exam_room},
-@{code},@{name},@{remark},@{addrid},@{siteid})
-      ]]>
-                 </insert>
-                 <update>
-                     <![CDATA[
-      update t_exam_room(@{code},@{name},@{remark},@{addrid},@{siteid})
-      where id=@{id}
-      ]]>
-                 </update>
-                 <delete><![CDATA[delete from t_exam_room where id=@{id}]]></delete>
              </sql>
              <format>
                  <imports>
@@ -179,7 +174,13 @@
          </report>
 
          <report id="report2" type="editablelist" title="已分配考生列表" depends="report1"
-                 dependsparams="roomid=@{id}" rowselect="checkbox" pagesize="10">
+                 dependsparams="roomid=@{id}" rowselect="checkbox" pagesize="30">
+             <buttons>
+                 <button autoreportdata="false" name="btn_create_test_no"  class="com.wabacus.system.buttons.ServerSQLActionButton" position="title"
+                         confirmessage="是否(重新)生成该考室座号？" label="生成座号" styleproperty="class='cls-button2'" successprompt="操作成功" failedprompt="操作失败">
+                     call p_reset_seatnum(url{roomid});
+                 </button>
+             </buttons>
                  <display>
                      <col column="seatnum" label="座号"/>
                      <col column="userid" displaytype="hidden"></col>
@@ -232,27 +233,14 @@
                             <option source="@{select * from t_exam_addr where siteid=#siteid#}" label="name" value="id"></option>
                         </inputbox>
                     </col>
-                    <col column="code" label="代码"/>
-                    <col column="name" label="名称"/>
+                    <col column="name" label="考室"/>
+                    <col column="remaincount" label="可再容纳人数"/>
                     <col column="remark" label="备注"/>
                 </display>
                 <sql>
                     <select>
                         <value><![CDATA[      select * from V_USED_EXAM_ROOM       ]]></value>
                     </select>
-                    <insert>
-                        <![CDATA[
-      insert into t_exam_room(id=sequence{seq_t_exam_room},
-@{code},@{name},@{remark},@{addrid},@{siteid})
-      ]]>
-                    </insert>
-                    <update>
-                        <![CDATA[
-      update t_exam_room(@{code},@{name},@{remark},@{addrid},@{siteid})
-      where id=@{id}
-      ]]>
-                    </update>
-                    <delete><![CDATA[delete from t_exam_room where id=@{id}]]></delete>
                 </sql>
                 <format>
                     <imports>
@@ -268,13 +256,14 @@
             </report>
 
             <report id="report2" type="editablelist" title="未分配考生列表" depends="report1"
-                    dependsparams="roomid=@{id}" rowselect="checkbox" pagesize="10">
+                    dependsparams="roomid=@{id}" rowselect="checkbox" pagesize="30">
                 <buttons>
                     <button name="btn_add_romm_user" label="分配考室" class="com.wabacus.system.buttons.ServerSQLActionButton"
                             position="title" confirmessage="是否确认将所有选中考生分配该考室？"
                             successprompt="操作成功" failedprompt="操作失败"  styleproperty="class='cls-button2'">
                         <![CDATA[
                                 insert into t_exam_room_user (roomid,userid) select url{roomid},@{createid__old} from dual;
+                                call p_reset_seatnum(url{roomid});
 							]]>
                     </button>
                 </buttons>
@@ -293,9 +282,12 @@
                     <select>
                         <value>
                             <![CDATA[
-                            select * from V_NO_ROOM_USER
+                            select * from V_NO_ROOM_USER where {#condition#}
                             ]]>
                         </value>
+                        <condition name="roomid" hidden="true">
+                            <value>siteid=(select siteid from V_EXAM_ROOM where id=#data#)</value>
+                        </condition>
                     </select>
                 </sql>
             </report>

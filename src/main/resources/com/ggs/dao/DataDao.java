@@ -242,6 +242,14 @@ public class DataDao {
         Map<String,String> item = dbUtil.queryForMap("select name from t_exam_addr where id=?",id);
         return item.get("name");
     }
+    /**
+     * 获取考室名称
+     * */
+    public static String getExamRoomName(String id){
+        Map<String,String> item = dbUtil.queryForMap("select name from t_exam_room where id=?",id);
+        return item.get("name");
+    }
+
 
     /**
      * 通过考场查询地市列表
