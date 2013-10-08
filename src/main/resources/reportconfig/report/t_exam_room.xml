@@ -23,7 +23,28 @@
     </display>
     <sql>
       <select>
-      <value><![CDATA[      select * from t_exam_room       ]]></value>
+      <value><![CDATA[      select * from t_exam_room  where {#condition#}     ]]></value>
+          <condition name="siteid" label="考场" labelposition="left">
+              <inputbox type="selectbox">
+                  <option value="" label="全部"></option>
+                  <option source="@{select * from t_exam_site}" label="name" value="id"></option>
+              </inputbox>
+              <value><![CDATA[siteid=#data# ]]></value>
+          </condition>
+          <condition name="addrid" label="考点" labelposition="left">
+              <inputbox type="selectbox"  depends="siteid">
+                  <option value="" label="全部"></option>
+                  <option source="@{select * from t_exam_addr where to_char(siteid)='#[siteid]#'}" label="name" value="id"></option>
+              </inputbox>
+              <value><![CDATA[addrid=#data# ]]></value>
+          </condition>
+          <condition name="id" label="考室" labelposition="left">
+              <inputbox type="selectbox"  depends="addrid">
+                  <option value="" label="全部"></option>
+                  <option source="@{select * from t_exam_room where to_char(addrid)='#addrid#'}" label="name" value="id"></option>
+              </inputbox>
+              <value><![CDATA[id=#data# ]]></value>
+          </condition>
       </select>
       <insert>
       <![CDATA[

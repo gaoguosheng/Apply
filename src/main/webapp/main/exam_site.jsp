@@ -114,8 +114,23 @@
                     type: "POST",
                     url: "apply!saveSiteCitys.action",
                     data:{siteid:siteid,cityids:cityids,specids:specids},
-                    success: function(msg){
-                        f_alert("保存成功");
+                    dataType:"json",
+                    success: function(json){
+                        if( json.length>0){
+                            var s="";
+                            var treeObj = $.fn.zTree.getZTreeObj("cityTree");
+                            for(var i=0;i<json.length;i++){
+                                var nodes = treeObj.getNodesByParam("id", json[i].cityid, null);
+                                if(nodes.length>0){
+                                    s+="【"+nodes[0].name+"】";
+                                }
+                            }
+                            f_alertError("保存失败！请检查"+ s+"，数据存在重复！");
+                            return  false;
+                        }else{
+                            f_alert("保存成功");
+                        }
+
                     }
                 });
             });
@@ -132,8 +147,10 @@
 
                 var editStr = "<select class='selDemo' id='spec_" +treeNode.id+ "'><option value=0>全部</option><option value=1>初级</option><option value=2>中级</option></select>";
                 aObj.after(editStr);
+            /*
                 var btn = $("#spec_"+treeNode.id);
                 if (btn) btn.bind("change", function(){alert("diy Select value="+btn.attr("value")+" for " + treeNode.name);});
+                */
 
         }
 
@@ -149,7 +166,7 @@
                 </div>
             </td>
             <td width="200"  valign="top">
-                <div>地市、专业类型：</div>
+                <div>地市、考试等级：</div>
                 <div id="cityTreeDiv" class="zTreeDemoBackground left" style="overflow: auto;border:#BDDFFF solid 1px;">
                     <ul id="cityTree" class="ztree"></ul>
                 </div>

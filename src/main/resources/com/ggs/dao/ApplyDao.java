@@ -394,6 +394,27 @@ public class ApplyDao {
         this.dbUtil.batchUpdate(sql);
     }
 
+    /**
+     * 检查考场地市表是否重复
+     * */
+    public List checkSiteCitys(String siteid,String cityids, String specids){
+        List list  =new ArrayList();
+        String []cityid = cityids.split(",");
+        String []specid = specids.split(",");
+        for(int i=0;i<cityid.length;i++){
+            String sql="select count(*) from  T_EXAM_SITE_CITY where siteid!=? and cityid=? and spec_type=?";
+            int counter = this.dbUtil.queryForInt(sql,siteid,cityid[i],specid[i]);
+            if(counter>0){
+                //有重复数据
+                Map<String,String> item = new HashMap<String,String>();
+                item.put("siteid",siteid);
+                item.put("cityid",cityid[i]);
+                list.add(item);
+            }
+        }
+        return list;
+
+    }
 
 
 }
