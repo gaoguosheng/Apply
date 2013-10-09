@@ -402,8 +402,17 @@ public class ApplyDao {
         String []cityid = cityids.split(",");
         String []specid = specids.split(",");
         for(int i=0;i<cityid.length;i++){
-            String sql="select count(*) from  T_EXAM_SITE_CITY where siteid!=? and cityid=? and spec_type=?";
-            int counter = this.dbUtil.queryForInt(sql,siteid,cityid[i],specid[i]);
+            int counter=0;
+            String sql;
+            if(specid[i].equals("0")){
+                //全部
+                sql="select count(*) from  T_EXAM_SITE_CITY where siteid!=? and cityid=?";
+                counter = this.dbUtil.queryForInt(sql,siteid,cityid[i]);
+            }else{
+                sql="select count(*) from  T_EXAM_SITE_CITY where siteid!=? and cityid=? and (spec_type=? or spec_type=0) ";
+                counter = this.dbUtil.queryForInt(sql,siteid,cityid[i],specid[i]);
+            }
+
             if(counter>0){
                 //有重复数据
                 Map<String,String> item = new HashMap<String,String>();

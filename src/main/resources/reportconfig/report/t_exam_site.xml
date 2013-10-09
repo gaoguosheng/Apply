@@ -25,12 +25,12 @@
       <insert>
       <![CDATA[
       insert into t_exam_site(id=sequence{seq_t_exam_site},
-@{name},@{remark},@{code},@{maxuser},@{cityid})
+@{name},@{remark},@{code},@{cityid})
       ]]>
       </insert>
       <update>
       <![CDATA[
-      update t_exam_site(@{name},@{remark},@{code},@{maxuser},@{cityid})
+      update t_exam_site(@{name},@{remark},@{code},@{cityid})
       where id=@{id}
       ]]>
       </update>
@@ -55,7 +55,7 @@
  <!--考场考生情况查询-->
 <page id="t_exam_site_stu_list">    
     <report id="report1" type="list"
-            dataexport="word"  title="考场考生情况查询">
+            dataexport="richexcel"  title="考场考生情况查询">
         <print type="lodop" preview="true"/>
 
         <buttons>
@@ -68,28 +68,7 @@
                 call p_random_room_users;
             </button>
         </buttons>
-        <dataexports>
-            <dataexport  type="word" filename="考场考生情况表"  template="/template/dataexport/site_stu.jsp"></dataexport>
-        </dataexports>
-        <interceptor>
-            <imports>
-                <import>com.ggs.dao.DataDao</import>
-                <import>com.ggs.util.DateUtil</import>
-            </imports>
-            <preaction>
-                String siteid=rrequest.getStringAttribute("siteid","");
-                String addrid=rrequest.getStringAttribute("addrid","");
-                String roomid=rrequest.getStringAttribute("roomid","");
-                String site_name=DataDao.getExamSiteName(siteid);
-                String addr_name=DataDao.getExamAddrName(addrid);
-                String room_name=DataDao.getExamRoomName(roomid);
-                String cur_year=DateUtil.getDatebyFormat("yyyy");
-                rrequest.getRequest().setAttribute("site_name",site_name);
-                rrequest.getRequest().setAttribute("addr_name",addr_name);
-                rrequest.getRequest().setAttribute("room_name",room_name);
-                rrequest.getRequest().setAttribute("cur_year",cur_year);
-            </preaction>
-        </interceptor>
+
         <display>
             <col column="{sequence:1}" label="序号" width="40" />
 
@@ -135,12 +114,21 @@
                     </inputbox>
                     <value><![CDATA[roomid=#data# ]]></value>
                 </condition>
+                <condition name="name" label="姓名" labelposition="left">
+                        <value><![CDATA[name like %#data#% ]]></value>
+                </condition>
+                <condition name="idcard" label="身份证" labelposition="left">
+                    <value><![CDATA[idcard like %#data#% ]]></value>
+                </condition>
+                <condition name="test_no" label="准考证" labelposition="left">
+                    <value><![CDATA[test_no like %#data#% ]]></value>
+                </condition>
             </select>
         </sql>
     </report>    
 </page>
 
-  <!--考室考生管理-->
+  <!--已分配考室考生管理-->
  <page id="room_user_list">
 
      <vpanel id="vp1" parenttitle="主从报表一">
@@ -345,6 +333,145 @@
             </report>
 
         </vpanel>
+    </page>
+
+    <!-- 考场门口表格-->
+    <page id="room_door_list">
+
+        <report id="report1" type="list"
+                dataexport="word"  title="考场门口表">
+
+            <dataexports>
+                <dataexport  type="word" filename="考场门口表"  template="/template/dataexport/site_stu.jsp"></dataexport>
+            </dataexports>
+            <interceptor>
+                <imports>
+                    <import>com.ggs.dao.DataDao</import>
+                    <import>com.ggs.util.DateUtil</import>
+                </imports>
+                <preaction>
+                    String siteid=rrequest.getStringAttribute("siteid","");
+                    String addrid=rrequest.getStringAttribute("addrid","");
+                    String roomid=rrequest.getStringAttribute("roomid","");
+                    String site_name=DataDao.getExamSiteName(siteid);
+                    String addr_name=DataDao.getExamAddrName(addrid);
+                    String room_name=DataDao.getExamRoomName(roomid);
+                    String cur_year=DateUtil.getDatebyFormat("yyyy");
+                    rrequest.getRequest().setAttribute("site_name",site_name);
+                    rrequest.getRequest().setAttribute("addr_name",addr_name);
+                    rrequest.getRequest().setAttribute("room_name",room_name);
+                    rrequest.getRequest().setAttribute("cur_year",cur_year);
+                </preaction>
+            </interceptor>
+            <display>
+                <col column="seatnum" label="座号"/>
+                <col column="test_no" label="准考证号" valuestyleproperty="style='mso-number-format:\@' "/>
+                <col column="name" label="姓名"/>
+                <col column="tech_name_name" label="级别"/>
+                <col column="spec_class_name" label="专业"/>
+            </display>
+            <sql>
+                <select>
+                    <value>
+                        <![CDATA[
+                            select * from v_exam_site_stu where {#condition#}   order by siteid,addrid,roomid,seatnum
+                            ]]>
+                    </value>
+                    <condition name="siteid" label="考场" labelposition="left">
+                        <inputbox type="selectbox">
+                            <option source="@{select * from t_exam_site}" label="name" value="id"></option>
+                        </inputbox>
+                        <value><![CDATA[siteid=#data# ]]></value>
+                    </condition>
+                    <condition name="addrid" label="考点" labelposition="left">
+                        <inputbox type="selectbox"  depends="siteid">
+                            <option source="@{select * from t_exam_addr where to_char(siteid)='#[siteid]#'}" label="name" value="id"></option>
+                        </inputbox>
+                        <value><![CDATA[addrid=#data# ]]></value>
+                    </condition>
+                    <condition name="roomid" label="考室" labelposition="left">
+                        <inputbox type="selectbox"  depends="addrid">
+                            <option source="@{select * from t_exam_room where to_char(addrid)='#addrid#'}" label="name" value="id"></option>
+                        </inputbox>
+                        <value><![CDATA[roomid=#data# ]]></value>
+                    </condition>
+                </select>
+            </sql>
+        </report>
+    </page>
+
+
+    <!-- 座次表-->
+    <page id="room_seat_list">
+
+        <report id="report1" type="list"
+                dataexport="word"  title="座次表" pagesize="10">
+            <dataexports>
+                <dataexport  type="word" filename="座次表"  template="/template/dataexport/room_seat.jsp"></dataexport>
+            </dataexports>
+            <interceptor>
+                <imports>
+                    <import>com.ggs.dao.DataDao</import>
+                    <import>com.ggs.util.DateUtil</import>
+                </imports>
+                <preaction>
+                    String siteid=rrequest.getStringAttribute("siteid","");
+                    String addrid=rrequest.getStringAttribute("addrid","");
+                    String roomid=rrequest.getStringAttribute("roomid","");
+                    String site_name=DataDao.getExamSiteName(siteid);
+                    String addr_name=DataDao.getExamAddrName(addrid);
+                    String room_name=DataDao.getExamRoomName(roomid);
+                    String cur_year=DateUtil.getDatebyFormat("yyyy");
+                    rrequest.getRequest().setAttribute("site_name",site_name);
+                    rrequest.getRequest().setAttribute("addr_name",addr_name);
+                    rrequest.getRequest().setAttribute("room_name",room_name);
+                    rrequest.getRequest().setAttribute("cur_year",cur_year);
+                </preaction>
+            </interceptor>
+            <display>
+                <col column="seatnum" label="座号"/>
+                <col column="name" label="姓名"/>
+                <col column="idcard" label="身份证" valuestyleproperty="style='mso-number-format:\@' "/>
+                <col column="test_no" label="准考证号" valuestyleproperty="style='mso-number-format:\@' "/>
+                <col column="tech_name_name" label="级别"/>
+                <col column="spec_class_name" label="专业"/>
+                <col column="photo" label="照片"/>
+            </display>
+            <sql>
+                <select>
+                    <value>
+                        <![CDATA[
+                            select * from v_exam_site_stu where {#condition#}   order by siteid,addrid,roomid,seatnum
+                            ]]>
+                    </value>
+                    <condition name="siteid" label="考场" labelposition="left">
+                        <inputbox type="selectbox">
+                            <option source="@{select * from t_exam_site}" label="name" value="id"></option>
+                        </inputbox>
+                        <value><![CDATA[siteid=#data# ]]></value>
+                    </condition>
+                    <condition name="addrid" label="考点" labelposition="left">
+                        <inputbox type="selectbox"  depends="siteid">
+                            <option source="@{select * from t_exam_addr where to_char(siteid)='#[siteid]#'}" label="name" value="id"></option>
+                        </inputbox>
+                        <value><![CDATA[addrid=#data# ]]></value>
+                    </condition>
+                    <condition name="roomid" label="考室" labelposition="left">
+                        <inputbox type="selectbox"  depends="addrid">
+                            <option source="@{select * from t_exam_room where to_char(addrid)='#addrid#'}" label="name" value="id"></option>
+                        </inputbox>
+                        <value><![CDATA[roomid=#data# ]]></value>
+                    </condition>
+                </select>
+            </sql>
+            <format>
+                <value>
+                    <![CDATA[
+                            photo="<img src='"+photo+"' style='width:100px;height:120px;'/>";
+                            ]]>
+                </value>
+            </format>
+        </report>
     </page>
 
 </applications>
