@@ -342,7 +342,7 @@
                 dataexport="word"  title="考场门口表">
 
             <dataexports>
-                <dataexport  type="word" filename="考场门口表"  template="/template/dataexport/site_stu.jsp"></dataexport>
+                <dataexport  type="word" filename="考场门口表"  template="/template/dataexport/room_door.jsp"></dataexport>
             </dataexports>
             <interceptor>
                 <imports>

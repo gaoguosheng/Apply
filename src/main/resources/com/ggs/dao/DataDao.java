@@ -258,5 +258,19 @@ public class DataDao {
         return dbUtil.queryForList("select * from T_EXAM_SITE_CITY where siteid=?",siteid);
     }
 
+    /**
+     * 获取考试日期时间
+     * */
+
+    public static List getExamDateTime(){
+        return dbUtil.queryForList("select distinct test_subject,f_getdata(test_subject)test_subject_name, test_date,test_time from t_TEST_RULE t");
+    }
+
+    /***
+     * 通过报名id获取考场考点
+     * */
+    public static Map getExamSite(String applyid){
+        return dbUtil.queryForMap("select room_name,addr_name,site_name,seatnum from V_EXAM_SITE_STU t  where applyid="+applyid);
+    }
 
 }

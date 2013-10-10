@@ -372,13 +372,13 @@
         </report>
     </page>
     <page id="t_admis_print_detail">
-        <vpanel id="vp1" border="1" bordercolor="#c0c0c0"  margin="10px">
+        <vpanel id="vp1" border="1" bordercolor="#c0c0c0"  margin="10px" >
             <print type="lodop" preview="true">
                 <![CDATA[
-							relative{/template/dataexport/admis.html}
+							relative{/template/dataexport/test_no.jsp}
 						]]>
             </print>
-            <report id="report1" extends="t_apply_list_detail.report1"   template="relative{/template/dataexport/admis.html}"/>
+            <report id="report1" extends="t_apply_list_detail.report1"   template="/template/dataexport/test_no.jsp"/>
         </vpanel>
     </page>
 
