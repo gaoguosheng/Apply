@@ -23,8 +23,8 @@
 <table width="700px" border="0" cellpadding="5" cellspacing="1" class="thinTable">
     <tr>
         <td colspan="8" align="center" valign="middle" style="height:50px;text-align: center">
-            <%=DateUtil.getDatebyFormat("yyyy")%>年度福建省药学（非临床）专业初中级技术职务任职资格考试
-            <h3 align="center">准 考 证</h3>
+            <h3><%=DateUtil.getDatebyFormat("yyyy")%>年度福建省药学（非临床）专业初中级技术职务任职资格考试</h3>
+            <h2 align="center">准 考 证</h2>
         </td>
     </tr>
 </table>

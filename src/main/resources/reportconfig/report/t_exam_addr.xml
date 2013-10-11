@@ -6,10 +6,10 @@
     <report id="report1"  extends="t_exam_site_list.report1" type="list" title="考场列表">
     </report>
 
-    <report id="report2"  extends="basePage.editList2" title="考点管理" depends="report1" dependsparams="siteid=@{id}" pagesize="10" rowselect="single|true">
+    <report id="report2"  type="editablelist2" title="考点管理" depends="report1" dependsparams="siteid=@{id}" pagesize="10" rowselect="single|true">
         <buttons>
             <button  autoreportdata="false" name="btn_create_site_rooms"  class="com.wabacus.system.buttons.ServerSQLActionButton" position="title"
-                     confirmessage="是否按照考点考室数量(重新)生成考室？" label="生成考室" styleproperty="class='cls-button2'"  successprompt="操作成功" failedprompt="操作失败">
+                     confirmessage="是否按照考点考室数量及默认考室人数(重新)生成考室？" label="生成考室" styleproperty="class='cls-button2'"  successprompt="操作成功" failedprompt="操作失败">
                 call p_create_site_rooms;
             </button>
         </buttons>
@@ -21,6 +21,7 @@
             <col column="name" label="考点名称"/>
             <col column="address" label="考点地址"/>
             <col column="roomcount" label="考室数量"/>
+            <col column="def_maxuser" label="考室默认容纳人数" defaultvalue="30"/>
             <col column="remark" label="备注"/>
         </display>
         <sql>
@@ -33,16 +34,20 @@
             <insert>
                 <![CDATA[
       insert into t_exam_addr(id=sequence{seq_t_exam_addr},
-@{code},@{name},@{remark},@{siteid},@{address},@{roomcount})
+@{code},@{name},@{remark},@{siteid},@{address},@{roomcount},@{def_maxuser})
       ]]>
             </insert>
             <update>
                 <![CDATA[
-      update t_exam_addr(@{code},@{name},@{remark},@{siteid},@{address},@{roomcount})
+      update t_exam_addr(@{code},@{name},@{remark},@{siteid},@{address},@{roomcount},@{def_maxuser})
       where id=@{id}
       ]]>
             </update>
-            <delete><![CDATA[delete from t_exam_addr where id=@{id}]]></delete>
+            <delete><![CDATA[
+                delete from t_exam_room_user where roomid in (select id from t_exam_room where addrid=@{id});
+                delete from t_exam_room where addrid=@{id};
+                delete from t_exam_addr where id=@{id};
+            ]]></delete>
         </sql>
     </report>
 </page>

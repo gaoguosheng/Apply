@@ -12,12 +12,11 @@
     .thinTable { background-color:black; font-size:9pt; }
     .thinTable tr{ background-color:white;line-height: 23px;}
 </style>
-<h3 align="center">${cur_year}年度药学（非临床）专业初中级技术职务任职资格考试座次表</h3>
-<p align="center">
-    （ <u>&nbsp;${addr_name}&nbsp;</u>考区<u>&nbsp;${site_name}&nbsp;</u>考点，第<u>&nbsp;${room_name}&nbsp;</u>考室 ） </p>
+
 <%
     ReportRequest rrequest=(ReportRequest)request.getAttribute("WX_REPORTREQUEST");
     int size=rrequest.getReportDataListSize("report1");
+    System.out.println("size:"+size);
     int pagesize=5;
     if(size>0)
     {
@@ -26,8 +25,10 @@
         //循环三次
 
 %>
-
-
+<br/>
+<h2 align="center">${cur_year}年度药学（非临床）专业初中级技术职务任职资格考试<br/>座次表</h2>
+<h3 align="center">
+    （ <u>&nbsp;${addr_name}&nbsp;</u>考区<u>&nbsp;${site_name}&nbsp;</u>考点，第<u>&nbsp;${room_name}&nbsp;</u>考室 ） </h3>
 
 <table cellpadding="0" cellspacing="0" width="100%" border="0" class="thinTable" align="center">
     <%
@@ -58,7 +59,7 @@
         </table></td>
         <%
             if(i+pagesize<size){
-
+            System.out.println("i:"+i);
         %>
         <td><table width="100%" border="0" align="center" class="thinTable">
             <tr>
@@ -113,8 +114,7 @@
     </tr>
     <%}%>
 </table>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
+<p style="line-height: 80px;">&nbsp;</p>
 <%}
 }
 %>

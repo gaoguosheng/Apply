@@ -22,7 +22,7 @@
     if(size>0)
     {
 %>
-<table border="1" cellpadding="4" align="center"  width="980" class="thinTable">
+<table border="1" cellpadding="10" align="center"  width="980" class="thinTable">
     <tr>
         <td width="64"><p align="center">座号</p> </td>
         <td width="158"><p align="center">准考证号 </p></td>

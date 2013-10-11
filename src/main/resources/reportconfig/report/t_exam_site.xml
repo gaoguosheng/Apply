@@ -4,7 +4,7 @@
   xsi:schemaLocation="http://www.wabacus.com ../xsd/wabacus.applications.xsd">
 <!--考场考点管理-->
 <page id="t_exam_site_list">
-  <report id="report1"  extends="basePage.editList2" title="考场管理" rowselect="single|true" pagesize="5">
+  <report id="report1"  type="editablelist2" title="考场管理" rowselect="single|true" pagesize="5">
     <display>
       <col column="{sequence:1}" label="序号" />
       <col column="id" displaytype="hidden"/>
@@ -15,7 +15,7 @@
                 <option source="@{select * from t_city}" label="name" value="id"></option>
             </inputbox>
         </col>
-        <col column="maxuser" label="容纳人数"/>
+        <col column="maxuser" label="容纳人数(该考场所有考室)"/>
       <col column="remark" label="备注"/>
     </display>
     <sql>
@@ -34,7 +34,13 @@
       where id=@{id}
       ]]>
       </update>
-      <delete><![CDATA[delete from t_exam_site where id=@{id}]]></delete>
+      <delete><![CDATA[
+        delete from t_exam_room_user where roomid in (select id from t_exam_room where siteid=@{id});
+        delete from t_exam_site_city where siteid=@{id};
+        delete from t_exam_addr where siteid=@{id};
+        delete from t_exam_room where siteid=@{id};
+        delete from t_exam_site where id=@{id};
+      ]]></delete>
     </sql>
      <format>
          <imports>
@@ -55,7 +61,7 @@
  <!--考场考生情况查询-->
 <page id="t_exam_site_stu_list">    
     <report id="report1" type="list"
-            dataexport="richexcel"  title="考场考生情况查询">
+            dataexport="richexcel"  title="考生分配及查询">
         <print type="lodop" preview="true"/>
 
         <buttons>
@@ -339,8 +345,10 @@
     <page id="room_door_list">
 
         <report id="report1" type="list"
-                dataexport="word"  title="考场门口表">
-
+                dataexport="word"  title="考场门口表" pagesize="30">
+            <print type="lodop" preview="true" printpagesize="2,2100,2970,''">
+                <![CDATA[jsp{/template/dataexport/room_door.jsp}]]>
+            </print>
             <dataexports>
                 <dataexport  type="word" filename="考场门口表"  template="/template/dataexport/room_door.jsp"></dataexport>
             </dataexports>
@@ -379,18 +387,21 @@
                     </value>
                     <condition name="siteid" label="考场" labelposition="left">
                         <inputbox type="selectbox">
+                            <option value="" label="全部"></option>
                             <option source="@{select * from t_exam_site}" label="name" value="id"></option>
                         </inputbox>
                         <value><![CDATA[siteid=#data# ]]></value>
                     </condition>
                     <condition name="addrid" label="考点" labelposition="left">
                         <inputbox type="selectbox"  depends="siteid">
+                            <option value="" label="全部"></option>
                             <option source="@{select * from t_exam_addr where to_char(siteid)='#[siteid]#'}" label="name" value="id"></option>
                         </inputbox>
                         <value><![CDATA[addrid=#data# ]]></value>
                     </condition>
                     <condition name="roomid" label="考室" labelposition="left">
                         <inputbox type="selectbox"  depends="addrid">
+                            <option value="" label="全部"></option>
                             <option source="@{select * from t_exam_room where to_char(addrid)='#addrid#'}" label="name" value="id"></option>
                         </inputbox>
                         <value><![CDATA[roomid=#data# ]]></value>
@@ -405,7 +416,10 @@
     <page id="room_seat_list">
 
         <report id="report1" type="list"
-                dataexport="word"  title="座次表" pagesize="10">
+                dataexport="word"  title="座次表" pagesize="30">
+            <print type="lodop" preview="true">
+                <![CDATA[jsp{/template/dataexport/room_seat.jsp}]]>
+            </print>
             <dataexports>
                 <dataexport  type="word" filename="座次表"  template="/template/dataexport/room_seat.jsp"></dataexport>
             </dataexports>
@@ -446,18 +460,21 @@
                     </value>
                     <condition name="siteid" label="考场" labelposition="left">
                         <inputbox type="selectbox">
+                            <option value="" label="全部"></option>
                             <option source="@{select * from t_exam_site}" label="name" value="id"></option>
                         </inputbox>
                         <value><![CDATA[siteid=#data# ]]></value>
                     </condition>
                     <condition name="addrid" label="考点" labelposition="left">
                         <inputbox type="selectbox"  depends="siteid">
+                            <option value="" label="全部"></option>
                             <option source="@{select * from t_exam_addr where to_char(siteid)='#[siteid]#'}" label="name" value="id"></option>
                         </inputbox>
                         <value><![CDATA[addrid=#data# ]]></value>
                     </condition>
                     <condition name="roomid" label="考室" labelposition="left">
                         <inputbox type="selectbox"  depends="addrid">
+                            <option value="" label="全部"></option>
                             <option source="@{select * from t_exam_room where to_char(addrid)='#addrid#'}" label="name" value="id"></option>
                         </inputbox>
                         <value><![CDATA[roomid=#data# ]]></value>

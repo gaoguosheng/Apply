@@ -3,7 +3,7 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.wabacus.com ../xsd/wabacus.applications.xsd">
 <page id="t_exam_room_list">
-  <report id="report1"  extends="basePage.editList2" title="考室管理">
+  <report id="report1"  type="editablelist2" title="考室管理">
     <display>
       <col column="{sequence:1}" label="序号" />
       <col column="id" displaytype="hidden"/>
@@ -59,7 +59,10 @@
       where id=@{id}
       ]]>
       </update>
-      <delete><![CDATA[delete from t_exam_room where id=@{id}]]></delete>
+      <delete><![CDATA[
+        delete from t_exam_room_user where roomid =@{id};
+        delete from t_exam_room where id=@{id};
+      ]]></delete>
     </sql>
       <format>
           <imports>
