@@ -270,7 +270,7 @@ public class DataDao {
      * 通过报名id获取考场考点
      * */
     public static Map getExamSite(String applyid){
-        return dbUtil.queryForMap("select room_name,addr_name,site_name,seatnum from V_EXAM_SITE_STU t  where applyid="+applyid);
+        return dbUtil.queryForMap("select room_name,addr_name,site_name,seatnum,address from V_EXAM_SITE_STU t  where applyid="+applyid);
     }
 
 }

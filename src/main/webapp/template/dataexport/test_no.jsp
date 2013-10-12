@@ -102,20 +102,20 @@
     </tr>
     <tr>
         <td align="center">所在考场</td>
-        <td align="center" colspan="5"><%=siteAddr.get("site_name")%> <%=siteAddr.get("addr_name")%></td>
+        <td align="center" colspan="5"><%=siteAddr.get("room_name")%> 第<%=siteAddr.get("seatnum")%>座位</td>
     </tr>
     <tr>
         <td align="center">考试地点</td>
-        <td align="center" colspan="5"> <%=siteAddr.get("room_name")%> 第<%=siteAddr.get("seatnum")%>座位</td>
+        <td align="center" colspan="5"> <%=siteAddr.get("site_name")%> <%=siteAddr.get("addr_name")%>(<%=siteAddr.get("address")%>)</td>
     </tr>
-
 </table>
+<p>&nbsp;</p>
 <table width="700px" border="0" cellpadding="5" cellspacing="1" class="thinTable">
     <tr>
         <td colspan="8" align="left" valign="middle"><h3 align="center">考 生 须 知</h3>
             <p>1、考生应提前半天熟悉考场，以免考试当天找不到考场或找错考场； <br>
                 2、考生必须带齐准考证、身份证，方可进入考场；未带证件或证件不齐、不符者，不得入场； <br>
-                3、考试一律用2B铅笔在答题卡上填涂作答。考生自备2B铅笔、橡皮、黑色、蓝色墨水笔（签字笔）或圆珠笔； <br>
+                3、考试一律用2B铅笔在答题卡上填涂作答。考生自备2B铅笔、橡皮、黑色墨水笔（签字笔）； <br>
                 4、禁止将移动电话、电子记事本、计算器等带有记忆、运算或通讯功能的电子设备带至座位； <br>
                 5、考试开始30分钟后，不得入场；考试期间不得在开考后60分钟内提前交卷退场； <br>
                 6、严禁将答题卡、题本、试卷、草稿纸等带出考场； <br>

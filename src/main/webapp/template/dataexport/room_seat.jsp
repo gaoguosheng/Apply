@@ -28,7 +28,7 @@
 <br/>
 <h2 align="center">${cur_year}年度药学（非临床）专业初中级技术职务任职资格考试<br/>座次表</h2>
 <h3 align="center">
-    （ <u>&nbsp;${addr_name}&nbsp;</u>考区<u>&nbsp;${site_name}&nbsp;</u>考点，第<u>&nbsp;${room_name}&nbsp;</u>考室 ） </h3>
+    （ <u>&nbsp;${addr_name}&nbsp;</u>考区<u>&nbsp;${site_name}&nbsp;</u>考点，第<u>&nbsp;${room_name}&nbsp;</u>考场 ） </h3>
 
 <table cellpadding="0" cellspacing="0" width="100%" border="0" class="thinTable" align="center">
     <%
@@ -39,7 +39,7 @@
         <td width="50%"><table width="100%" border="0" align="center" class="thinTable">
             <tr>
                 <td>姓名：<%=rrequest.getColDisplayValue("report1","name",i) %></td>
-                <td rowspan="6" align="center" style="width:100px;height:120px;"><img src="<%=rrequest.getColDisplayValue("report1","photo",i) %>" style="width:100px;height:120px;" /></td>
+                <td rowspan="6" align="center" style="width:100px;height:120px;"><%=rrequest.getColDisplayValue("report1","photo",i) %></td>
             </tr>
             <tr>
                 <td>身份证号：<%=rrequest.getColDisplayValue("report1","idcard",i) %></td>
@@ -64,7 +64,7 @@
         <td><table width="100%" border="0" align="center" class="thinTable">
             <tr>
                 <td>姓名：<%=rrequest.getColDisplayValue("report1","name",i+pagesize) %></td>
-                <td rowspan="6" align="center" style="width:100px;height:120px;"><img src="<%=rrequest.getColDisplayValue("report1","photo",i) %>" style="width:100px;height:120px;"/></td>
+                <td rowspan="6" align="center" style="width:100px;height:120px;"><%=rrequest.getColDisplayValue("report1","photo",i+pagesize) %></td>
             </tr>
             <tr>
                 <td>身份证号：<%=rrequest.getColDisplayValue("report1","idcard",i+pagesize) %></td>

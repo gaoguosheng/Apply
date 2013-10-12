@@ -14,7 +14,7 @@
 </style>
 <h3 align="center">${cur_year}年度药学（非临床）专业初中级技术职务任职资格考试</h3>
 <p align="center">
-    （ <u>&nbsp;&nbsp;${addr_name}&nbsp;&nbsp;</u>考区<u>&nbsp;&nbsp;${site_name}&nbsp;&nbsp;</u>考点，第<u>&nbsp;${room_name}&nbsp;</u>考室 ） </p>
+    （ <u>&nbsp;&nbsp;${addr_name}&nbsp;&nbsp;</u>考区<u>&nbsp;&nbsp;${site_name}&nbsp;&nbsp;</u>考点，第<u>&nbsp;${room_name}&nbsp;</u>考场  ） </p>
 <%
     ReportRequest rrequest=(ReportRequest)request.getAttribute("WX_REPORTREQUEST");
     int size=rrequest.getReportDataListSize("report1");

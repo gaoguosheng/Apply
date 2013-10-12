@@ -3,7 +3,7 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.wabacus.com ../xsd/wabacus.applications.xsd">
 <page id="t_exam_addr_list">
-    <report id="report1"  extends="t_exam_site_list.report1" type="list" title="考场列表">
+    <report id="report1"  extends="t_exam_site_list.report1" type="list" title="考区列表">
     </report>
 
     <report id="report2"  type="editablelist2" title="考点管理" depends="report1" dependsparams="siteid=@{id}" pagesize="10" rowselect="single|true">
@@ -17,11 +17,21 @@
             <col column="{sequence:1}" label="序号" />
             <col column="id" displaytype="hidden"/>
             <col column="siteid" displaytype="hidden" defaultvalue="url{siteid}"/>
-            <col column="code" label="代码"/>
-            <col column="name" label="考点名称"/>
-            <col column="address" label="考点地址"/>
-            <col column="roomcount" label="考室数量"/>
-            <col column="def_maxuser" label="考室默认容纳人数" defaultvalue="30"/>
+            <col column="code" label="代码">
+                <inputbox jsvalidate="isNotEmpty(#label#不允许为空)"></inputbox>
+            </col>
+            <col column="name" label="考点名称">
+                <inputbox jsvalidate="isNotEmpty(#label#不允许为空)"></inputbox>
+            </col>
+            <col column="address" label="考点地址">
+                <inputbox jsvalidate="isNotEmpty(#label#不允许为空)"></inputbox>
+            </col>
+            <col column="roomcount" label="考室数量">
+                <inputbox jsvalidate="isNotEmpty(#label#不允许为空)"></inputbox>
+            </col>
+            <col column="def_maxuser" label="考室默认容纳人数" defaultvalue="30">
+                <inputbox jsvalidate="isNotEmpty(#label#不允许为空)"></inputbox>
+            </col>
             <col column="remark" label="备注"/>
         </display>
         <sql>

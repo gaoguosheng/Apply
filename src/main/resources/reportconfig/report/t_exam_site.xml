@@ -2,20 +2,25 @@
 <applications xmlns="http://www.wabacus.com"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.wabacus.com ../xsd/wabacus.applications.xsd">
-<!--考场考点管理-->
+<!--考区考点管理-->
 <page id="t_exam_site_list">
-  <report id="report1"  type="editablelist2" title="考场管理" rowselect="single|true" pagesize="5">
+  <report id="report1"  type="editablelist2" title="考区管理" rowselect="single|true" pagesize="5">
     <display>
       <col column="{sequence:1}" label="序号" />
       <col column="id" displaytype="hidden"/>
-        <col column="code" label="代码"/>
-      <col column="name" label="考场名称"/>
+        <col column="code" label="代码">
+            <inputbox jsvalidate="isNotEmpty(#label#不允许为空)"></inputbox>
+        </col>
+      <col column="name" label="考场名称">
+          <inputbox jsvalidate="isNotEmpty(#label#不允许为空)"></inputbox>
+        </col>
         <col column="cityid" label="考场城市">
             <inputbox type="selectbox">
                 <option source="@{select * from t_city}" label="name" value="id"></option>
             </inputbox>
         </col>
-        <col column="maxuser" label="容纳人数(该考场所有考室)"/>
+        <col column="maxuser" label="容纳人数"/>
+        <col column="hasuser" label="已分配人数"/>
       <col column="remark" label="备注"/>
     </display>
     <sql>
@@ -54,6 +59,7 @@
      </format>
   </report>
     <report id="report2"  extends="t_exam_addr_list.report2" depends="report1" dependsparams="siteid=@{id}" type="list" title="考点列表">
+        <buttons></buttons>
     </report>
 
 </page>
@@ -156,6 +162,7 @@
 
                  <col column="name" label="考室"/>
                  <col column="maxuser" label="容纳人数"/>
+                 <col column="hasuser" label="已分配人数"/>
                  <col column="remark" label="备注"/>
              </display>
              <sql>
