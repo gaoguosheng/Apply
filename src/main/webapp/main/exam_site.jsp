@@ -160,13 +160,13 @@
     <table cellpadding="5">
         <tr>
             <td width="200" valign="top">
-                <div>考场：</div>
+                <div>考区：</div>
                 <div id="siteTreeDiv" class="zTreeDemoBackground left" style="overflow: auto;border:#BDDFFF solid 1px;">
                     <ul id="siteTree" class="ztree"></ul>
                 </div>
             </td>
             <td width="200"  valign="top">
-                <div>地市、考试等级：</div>
+                <div>地市、考试级别：</div>
                 <div id="cityTreeDiv" class="zTreeDemoBackground left" style="overflow: auto;border:#BDDFFF solid 1px;">
                     <ul id="cityTree" class="ztree"></ul>
                 </div>

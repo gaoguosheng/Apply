@@ -4,17 +4,17 @@
   xsi:schemaLocation="http://www.wabacus.com ../xsd/wabacus.applications.xsd">
 <!--考区考点管理-->
 <page id="t_exam_site_list">
-  <report id="report1"  type="editablelist2" title="考区管理" rowselect="single|true" pagesize="5">
+  <report id="report1"  extends="basePage.editList2" title="考区管理" rowselect="single|true" pagesize="5">
     <display>
       <col column="{sequence:1}" label="序号" />
       <col column="id" displaytype="hidden"/>
         <col column="code" label="代码">
             <inputbox jsvalidate="isNotEmpty(#label#不允许为空)"></inputbox>
         </col>
-      <col column="name" label="考场名称">
+      <col column="name" label="名称">
           <inputbox jsvalidate="isNotEmpty(#label#不允许为空)"></inputbox>
         </col>
-        <col column="cityid" label="考场城市">
+        <col column="cityid" label="城市">
             <inputbox type="selectbox">
                 <option source="@{select * from t_city}" label="name" value="id"></option>
             </inputbox>
@@ -60,6 +60,7 @@
   </report>
     <report id="report2"  extends="t_exam_addr_list.report2" depends="report1" dependsparams="siteid=@{id}" type="list" title="考点列表">
         <buttons></buttons>
+        <interceptor></interceptor>
     </report>
 
 </page>
@@ -76,7 +77,7 @@
                     call p_create_test_no;
             </button>
             <button  autoreportdata="false" name="btn_random_room_users"  class="com.wabacus.system.buttons.ServerSQLActionButton" position="title"
-                     confirmessage="是否(重新)随机分配考室？" label="分配考室" styleproperty="class='cls-button2'"  successprompt="操作成功" failedprompt="操作失败">
+                     confirmessage="是否(重新)一键随机分配考场？" label="分配考场" styleproperty="class='cls-button2'"  successprompt="操作成功" failedprompt="操作失败">
                 call p_random_room_users;
             </button>
         </buttons>
@@ -84,9 +85,9 @@
         <display>
             <col column="{sequence:1}" label="序号" width="40" />
 
-            <col column="site_name" label="考场"/>
+            <col column="site_name" label="考区"/>
             <col column="addr_name" label="考点"/>
-            <col column="room_name" label="考室"/>
+            <col column="room_name" label="考场"/>
             <col column="seatnum" label="座号"/>
             <col column="name" label="姓名"/>
             <col column="sex" label="性别"/>
@@ -105,7 +106,7 @@
                             select * from v_exam_site_stu where {#condition#}   order by siteid,addrid,roomid,seatnum
                             ]]>
                 </value>
-                <condition name="siteid" label="考场" labelposition="left">
+                <condition name="siteid" label="考区" labelposition="left">
                     <inputbox type="selectbox">
                         <option value="" label="全部"></option>
                         <option source="@{select * from t_exam_site}" label="name" value="id"></option>
@@ -119,7 +120,7 @@
                     </inputbox>
                     <value><![CDATA[addrid=#data# ]]></value>
                 </condition>
-                <condition name="roomid" label="考室" labelposition="left">
+                <condition name="roomid" label="考场" labelposition="left">
                     <inputbox type="selectbox"  depends="addrid">
                         <option value="" label="全部"></option>
                         <option source="@{select * from t_exam_room where to_char(addrid)='#addrid#'}" label="name" value="id"></option>
@@ -145,11 +146,11 @@
 
      <vpanel id="vp1" parenttitle="主从报表一">
 
-         <report id="report1"  type="list" title="考室列表" pagesize="5">
+         <report id="report1"  type="list" title="考场列表" pagesize="5">
              <display>
                  <col column="{sequence:1}" label="序号" />
                  <col column="id" displaytype="hidden"/>
-                 <col column="siteid" label="考场">
+                 <col column="siteid" label="考区">
                      <inputbox type="selectbox">
                          <option source="@{select * from t_exam_site}" label="name" value="id"></option>
                      </inputbox>
@@ -160,7 +161,7 @@
                      </inputbox>
                  </col>
 
-                 <col column="name" label="考室"/>
+                 <col column="name" label="考场"/>
                  <col column="maxuser" label="容纳人数"/>
                  <col column="hasuser" label="已分配人数"/>
                  <col column="remark" label="备注"/>
@@ -168,7 +169,7 @@
              <sql>
                  <select>
                      <value><![CDATA[      select * from v_exam_room  where {#condition#}   order by siteid,addrid,id     ]]></value>
-                     <condition name="siteid" label="考场" labelposition="left">
+                     <condition name="siteid" label="考区" labelposition="left">
                          <inputbox type="selectbox">
                              <option value="" label="全部"></option>
                              <option source="@{select * from t_exam_site}" label="name" value="id"></option>
@@ -182,7 +183,7 @@
                          </inputbox>
                          <value><![CDATA[addrid=#data# ]]></value>
                      </condition>
-                     <condition name="id" label="考室" labelposition="left">
+                     <condition name="id" label="考场" labelposition="left">
                          <inputbox type="selectbox"  depends="addrid">
                              <option value="" label="全部"></option>
                              <option source="@{select * from t_exam_room where to_char(addrid)='#addrid#'}" label="name" value="id"></option>
@@ -251,11 +252,11 @@
 
         <vpanel id="vp1" parenttitle="主从报表一">
 
-            <report id="report1"  type="list" title="可用考室列表" pagesize="5">
+            <report id="report1"  type="list" title="可用考场列表" pagesize="5">
                 <display>
                     <col column="{sequence:1}" label="序号" />
                     <col column="id" displaytype="hidden"/>
-                    <col column="siteid" label="考场">
+                    <col column="siteid" label="考区">
                         <inputbox type="selectbox">
                             <option source="@{select * from t_exam_site}" label="name" value="id"></option>
                         </inputbox>
@@ -265,14 +266,14 @@
                             <option source="@{select * from t_exam_addr where siteid=#siteid#}" label="name" value="id"></option>
                         </inputbox>
                     </col>
-                    <col column="name" label="考室"/>
+                    <col column="name" label="考场"/>
                     <col column="remaincount" label="可再容纳人数"/>
                     <col column="remark" label="备注"/>
                 </display>
                 <sql>
                     <select>
                         <value><![CDATA[      select * from V_USED_EXAM_ROOM     where {#condition#}   order by siteid,addrid,id   ]]></value>
-                        <condition name="siteid" label="考场" labelposition="left">
+                        <condition name="siteid" label="考区" labelposition="left">
                             <inputbox type="selectbox">
                                 <option value="" label="全部"></option>
                                 <option source="@{select * from t_exam_site}" label="name" value="id"></option>
@@ -286,7 +287,7 @@
                             </inputbox>
                             <value><![CDATA[addrid=#data# ]]></value>
                         </condition>
-                        <condition name="id" label="考室" labelposition="left">
+                        <condition name="id" label="考场" labelposition="left">
                             <inputbox type="selectbox"  depends="addrid">
                                 <option value="" label="全部"></option>
                                 <option source="@{select * from t_exam_room where to_char(addrid)='#addrid#'}" label="name" value="id"></option>
@@ -311,7 +312,7 @@
             <report id="report2" type="editablelist" title="未分配考生管理" depends="report1"
                     dependsparams="roomid=@{id}" rowselect="checkbox" pagesize="30">
                 <buttons>
-                    <button name="btn_add_romm_user" label="分配该考室" class="com.wabacus.system.buttons.ServerSQLActionButton"
+                    <button name="btn_add_romm_user" label="分配该考场" class="com.wabacus.system.buttons.ServerSQLActionButton"
                             position="title" confirmessage="是否确认将所有选中考生分配该考室？"
                             successprompt="操作成功" failedprompt="操作失败"  styleproperty="class='cls-button2'">
                         <![CDATA[
@@ -359,25 +360,6 @@
             <dataexports>
                 <dataexport  type="word" filename="考场门口表"  template="/template/dataexport/room_door.jsp"></dataexport>
             </dataexports>
-            <interceptor>
-                <imports>
-                    <import>com.ggs.dao.DataDao</import>
-                    <import>com.ggs.util.DateUtil</import>
-                </imports>
-                <preaction>
-                    String siteid=rrequest.getStringAttribute("siteid","");
-                    String addrid=rrequest.getStringAttribute("addrid","");
-                    String roomid=rrequest.getStringAttribute("roomid","");
-                    String site_name=DataDao.getExamSiteName(siteid);
-                    String addr_name=DataDao.getExamAddrName(addrid);
-                    String room_name=DataDao.getExamRoomName(roomid);
-                    String cur_year=DateUtil.getDatebyFormat("yyyy");
-                    rrequest.getRequest().setAttribute("site_name",site_name);
-                    rrequest.getRequest().setAttribute("addr_name",addr_name);
-                    rrequest.getRequest().setAttribute("room_name",room_name);
-                    rrequest.getRequest().setAttribute("cur_year",cur_year);
-                </preaction>
-            </interceptor>
             <display>
                 <col column="seatnum" label="座号"/>
                 <col column="test_no" label="准考证号" valuestyleproperty="style='mso-number-format:\@' "/>
@@ -392,7 +374,7 @@
                             select * from v_exam_site_stu where {#condition#}   order by siteid,addrid,roomid,seatnum
                             ]]>
                     </value>
-                    <condition name="siteid" label="考场" labelposition="left">
+                    <condition name="siteid" label="考区" labelposition="left">
                         <inputbox type="selectbox">
                             <option value="" label="全部"></option>
                             <option source="@{select * from t_exam_site}" label="name" value="id"></option>
@@ -406,7 +388,7 @@
                         </inputbox>
                         <value><![CDATA[addrid=#data# ]]></value>
                     </condition>
-                    <condition name="roomid" label="考室" labelposition="left">
+                    <condition name="roomid" label="考场" labelposition="left">
                         <inputbox type="selectbox"  depends="addrid">
                             <option value="" label="全部"></option>
                             <option source="@{select * from t_exam_room where to_char(addrid)='#addrid#'}" label="name" value="id"></option>
@@ -430,25 +412,6 @@
             <dataexports>
                 <dataexport  type="word" filename="座次表"  template="/template/dataexport/room_seat.jsp"></dataexport>
             </dataexports>
-            <interceptor>
-                <imports>
-                    <import>com.ggs.dao.DataDao</import>
-                    <import>com.ggs.util.DateUtil</import>
-                </imports>
-                <preaction>
-                    String siteid=rrequest.getStringAttribute("siteid","");
-                    String addrid=rrequest.getStringAttribute("addrid","");
-                    String roomid=rrequest.getStringAttribute("roomid","");
-                    String site_name=DataDao.getExamSiteName(siteid);
-                    String addr_name=DataDao.getExamAddrName(addrid);
-                    String room_name=DataDao.getExamRoomName(roomid);
-                    String cur_year=DateUtil.getDatebyFormat("yyyy");
-                    rrequest.getRequest().setAttribute("site_name",site_name);
-                    rrequest.getRequest().setAttribute("addr_name",addr_name);
-                    rrequest.getRequest().setAttribute("room_name",room_name);
-                    rrequest.getRequest().setAttribute("cur_year",cur_year);
-                </preaction>
-            </interceptor>
             <display>
                 <col column="seatnum" label="座号"/>
                 <col column="name" label="姓名"/>
@@ -465,7 +428,7 @@
                             select * from v_exam_site_stu where {#condition#}   order by siteid,addrid,roomid,seatnum
                             ]]>
                     </value>
-                    <condition name="siteid" label="考场" labelposition="left">
+                    <condition name="siteid" label="考区" labelposition="left">
                         <inputbox type="selectbox">
                             <option value="" label="全部"></option>
                             <option source="@{select * from t_exam_site}" label="name" value="id"></option>
@@ -479,7 +442,7 @@
                         </inputbox>
                         <value><![CDATA[addrid=#data# ]]></value>
                     </condition>
-                    <condition name="roomid" label="考室" labelposition="left">
+                    <condition name="roomid" label="考场" labelposition="left">
                         <inputbox type="selectbox"  depends="addrid">
                             <option value="" label="全部"></option>
                             <option source="@{select * from t_exam_room where to_char(addrid)='#addrid#'}" label="name" value="id"></option>

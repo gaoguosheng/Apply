@@ -3,11 +3,11 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.wabacus.com ../xsd/wabacus.applications.xsd">
 <page id="t_exam_room_list">
-  <report id="report1"  type="editablelist2" title="考室管理">
+  <report id="report1" extends="basePage.editList2" title="考场管理">
     <display>
       <col column="{sequence:1}" label="序号" />
       <col column="id" displaytype="hidden"/>
-        <col column="siteid" label="考场">
+        <col column="siteid" label="考区">
             <inputbox type="selectbox">
                 <option source="@{select * from t_exam_site}" label="name" value="id"></option>
             </inputbox>
@@ -26,12 +26,13 @@
         <col column="maxuser" label="容纳人数">
             <inputbox jsvalidate="isNotEmpty(#label#不允许为空)"></inputbox>
         </col>
+        <col column="hasuser" label="已分配人数"/>
       <col column="remark" label="备注"/>
     </display>
     <sql>
       <select>
-      <value><![CDATA[      select * from t_exam_room  where {#condition#}     ]]></value>
-          <condition name="siteid" label="考场" labelposition="left">
+      <value><![CDATA[      select * from V_EXAM_ROOM  where {#condition#}     ]]></value>
+          <condition name="siteid" label="考区" labelposition="left">
               <inputbox type="selectbox">
                   <option value="" label="全部"></option>
                   <option source="@{select * from t_exam_site}" label="name" value="id"></option>
@@ -45,7 +46,7 @@
               </inputbox>
               <value><![CDATA[addrid=#data# ]]></value>
           </condition>
-          <condition name="id" label="考室" labelposition="left">
+          <condition name="id" label="考场" labelposition="left">
               <inputbox type="selectbox"  depends="addrid">
                   <option value="" label="全部"></option>
                   <option source="@{select * from t_exam_room where to_char(addrid)='#addrid#'}" label="name" value="id"></option>

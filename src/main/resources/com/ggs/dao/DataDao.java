@@ -273,4 +273,29 @@ public class DataDao {
         return dbUtil.queryForMap("select room_name,addr_name,site_name,seatnum,address from V_EXAM_SITE_STU t  where applyid="+applyid);
     }
 
+    /**
+     * 通过roomid获取考场考生列表
+     * */
+
+    public static List getRoomUserList(String roomid){
+        return dbUtil.queryForList("select * from V_EXAM_SITE_STU where roomid="+roomid+" order by seatnum");
+    }
+
+    /**
+     * 通过考区id、考点id获取所有考场列表
+     * */
+    public static List getRoomList(String siteid,String addrid,String roomid){
+        String sql ="select * from V_EXAM_ROOM where 1=1";
+        if(siteid!=null && siteid.trim().length()>0){
+            sql+=" and siteid="+siteid;
+        }
+        if(addrid!=null && addrid.trim().length()>0){
+            sql+=" and addrid="+addrid;
+        }
+        if(roomid!=null && roomid.trim().length()>0){
+            sql+=" and id="+roomid;
+        }
+        return  dbUtil.queryForList(sql);
+    }
+
 }

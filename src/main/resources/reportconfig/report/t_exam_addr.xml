@@ -4,12 +4,13 @@
   xsi:schemaLocation="http://www.wabacus.com ../xsd/wabacus.applications.xsd">
 <page id="t_exam_addr_list">
     <report id="report1"  extends="t_exam_site_list.report1" type="list" title="考区列表">
+        <interceptor></interceptor>
     </report>
 
-    <report id="report2"  type="editablelist2" title="考点管理" depends="report1" dependsparams="siteid=@{id}" pagesize="10" rowselect="single|true">
+    <report id="report2"  extends="basePage.editList2" title="考点管理" depends="report1" dependsparams="siteid=@{id}" pagesize="10" rowselect="single|true">
         <buttons>
             <button  autoreportdata="false" name="btn_create_site_rooms"  class="com.wabacus.system.buttons.ServerSQLActionButton" position="title"
-                     confirmessage="是否按照考点考室数量及默认考室人数(重新)生成考室？" label="生成考室" styleproperty="class='cls-button2'"  successprompt="操作成功" failedprompt="操作失败">
+                     confirmessage="是否按照考场数量及默认考场人数(重新)批量生成考场？" label="生成考场" styleproperty="class='cls-button2'"  successprompt="操作成功" failedprompt="操作失败">
                 call p_create_site_rooms;
             </button>
         </buttons>
@@ -20,16 +21,16 @@
             <col column="code" label="代码">
                 <inputbox jsvalidate="isNotEmpty(#label#不允许为空)"></inputbox>
             </col>
-            <col column="name" label="考点名称">
+            <col column="name" label="名称">
                 <inputbox jsvalidate="isNotEmpty(#label#不允许为空)"></inputbox>
             </col>
             <col column="address" label="考点地址">
                 <inputbox jsvalidate="isNotEmpty(#label#不允许为空)"></inputbox>
             </col>
-            <col column="roomcount" label="考室数量">
+            <col column="roomcount" label="考场数量">
                 <inputbox jsvalidate="isNotEmpty(#label#不允许为空)"></inputbox>
             </col>
-            <col column="def_maxuser" label="考室默认容纳人数" defaultvalue="30">
+            <col column="def_maxuser" label="考场默认容纳人数" defaultvalue="30">
                 <inputbox jsvalidate="isNotEmpty(#label#不允许为空)"></inputbox>
             </col>
             <col column="remark" label="备注"/>
