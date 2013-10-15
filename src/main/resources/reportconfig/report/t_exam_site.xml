@@ -337,6 +337,7 @@
                         <value>
                             <![CDATA[
                             select * from V_NO_ROOM_USER where {#condition#}
+                            order by test_level,tech_name,spec_class
                             ]]>
                         </value>
                         <condition name="roomid" hidden="true">

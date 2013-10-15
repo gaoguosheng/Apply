@@ -29,15 +29,15 @@
     </tr>
 </table>
 <%!
-    List getExamDateTime(){
-          return DataDao.getExamDateTime();
+    List getExamDateTime(String applyid){
+          return DataDao.getExamDateTime(applyid);
     }
     Map getExamSite(String applyid){
         return DataDao.getExamSite(applyid);
     }
 %>
 <%
-    List<Map<String,String>> examDateList = getExamDateTime();
+    List<Map<String,String>> examDateList = getExamDateTime(request.getParameter("id"));
     Map<String,String>siteAddr = getExamSite(request.getParameter("id"));
     ReportRequest rrequest=(ReportRequest)request.getAttribute("WX_REPORTREQUEST");
     int size=rrequest.getReportDataListSize("report1");
@@ -59,7 +59,7 @@
     </tr>
     <tr>
         <td align="right">报考级别：</td>
-        <td align="center"><%=rrequest.getColDisplayValue("report1","test_level",0) %></td>
+        <td align="center"><%=rrequest.getColDisplayValue("report1","test_level",0) %> <%=rrequest.getColDisplayValue("report1","tech_name",0) %></td>
         <td align="right">报考专业：</td>
         <td align="center"><%=rrequest.getColDisplayValue("report1","spec_class",0) %></td>
     </tr>
@@ -80,12 +80,10 @@
 <table width="700px" border="0" cellpadding="5" cellspacing="1" class="thinTable">
     <tr>
 
-        <td width="66" align="center">考试科目</td>
-        <td width="100" align="center">药事管理与法规</td>
-        <td width="100" align="center">(中)药学综合知识<br/>与技能</td>
-        <td width="100" align="center">（中）药学专业<br/>知识</td>
-        <td width="100" align="center">（中）药学专业<br/>知识一</td>
-        <td width="100" align="center">（中）药学专业<br/>知识二</td>
+        <td align="center">考试科目</td>
+        <%for (Map<String,String> item:examDateList){%>
+        <td align="center"><%=item.get("test_subject_name")%></td>
+        <%}%>
 
     </tr>
     <tr>
@@ -102,11 +100,11 @@
     </tr>
     <tr>
         <td align="center">所在考场</td>
-        <td align="center" colspan="5"><%=siteAddr.get("room_name")%> 第<%=siteAddr.get("seatnum")%>座位</td>
+        <td align="center" colspan="5">第<%=siteAddr.get("room_name")%>考场， 第<%=siteAddr.get("seatnum")%>座位</td>
     </tr>
     <tr>
         <td align="center">考试地点</td>
-        <td align="center" colspan="5"> <%=siteAddr.get("site_name")%> <%=siteAddr.get("addr_name")%>(<%=siteAddr.get("address")%>)</td>
+        <td align="center" colspan="5"> <%=siteAddr.get("site_name")%>考区 <%=siteAddr.get("addr_name")%>(<%=siteAddr.get("address")%>)</td>
     </tr>
 </table>
 <p>&nbsp;</p>

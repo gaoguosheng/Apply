@@ -262,8 +262,9 @@ public class DataDao {
      * 获取考试日期时间
      * */
 
-    public static List getExamDateTime(){
-        return dbUtil.queryForList("select distinct test_subject,f_getdata(test_subject)test_subject_name, test_date,test_time from t_TEST_RULE t");
+    public static List getExamDateTime(String applyid){
+        return dbUtil.queryForList("select distinct test_subject,f_getdata(test_subject)test_subject_name, test_date,test_time from t_TEST_RULE t " +
+                " where test_subject in (select test_subject_id from v_apply_subject where id=?)",applyid);
     }
 
     /***
