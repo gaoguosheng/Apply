@@ -64,6 +64,7 @@
                                 selectedMulti: true
                             },
                             check: {
+                                chkboxType : { "Y" : "s", "N" : "s" },
                                 enable: true
                             },
                             data: {
