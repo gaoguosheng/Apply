@@ -13,7 +13,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <style type="text/css">
     body{margin:0px; padding:0px;}
-    .thinTable { background-color:black; font-size:9pt; }
+    .thinTable { background-color:black; font-size:12pt; }
     .thinTable tr{ background-color:white;}
 </style>
 <%
@@ -24,7 +24,7 @@
 
 %>
 
-<h3 align="center"><%=curYear%>年度药学（非临床）专业初中级技术职务任职资格考试</h3>
+<h2 align="center"><%=curYear%>年度药学（非临床）专业初中级技术职务任职资格考试</h2>
 <p align="center">
     （ <u>&nbsp;&nbsp;<%=room.get("site_name")%>&nbsp;&nbsp;</u>考区<u>&nbsp;&nbsp;<%=room.get("addr_name")%>&nbsp;&nbsp;</u>考点，第<u>&nbsp;<%=room.get("name")%>&nbsp;</u>考场  ） </p>
 
@@ -33,7 +33,7 @@
     List<Map<String,String>> userList = DataDao.getRoomUserList(room.get("id"));
     int size =userList.size();
 %>
-<table border="1" cellpadding="10" align="center"  width="980" class="thinTable">
+<table border="1" cellpadding="8" align="center"  width="980" class="thinTable">
     <tr>
         <td ><p align="center">座号</p> </td>
         <td><p align="center">准考证号 </p></td>
@@ -99,7 +99,7 @@
         }
     %>
 </table>
-<p style="line-height: 7px;">&nbsp;</p>
+<p style="line-height: 3px;">&nbsp;</p>
 <%
     }
 

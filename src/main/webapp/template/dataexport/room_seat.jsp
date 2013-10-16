@@ -13,7 +13,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <style type="text/css">
     body{margin:0px; padding:0px;}
-    .thinTable { background-color:black; font-size:9pt; }
+    .thinTable { background-color:black; font-size:12pt; }
     .thinTable tr{ background-color:white;line-height: 23px;}
 </style>
 <%

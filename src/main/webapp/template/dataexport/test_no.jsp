@@ -17,7 +17,7 @@
 </head>
 <body>
 <style type="text/css">
-    .thinTable { background-color:black; font-size:10pt; line-height:27px;}
+    .thinTable { background-color:black; font-size:12pt; line-height:27px;}
     .thinTable tr{ background-color:white;}
 </style>
 <table width="700px" border="0" cellpadding="5" cellspacing="1" class="thinTable">
