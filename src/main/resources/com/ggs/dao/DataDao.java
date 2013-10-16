@@ -263,8 +263,12 @@ public class DataDao {
      * */
 
     public static List getExamDateTime(String applyid){
-        return dbUtil.queryForList("select distinct test_subject,f_getdata(test_subject)test_subject_name, test_date,test_time from t_TEST_RULE t " +
-                " where test_subject in (select test_subject_id from v_apply_subject where id=?)",applyid);
+        StringBuilder sql = new StringBuilder();
+        sql.append(" select distinct a.*,b.test_date,b.test_time from (");
+        sql.append(" select * from v_apply_subject where id=? and test_subject_id is not null)a");
+        sql.append(" left join t_test_rule b on a.test_subject_id=b.test_subject and a.spec_class=b.spec_class");
+        sql.append(" order by b.test_date,b.test_time");
+        return dbUtil.queryForList(sql.toString(),applyid);
     }
 
     /***
