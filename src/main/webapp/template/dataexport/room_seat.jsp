@@ -79,7 +79,7 @@
         <td><table width="100%" border="0" align="center" class="thinTable">
             <tr>
                 <td>姓名：</td>
-                <td rowspan="6" align="center" style="width:100px;height:120px;"><img src="" style="width:100px;height:120px;"/></td>
+                <td rowspan="6" align="center" style="width:100px;height:120px;">&nbsp;</td>
             </tr>
             <tr>
                 <td>身份证号：</td>
@@ -136,7 +136,7 @@
         <td><table width="100%" border="0" align="center" class="thinTable">
             <tr>
                 <td>姓名：</td>
-                <td rowspan="6" align="center" style="width:100px;height:120px;"><img src="" style="width:100px;height:120px;"/></td>
+                <td rowspan="6" align="center" style="width:100px;height:120px;">&nbsp;</td>
             </tr>
             <tr>
                 <td>身份证号：</td>
