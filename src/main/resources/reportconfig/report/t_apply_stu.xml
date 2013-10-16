@@ -421,4 +421,55 @@
     </page>
 
 
+
+    <!-- 打印准考证-->
+    <page id="t_admin_admis_print">
+        <report id="report1" extends="t_apply_print.report1" title="打印准考证">
+            <header><![CDATA[<font color="red">说明：</font><font color="blue">资格复审核通过后，可在打印准考证周期内双击表格行打印准考证。</font>]]></header>
+            <sql>
+                <select>
+                    <value>
+                        <![CDATA[
+                            select * from v_apply
+                                where {#condition#} and iscommit=1 and status=31
+                                
+
+                        ]]>
+                    </value>
+                    <condition name="name" label="姓名" labelposition="left">
+                        <value>
+                            <![CDATA[
+                                       name like '%#data#%'
+                                ]]>
+                        </value>
+                    </condition>
+                    <condition name="idcard" label="身份证号码" labelposition="left">
+                        <value>
+                            <![CDATA[
+                                       idcard like '%#data#%'
+                                ]]>
+                        </value>
+                    </condition>
+					 <condition name="test_no" label="准考证号码" labelposition="left">
+                        <value>
+                            <![CDATA[
+                                       test_no like '%#data#%'
+                                ]]>
+                        </value>
+                    </condition>
+                </select>
+            </sql>
+        </report>
+    </page>
+    <page id="t_admin_admis_print_detail">
+        <vpanel id="vp1" border="1" bordercolor="#c0c0c0"  margin="10px" >
+            <print type="lodop" preview="true">
+                <![CDATA[
+							jsp{/template/dataexport/test_no.jsp}
+						]]>
+            </print>
+            <report id="report1" extends="t_apply_list_detail.report1"   template="/template/dataexport/test_no.jsp"/>
+        </vpanel>
+    </page>
+
 </applications>
