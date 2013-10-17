@@ -303,4 +303,12 @@ public class DataDao {
         return  dbUtil.queryForList(sql);
     }
 
+    /**
+     * 获取最新公告
+     * */
+    public static Map getNewNotice(){
+        String sql = "select * from V_NOTICE t where t.status=1";
+        return dbUtil.queryForMap(sql);
+    }
+
 }

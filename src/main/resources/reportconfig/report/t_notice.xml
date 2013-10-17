@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<applications xmlns="http://www.wabacus.com"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.wabacus.com ../xsd/wabacus.applications.xsd">
+<page id="t_notice_list">
+  <report id="report1"  extends="basePage.editList" title="公告管理">
+    <display>
+      <col column="{sequence:1}" label="序号" />
+      <col column="id" displaytype="hidden"/>
+        <col column="createtime" label="创建时间"/>
+      <col column="title" label="标题"/>
+        <col column="realname" label="创建用户"/>
+      <col column="status_name" label="是否启用"/>
+
+    </display>
+    <sql>
+      <select>
+      <value><![CDATA[      select * from v_notice    ]]></value>
+      </select>
+      <insert pageurl="report{t_notice_form.report1}" popupparams="{initsize:'max'}" />
+      <update pageurl="report{t_notice_form.report1}" urlparams="id=@{id}"  popupparams="{initsize:'max'}" />
+      <delete><![CDATA[delete from t_notice where id=@{id}]]></delete>
+    </sql>
+  </report>
+</page>
+
+<page id="t_notice_form">
+  <report id="report1" type="editabledetail">
+    <display>
+      <col column="id" displaytype="hidden"/>
+      <col column="title" label="标题"  br="true" labelstyleproperty="width='80px'">
+          <inputbox jsvalidate="isNotEmpty(#label#不允许为空)" styleproperty="style='width:80%;'"></inputbox>
+      </col>
+      <col column="content" label="内容" br="true">
+        <inputbox type="richtextbox" jsvalidate="isNotEmpty(#label#不允许为空)" styleproperty="style='width:80%;height:400px;'"></inputbox>
+      </col>
+      <col column="status" label="是否启用">
+          <inputbox type="selectbox">
+              <option value="0" label="禁用"></option>
+              <option value="1" label="启用"></option>
+          </inputbox>
+      </col>
+      <col column="userid" label="userid" defaultvalue="session{user_id}" displaytype="hidden"/>
+    </display>
+    <sql>
+      <select>
+      <value><![CDATA[      select * from t_notice where {#condition#}       ]]></value>
+      <condition name="id" hidden="true">
+      <value><![CDATA[id=#data#]]></value>
+      </condition>
+      </select>
+      <insert>
+      <![CDATA[
+      insert into t_notice(id=sequence{seq_t_notice},
+@{title},@{content},@{status},@{userid})
+      ]]>
+      </insert>
+      <update>
+      <![CDATA[
+      update t_notice set status=0;
+      update t_notice(@{title},@{content},@{status})
+      where id=@{id};
+      ]]>
+      </update>
+    </sql>
+  </report>
+</page>
+
+<page id="t_notice_list_detail">
+  <report id="report1" extends="t_notice_form.report1"  type="detail">
+      <format>
+          <value>
+              <![CDATA[
+                      if(status.equals("1")){
+                        status="启用";
+                      }else{
+                        status="禁用";
+                      }
+                      ]]>
+          </value>
+      </format>
+  </report>
+</page>
+</applications>

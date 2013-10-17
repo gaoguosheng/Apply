@@ -1,5 +1,6 @@
 <%@ page import="com.ggs.dao.DataDao" %>
 <%@ page import="com.ggs.util.DateUtil" %>
+<%@ page import="java.util.Map" %>
 <%--
   Created by IntelliJ IDEA.
   User: ggs
@@ -65,84 +66,21 @@
         </div>
     </div>
     <div id="regDialog"></div>
-<%--    <div id="msgDiaog" class="easyui-dialog" title="${softTitle}" resizable="false" draggable="true" closable="true" data-options="iconCls:'icon-user'" style="width:600px;height:300px;padding:10px">
+    <%
+        Map<String,String> notice =  DataDao.getNewNotice();
+        if(notice.size()>0){
+
+    %>
+    <div id="msgDiaog" class="easyui-dialog" title="${softTitle}" resizable="false" draggable="true" closable="true" data-options="iconCls:'icon-user'" style="width:640px;height:480px;padding:10px">
         <div style="line-height: 30px;margin: 10px;">
-            <h3 style="color: red;" align="center">紧急通知</h3>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;由于报名系统首次投入运行，系统存在小问题，请8月5日上午10点10分前报名的考生登陆系统核查自己的信息，若发现自己信息丢失，请重新报名。给大家带来不便，敬请谅解。
+            <h2 style="color: red;" align="center"><%=notice.get("title")%></h2>
+            <div><%=notice.get("content")%></div>
         </div>
-        <div align="right" style="margin: 10px;">2013年8月5日</div>
-    </div>--%>
-    <%--<div id="msgDiaog" class="easyui-dialog" title="${softTitle}" resizable="false" draggable="true" closable="true" data-options="iconCls:'icon-user'" style="width:700px;height:500px;padding:10px">
-        <div style="line-height: 30px;margin: 10px;">
-            <h3 style="color: red;" align="center">通知</h3>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;为方便考生报名，现决定延长考生提交审核时间。已于本月16日前（含16日）提交报名资料的考生，可在本月23日15点前继续提交报名信息，之后将关闭修改和提交。预审通过的考生可于本月30日前打印报名表，之后将关闭打印。
-            <table border="0" cellspacing="1"  bgcolor="#000000" align="center">
-                <tr>
-                    <td width="114" valign="top" bgcolor="#FFFFFF" >考生属地 </td>
-                    <td width="358" valign="top" bgcolor="#FFFFFF" >现场确认地址 </td>
-                    <td width="111" valign="top" bgcolor="#FFFFFF" >联系电话 </td>
-                </tr>
-                <tr>
-                    <td width="114" valign="top" bgcolor="#FFFFFF" >福州市考生 </td>
-                    <td width="358" valign="top" bgcolor="#FFFFFF" >福州市下杭路118号 <br />
-                        福州市食品药品监督管理局二楼会议室&nbsp; </td>
-                    <td width="111" valign="top" bgcolor="#FFFFFF" >0591-83258334 </td>
-                </tr>
-                <tr>
-                    <td width="114" valign="top" bgcolor="#FFFFFF" >厦门市考生 </td>
-                    <td width="358" valign="top" bgcolor="#FFFFFF" >厦门市政务服务中心（云顶北路842号，BRT穆厝站）3楼D厅17，18号窗口 </td>
-                    <td width="111" valign="top" bgcolor="#FFFFFF" >0592-7703957，0592-7703958 </td>
-                </tr>
-                <tr>
-                    <td width="114" valign="top" bgcolor="#FFFFFF" >漳州市考生 </td>
-                    <td width="358" valign="top" bgcolor="#FFFFFF" >漳州市芗城区元光北路 <br />
-                        漳州市食品药品监管局一楼大厅 </td>
-                    <td width="111" valign="top" bgcolor="#FFFFFF" >0596-2960305
-                        &nbsp;</td>
-                </tr>
-                <tr>
-                    <td width="114" valign="top" bgcolor="#FFFFFF" >泉州市考生 </td>
-                    <td width="358" valign="top" bgcolor="#FFFFFF" >泉州市丰泽区祥远路2号 <br />
-                        泉州市食品药品监督管理局十楼会议室 </td>
-                    <td width="111" valign="top" bgcolor="#FFFFFF" >0595-22169902
-                        &nbsp;</td>
-                </tr>
-                <tr>
-                    <td width="114" valign="top" bgcolor="#FFFFFF" >三明市考生 </td>
-                    <td width="358" valign="top" bgcolor="#FFFFFF" >三明市梅列区列东东新二路物资大厦八楼<br />
-                        三明市食品药品监督管理局人事教育科&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </td>
-                    <td width="111" valign="top" bgcolor="#FFFFFF" >0598-8296958<br />
-                    </td>
-                </tr>
-                <tr>
-                    <td width="114" valign="top" bgcolor="#FFFFFF" >莆田市考生 </td>
-                    <td width="358" valign="top" bgcolor="#FFFFFF" >莆田市城厢区学园中街1899号 <br />
-                        莆田市食品药品监督管理局人事教育科（303室） </td>
-                    <td width="111" valign="top" bgcolor="#FFFFFF" >0594&#8212;2685130. </td>
-                </tr>
-                <tr>
-                    <td width="114" valign="top" bgcolor="#FFFFFF" >南平市考生 </td>
-                    <td width="358" valign="top" bgcolor="#FFFFFF" >南平市八一路421号 <br />
-                        南平市食品药品监督管理局八楼人教科</td>
-                    <td width="111" valign="top" bgcolor="#FFFFFF" >0599-8069693
-                        &nbsp;</td>
-                </tr>
-                <tr>
-                    <td width="114" valign="top" bgcolor="#FFFFFF" >龙岩市考生 </td>
-                    <td width="358" valign="top" bgcolor="#FFFFFF" >龙岩市南环西路36号天马湾大厦15楼 <br />
-                        龙岩市食品药品监督管理局人教科&nbsp; </td>
-                    <td width="111" valign="top" bgcolor="#FFFFFF" >0597-3398382 </td>
-                </tr>
-                <tr>
-                    <td width="114" valign="top" bgcolor="#FFFFFF" >宁德市考生 </td>
-                    <td width="358" valign="top" bgcolor="#FFFFFF" >宁德市鹤峰路43号 <br />
-                        宁德市食品药品监督管理局六楼人教科 </td>
-                    <td width="111" valign="top" bgcolor="#FFFFFF" >0593-2805851 </td>
-                </tr>
-            </table>
-        </div>
-        <div align="right" style="margin: 10px;">2013年8月20日</div>
-    </div>--%>
+    </div>
+    <%
+        }
+    %>
+
 
     <script type="text/javascript">
         function f_submitForm(){
