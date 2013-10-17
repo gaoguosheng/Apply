@@ -25,8 +25,8 @@
 %>
 
 <h2 align="center"><%=curYear%>年度药学（非临床）专业初中级技术职务任职资格考试考场考生安排表</h2>
-<p align="center">
-    （ <u>&nbsp;&nbsp;<%=room.get("site_name")%>&nbsp;&nbsp;</u>考区<u>&nbsp;&nbsp;<%=room.get("addr_name")%>&nbsp;&nbsp;</u>考点，第<u>&nbsp;<%=room.get("name")%>&nbsp;</u>考场  ） </p>
+<h3 align="center" >
+    (<u>&nbsp;&nbsp;<%=room.get("site_name")%></u>考区 <u>&nbsp;<%=room.get("addr_name")%></u>考点 第<u>&nbsp;<%=room.get("name").trim()%>&nbsp;</u>考场)</h3>
 
 <%
 
@@ -99,7 +99,7 @@
         }
     %>
 </table>
-<p style="line-height: 3px;">&nbsp;</p>
+<p style="line-height: 1px;">&nbsp;</p>
 <%
     }
 
