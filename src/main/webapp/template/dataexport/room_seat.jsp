@@ -37,7 +37,10 @@
 <h3 align="center"><%=curYear%>年度药学（非临床）专业初中级技术职务任职资格考试</h3>
 <h2 align="center">座次表</h2>
 <p align="center">
-    （ <u>&nbsp;&nbsp;<%=room.get("site_name")%>&nbsp;&nbsp;</u>考区<u>&nbsp;&nbsp;<%=room.get("addr_name")%>&nbsp;&nbsp;</u>考点，第<u>&nbsp;<%=room.get("name")%>&nbsp;</u>考场  ）
+    （ <u>&nbsp;&nbsp;<%=room.get("site_name")%>&nbsp;&nbsp;</u>考区<u>
+    &nbsp;&nbsp;<%=room.get("addr_name")%>&nbsp;&nbsp;</u>考点，
+    第<u>&nbsp;<%=room.get("name")%>&nbsp;</u>考场  ）
+    ${param.testtime}
 </p>
 
 <table cellpadding="0" cellspacing="0" width="100%" border="0" class="thinTable" align="center">
@@ -161,7 +164,7 @@
     </tr>
     <%}%>
 </table>
-<p style="line-height: 75px;">&nbsp;</p>
+<p style="line-height: 110px;">&nbsp;</p>
 <%
     }
 

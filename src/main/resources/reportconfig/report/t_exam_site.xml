@@ -450,6 +450,9 @@
                         </inputbox>
                         <value><![CDATA[roomid=#data# ]]></value>
                     </condition>
+                    <condition name="testtime" label="考试时间" labelposition="left">
+                        <value><![CDATA[1=1 ]]></value>
+                    </condition>
                 </select>
             </sql>
             <format>
