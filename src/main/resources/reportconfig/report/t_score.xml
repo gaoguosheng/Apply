@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<applications xmlns="http://www.wabacus.com"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.wabacus.com ../xsd/wabacus.applications.xsd">
+<page id="t_score_list">
+  <report id="report1" extends="basePage.editList">
+    <display>
+      <col column="{sequence:1}" label="序号" />
+      <col column="id" displaytype="hidden"/>
+        <col column="name" label="姓名" />
+        <col column="company" label="工作单位" />
+        <col column="test_no" label="准考证号" />
+        <col column="spec_class_name" label="专业" />
+        <col column="test_level_name" label="考试级别" />
+        <col column="test_subject_name" label="考试科目" />
+        <col column="test_status_name" label="考试状态" />
+        <col column="score" label="考试成绩" />
+    </display>
+    <sql>
+      <select>
+        <value><![CDATA[      select * from v_score  where {#condition#}     ]]></value>
+        <condition name="name" label="姓名" labelposition="left">
+                         <value><![CDATA[     name like %#data#%  ]]></value>
+        </condition>
+          <condition name="test_no" label="准考证号" labelposition="left">
+              <value><![CDATA[     test_no like %#data#%  ]]></value>
+          </condition>
+      </select>
+      <update pageurl="report{t_score_form.report1}" urlparams="id=@{id}"  popupparams="{initsize:'max'}" />
+    </sql>
+  </report>
+</page>
+
+<page id="t_score_form">
+  <report id="report1" type="editabledetail">
+    <display>
+      <col column="id" displaytype="hidden"/>
+      <col column="test_no" label="准考证号" />
+      <col column="spec_class" label="专业" br="true" displaytype="hidden"/>
+      <col column="test_level" label="考试级别" displaytype="hidden"/>
+      <col column="test_subject" label="考试科目" br="true" displaytype="hidden"/>
+      <col column="test_status" label="考试状态" displaytype="hidden"/>
+        <col column="spec_class_name" label="专业" br="true"/>
+        <col column="test_level_name" label="考试级别" />
+        <col column="test_subject_name" label="考试科目" br="true"/>
+        <col column="test_status_name" label="考试状态" />
+      <col column="score" label="考试成绩" br="true"/>
+    </display>
+    <sql>
+      <select>
+      <value><![CDATA[      select * from v_score where {#condition#}       ]]></value>
+      <condition name="id" hidden="true">
+      <value><![CDATA[id=#data#]]></value>
+      </condition>
+      </select>
+      <update>
+      <![CDATA[
+        update t_score(@{score}) where id=@{id};
+        insert into t_score_log(id,scoreid,userid,oldscore,newscore)values(seq_t_score_log.nextval,@{id},session{user_id},@{score__old},@{score});
+      ]]>
+      </update>
+    </sql>
+  </report>
+</page>
+
+<page id="t_score_list_detail">
+  <report id="report1" extends="t_score_form.report1"  type="detail"/>
+  <report id="report2"  extends="basePage.list" title="成绩修改记录">
+      <display>
+          <col column="{sequence:1}" label="序号" />
+          <col column="id" displaytype="hidden"/>
+          <col column="realname" label="姓名" />
+          <col column="createtime" label="操作时间" />
+          <col column="oldscore" label="旧成绩" />
+          <col column="newscore" label="新成绩" />
+      </display>
+      <sql>
+          <select>
+              <value><![CDATA[      select * from v_score_log  where {#condition#}   order by id desc  ]]></value>
+              <condition name="id" hidden="true">
+                  <value><![CDATA[     scoreid=#data#  ]]></value>
+              </condition>
+          </select>
+      </sql>
+  </report>
+</page>
+</applications>
