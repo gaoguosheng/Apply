@@ -9,11 +9,6 @@
     <page id="t_apply_total">
 
         <report id="report1" extends="t_apply_list.report1" title="报名人员汇总">
-            <print type="lodop" preview="true">
-                <![CDATA[
-							relative{/template/dataexport/apply_total.html}
-						]]>
-            </print>
             <dataexports>
                 <dataexport  type="richexcel" filename="报名人员汇总"  template="relative{/template/dataexport/apply_total.html}"></dataexport>
             </dataexports>
