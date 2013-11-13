@@ -22,5 +22,7 @@
         <action name="main"	class="com.ggs.web.MainAction"/>
         <!--报名业务 -->
         <action name="apply"	class="com.ggs.web.ApplyAction"/>
+        <!--报名业务 -->
+        <action name="impScore"	class="com.ggs.web.ImpScoreAction"/>
     </package>
 </struts>

@@ -23,50 +23,58 @@ public class ImpScoreUtil {
     /**
      *读取xml成绩数据
      * */
-    public static List<Score> getScoreListByXml(){
-        List<Score>scoreList = new ArrayList<Score>();
-        SAXReader reader = new SAXReader();
+    public static void impScore(){
         //读取导入路径
         String dirstr= DataDao.getConf("IMP_SCORE_PATH");
         File dir = new File(dirstr);
         if(!dir.exists()){
             dir.mkdirs();
         }
-        if(dir.listFiles().length==0){
-            System.out.println("未找到任何数据,请将成绩数据文件放至【"+dirstr+"】目录");
-            return scoreList;
-        }
+
         for(File file:dir.listFiles()){
             if(!file.getName().trim().toLowerCase().endsWith(".xml")){
                  continue;
             }
-            try {
-                Document doc = reader.read(file);
-                Element root = doc.getRootElement();
-                List<Element> scoreElementList =  root.selectNodes("/stu-scores/stu-score");
-                for(Element scoreElement:scoreElementList){
-                    Score scoreBean = new Score();
-                    String test_no = scoreElement.selectSingleNode("test_no").getText();
-                    String test_subject = scoreElement.selectSingleNode("test_subject").getText();
-                    String test_level = scoreElement.selectSingleNode("test_level").getText();
-                    String spec_class = scoreElement.selectSingleNode("spec_class").getText();
-                    String test_status = scoreElement.selectSingleNode("test_status").getText();
-                    String score = scoreElement.selectSingleNode("score").getText();
-                    scoreBean.setTest_no(test_no);
-                    scoreBean.setTest_subject(test_subject);
-                    scoreBean.setTest_level(test_level);
-                    scoreBean.setSpec_class(spec_class);
-                    scoreBean.setTest_status(test_status);
-                    scoreBean.setScore(score);
-                    System.out.println(file.getName()+"："+test_no+" "+test_subject+" "+test_level+" "+spec_class+" "+test_status+" "+score);
-                    scoreList.add(scoreBean);
-                }
-            } catch (DocumentException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            List<Score>scoreList=getScoreListByXml(file);
+            impScoreToDb(scoreList);
+        }
+    }
+
+
+    /**
+     *读取xml成绩数据
+     * */
+    public static List<Score> getScoreListByXml(File file){
+        List<Score>scoreList = new ArrayList<Score>();
+        SAXReader reader = new SAXReader();
+        try {
+            Document doc = reader.read(file);
+            Element root = doc.getRootElement();
+            List<Element> scoreElementList =  root.selectNodes("/stu-scores/stu-score");
+            for(Element scoreElement:scoreElementList){
+                Score scoreBean = new Score();
+                String test_no = scoreElement.selectSingleNode("test_no").getText();
+                String test_subject = scoreElement.selectSingleNode("test_subject").getText();
+                String test_level = scoreElement.selectSingleNode("test_level").getText();
+                String spec_class = scoreElement.selectSingleNode("spec_class").getText();
+                String test_status = scoreElement.selectSingleNode("test_status").getText();
+                String score = scoreElement.selectSingleNode("score").getText();
+                scoreBean.setTest_no(test_no);
+                scoreBean.setTest_subject(test_subject);
+                scoreBean.setTest_level(test_level);
+                scoreBean.setSpec_class(spec_class);
+                scoreBean.setTest_status(test_status);
+                scoreBean.setScore(score);
+                //System.out.println(file.getName()+"："+test_no+" "+test_subject+" "+test_level+" "+spec_class+" "+test_status+" "+score);
+                scoreList.add(scoreBean);
             }
+        } catch (DocumentException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
         return scoreList;
     }
+
+
 
     /***
      * 导入成绩数据至数据库
@@ -88,7 +96,4 @@ public class ImpScoreUtil {
         return dbUtil.batchUpdate(sql);
     }
 
-    public static void main(String[]args){
-        impScoreToDb(getScoreListByXml());
-    }
 }
