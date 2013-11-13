@@ -7,6 +7,7 @@
 	<!-- 常量 -->
 	<constant name="struts.action.extension" value="action"></constant>
 	<constant name="struts.devMode" value="true"></constant>
+    <constant name="struts.multipart.maxSize" value="10240000"/>
 	<!-- 基包 -->
 	<package name="myPkg" extends="struts-default" abstract="true">
 	</package>

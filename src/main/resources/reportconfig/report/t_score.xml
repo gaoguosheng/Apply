@@ -3,7 +3,7 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.wabacus.com ../xsd/wabacus.applications.xsd">
 <page id="t_score_list">
-  <report id="report1" extends="basePage.editList" rowselect="none" title="成绩管理">
+  <report id="report1" extends="basePage.editList"  title="成绩管理">
     <display>
       <col column="{sequence:1}" label="序号" />
       <col column="id" displaytype="hidden"/>
@@ -21,9 +21,55 @@
     <sql>
       <select>
         <value><![CDATA[      select * from v_score  where {#condition#}     ]]></value>
-        <condition name="name" label="姓名" labelposition="left">
-                         <value><![CDATA[     name like %#data#%  ]]></value>
-        </condition>
+          <condition name="test_subject_name" label="考试科目" labelposition="left">
+              <inputbox type="selectbox">
+                  <option value="" label="全部"></option>
+                  <option source="@{select id,name from t_test_subject}" label="name" value="name"></option>
+              </inputbox>
+              <value><![CDATA[     test_subject_name = to_char(#data#)  ]]></value>
+          </condition>
+          <condition name="cityid" label="所在地" labelposition="left">
+              <inputbox type="selectbox">
+                  <option value="" label="全部"></option>
+                  <option source="@{select name from t_city}" label="name" value="name"></option>
+              </inputbox>
+              <value><![CDATA[     city_name like %#data#%  ]]></value>
+          </condition>
+          <condition name="spec_class" label="报考专业" labelposition="left">
+              <inputbox type="selectbox">
+                  <option value="" label="全部"></option>
+                  <option source="@{select id,name from t_data where datatype='SpecClass' order by id}" label="name" value="id"></option>
+              </inputbox>
+              <value><![CDATA[     spec_class_id=to_char(#data#)  ]]></value>
+          </condition>
+          <condition name="tech_name" label="报考级别" labelposition="left">
+              <inputbox type="selectbox">
+                  <option value="" label="全部"></option>
+                  <option source="@{select id,name from t_data where datatype='TechName' order by id}" label="name" value="id"></option>
+              </inputbox>
+              <value><![CDATA[     tech_name_id =to_char(#data#)  ]]></value>
+          </condition>
+          <condition name="isquali" label="是否合格" labelposition="left">
+              <inputbox type="selectbox">
+                  <option value="" label="全部"></option>
+                  <option value="1" label="合格"></option>
+                  <option value="0" label="不合格"></option>
+              </inputbox>
+              <value><![CDATA[     isquali=to_char(#data#)  ]]></value>
+          </condition>
+          <condition name="test_status" label="考试状态" labelposition="left" br="true">
+              <inputbox type="selectbox">
+                  <option value="" label="全部"></option>
+                  <option value="1" label="正常"></option>
+                  <option value="2" label="缺考"></option>
+                  <option value="3" label="违纪"></option>
+              </inputbox>
+              <value><![CDATA[     test_status=to_char(#data#)  ]]></value>
+          </condition>
+
+          <condition name="name" label="姓名" labelposition="left">
+              <value><![CDATA[     name like %#data#%  ]]></value>
+          </condition>
           <condition name="idcard" label="身份证" labelposition="left">
               <value><![CDATA[     idcard like %#data#%  ]]></value>
           </condition>
@@ -32,6 +78,14 @@
           </condition>
       </select>
       <update pageurl="report{t_score_form.report1}" urlparams="id=@{id}"  popupparams="{initsize:'max'}" />
+      <delete>
+          <value>
+              <![CDATA[
+              delete from t_score where id=@{id};
+              delete from t_score_log where scoreid=@{id};
+              ]]>
+          </value>
+      </delete>
     </sql>
   </report>
 </page>
@@ -69,7 +123,7 @@
       </update>
     </sql>
   </report>
-    <report id="report2"  extends="basePage.list" title="成绩修改记录"  dataexport="">
+    <report id="report2"  type="list" title="成绩修改记录" >
         <display>
             <col column="{sequence:1}" label="序号" />
             <col column="id" displaytype="hidden"/>
@@ -109,36 +163,39 @@
                     rrequest.getRequest().setAttribute("test_subject_name",test_subject_name);
                 </preaction>
             </interceptor>
+        </report>
+    </page>
+
+
+    <page id="t_score_imp_log">
+        <report id="report1" extends="t_score_list.report1" type="list" title="成绩导入日志">
+            <dataexports>
+                <dataexport  type="richexcel" filename="成绩汇总表"  template="relative{/template/dataexport/score_total.html}"></dataexport>
+            </dataexports>
+            <interceptor>
+                <preaction>
+                </preaction>
+            </interceptor>
             <display>
                 <col column="{sequence:1}" label="序号" />
                 <col column="id" displaytype="hidden"/>
-                <col column="city_name" label="所在地" />
-                <col column="name" label="姓名" />
-                <col column="company" label="工作单位" />
                 <col column="test_no" label="准考证号" />
                 <col column="spec_class_name" label="报考专业" />
-                <col column="tech_name_name" label="报考级别" />
+                <col column="test_level_name" label="报考级别" />
                 <col column="test_subject_name" label="考试科目" />
                 <col column="score" label="考试成绩" />
                 <col column="test_status_name" label="考试状态" />
-                <col column="remark" label="备注" />
+                <col column="status" label="日志状态" />
             </display>
             <sql>
                 <select>
-                    <value><![CDATA[      select * from v_score  where {#condition#}     ]]></value>
+                    <value><![CDATA[      select * from v_score_imp_log  where {#condition#}     ]]></value>
                     <condition name="test_subject_name" label="考试科目" labelposition="left">
                         <inputbox type="selectbox">
                             <option value="" label="全部"></option>
                             <option source="@{select id,name from t_test_subject}" label="name" value="name"></option>
                         </inputbox>
                         <value><![CDATA[     test_subject_name = to_char(#data#)  ]]></value>
-                    </condition>
-                    <condition name="cityid" label="所在地" labelposition="left">
-                        <inputbox type="selectbox">
-                            <option value="" label="全部"></option>
-                            <option source="@{select name from t_city}" label="name" value="name"></option>
-                        </inputbox>
-                        <value><![CDATA[     city_name like %#data#%  ]]></value>
                     </condition>
                     <condition name="spec_class" label="报考专业" labelposition="left">
                         <inputbox type="selectbox">
@@ -154,38 +211,18 @@
                         </inputbox>
                         <value><![CDATA[     tech_name_id =to_char(#data#)  ]]></value>
                     </condition>
-                    <condition name="isquali" label="是否合格" labelposition="left">
+                    <condition name="status" label="日志状态" labelposition="left" br="true">
                         <inputbox type="selectbox">
                             <option value="" label="全部"></option>
-                            <option value="1" label="合格"></option>
-                            <option value="0" label="不合格"></option>
+                            <option value="数据错误" label="数据错误"></option>
+                            <option value="数据重复" label="数据重复"></option>
                         </inputbox>
-                        <value><![CDATA[     isquali=to_char(#data#)  ]]></value>
+                        <value><![CDATA[     status=to_char(#data#)  ]]></value>
                     </condition>
-                    <condition name="test_status" label="考试状态" labelposition="left" br="true">
-                        <inputbox type="selectbox">
-                            <option value="" label="全部"></option>
-                            <option value="1" label="正常"></option>
-                            <option value="2" label="缺考"></option>
-                            <option value="3" label="违纪"></option>
-                        </inputbox>
-                        <value><![CDATA[     test_status=to_char(#data#)  ]]></value>
-                    </condition>
-
-                <condition name="name" label="姓名" labelposition="left">
-                    <value><![CDATA[     name like %#data#%  ]]></value>
-                </condition>
-                <condition name="idcard" label="身份证" labelposition="left">
-                    <value><![CDATA[     idcard like %#data#%  ]]></value>
-                </condition>
-                <condition name="test_no" label="准考证号" labelposition="left">
-                    <value><![CDATA[     test_no like %#data#%  ]]></value>
-                </condition>
                 </select>
             </sql>
         </report>
     </page>
-
 
 
 
