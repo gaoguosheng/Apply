@@ -69,33 +69,37 @@
       </update>
     </sql>
   </report>
+    <report id="report2"  extends="basePage.list" title="成绩修改记录"  dataexport="">
+        <display>
+            <col column="{sequence:1}" label="序号" />
+            <col column="id" displaytype="hidden"/>
+            <col column="realname" label="姓名" />
+            <col column="createtime" label="操作时间" />
+            <col column="oldscore" label="旧成绩" />
+            <col column="newscore" label="新成绩" />
+        </display>
+        <sql>
+            <select>
+                <value><![CDATA[      select * from v_score_log  where {#condition#}   order by id desc  ]]></value>
+                <condition name="id" hidden="true">
+                    <value><![CDATA[     scoreid=#data#  ]]></value>
+                </condition>
+            </select>
+        </sql>
+    </report>
 </page>
 
 <page id="t_score_list_detail">
   <report id="report1" extends="t_score_form.report1"  type="detail"/>
-  <report id="report2"  extends="basePage.list" title="成绩修改记录">
-      <display>
-          <col column="{sequence:1}" label="序号" />
-          <col column="id" displaytype="hidden"/>
-          <col column="realname" label="姓名" />
-          <col column="createtime" label="操作时间" />
-          <col column="oldscore" label="旧成绩" />
-          <col column="newscore" label="新成绩" />
-      </display>
-      <sql>
-          <select>
-              <value><![CDATA[      select * from v_score_log  where {#condition#}   order by id desc  ]]></value>
-              <condition name="id" hidden="true">
-                  <value><![CDATA[     scoreid=#data#  ]]></value>
-              </condition>
-          </select>
-      </sql>
-  </report>
+  <report id="report2" extends="t_score_form.report2"/>
 </page>
 
 
     <page id="t_score_total">
         <report id="report1" extends="t_score_list.report1" type="list" title="成绩汇总表">
+            <print type="lodop" preview="true" printpagesize="2,2100,2970,''">
+                <![CDATA[relative{/template/dataexport/score_total.html}]]>
+            </print>
             <dataexports>
                 <dataexport  type="richexcel" filename="成绩汇总表"  template="relative{/template/dataexport/score_total.html}"></dataexport>
             </dataexports>
@@ -167,8 +171,17 @@
                         </inputbox>
                         <value><![CDATA[     test_status=to_char(#data#)  ]]></value>
                     </condition>
-                </select>
 
+                <condition name="name" label="姓名" labelposition="left">
+                    <value><![CDATA[     name like %#data#%  ]]></value>
+                </condition>
+                <condition name="idcard" label="身份证" labelposition="left">
+                    <value><![CDATA[     idcard like %#data#%  ]]></value>
+                </condition>
+                <condition name="test_no" label="准考证号" labelposition="left">
+                    <value><![CDATA[     test_no like %#data#%  ]]></value>
+                </condition>
+                </select>
             </sql>
         </report>
     </page>

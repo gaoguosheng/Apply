@@ -8,18 +8,18 @@
         <report id="report1" extends="basePage.editList" title="规则管理" rowselect="none" pagesize="-1">
             <display treeborder="0">
                 <col column="id" displaytype="hidden"/>
-                <col column="test_level" label="开考层次" treerowgroup="true"/>
-                <col column="tech_name" label="资格名称" treerowgroup="true"/>
-                <col column="test_year"  label="开考年度" />
-                <col column="spec_class" label="专业类别" />
-                <col column="test_subject" label="考试科目" />
+                <col column="test_year"  label="开考年度" treerowgroup="true" />
+                <col column="test_level_name" label="开考层次" treerowgroup="true"/>
+                <col column="tech_name_name" label="资格名称" treerowgroup="true"/>
+                <col column="spec_class_name" label="专业类别" />
+                <col column="test_subject_name" label="考试科目" />
                 <col column="test_date" label="考试日期" />
                 <col column="test_time" label="考试时间" />
             </display>
             <sql>
                 <select>
                     <value>
-                        <![CDATA[select * from t_test_rule where  {#condition#}]]>
+                        <![CDATA[select * from v_test_rule where  {#condition#}]]>
                     </value>
 
                     <condition name="test_year" label="开考年度" labelposition="left">
@@ -67,17 +67,6 @@
                     </value>
                 </delete>
             </sql>
-            <format>
-                <imports>
-                    <import>com.ggs.dao.DataDao</import>
-                </imports>
-                <value>
-                    test_level=DataDao.getDataName(test_level);
-                    tech_name=DataDao.getDataName(tech_name);
-                    spec_class=DataDao.getDataName(spec_class);
-                    test_subject=DataDao.getDataName(test_subject);
-                </value>
-            </format>
         </report>
     </page>
     <page id="t_test_rule_form">
@@ -108,8 +97,8 @@
                         <option source="@{select * from v_data where datatype='TestSubject'}" label="name" value="id"></option>
                     </inputbox>
                 </col>
-                <col column="qualified" label="合格线（分）" defaultvalue="60"></col>
-                <col column="limityear" label="有效期限（年）" defaultvalue="1" br="true"></col>
+<!--                <col column="qualified" label="合格线（分）" defaultvalue="60"></col>
+                <col column="limityear" label="有效期限（年）" defaultvalue="1" br="true"></col>-->
                 <col column="test_date"  label="考试日期" br="true" valuestyleproperty="colspan=3" >
                     <inputbox jsvalidate="isNotEmpty(#label#不允许为空)"></inputbox>
                 </col>
@@ -131,7 +120,7 @@
                 <insert>
                     <value>
                         <![CDATA[insert into t_test_rule(id=sequence{seq_t_test_rule},
-                        @{test_year},@{test_level},@{tech_name},@{spec_class},@{test_subject}, @{qualified},@{limityear},
+                        @{test_year},@{test_level},@{tech_name},@{spec_class},@{test_subject},
                         @{test_date},@{test_time})
                         ]]>
                     </value>
@@ -139,7 +128,7 @@
                 <update>
                     <value>
                         <![CDATA[update t_test_rule(
-                        @{test_year},@{test_level},@{tech_name},@{spec_class},@{test_subject},  @{qualified},@{limityear},
+                        @{test_year},@{test_level},@{tech_name},@{spec_class},@{test_subject},
                         @{test_date},@{test_time})
                         where id=@{id}
                         ]]>
@@ -150,6 +139,32 @@
     </page>
     <page id="t_test_rule_list_detail">
         <report id="report1" extends="t_test_rule_form.report1"></report>
+    </page>
+
+
+
+<!-- 科目合格线管理-->
+    <page id="t_test_subject_list">
+        <report id="report1"  extends="basePage.editList2" title="科目合格线设置" rowselect="none">
+            <display>
+                <col column="{sequence:1}" label="序号" />
+                <col column="id" displaytype="hidden"/>
+                <col column="name" label="科目名称"/>
+                <col column="qualified" label="合格线"/>
+                <col column="limityear" label="有效年限"/>
+            </display>
+            <sql>
+                <select>
+                    <value><![CDATA[      select * from t_test_subject       ]]></value>
+                </select>
+                <update>
+                    <![CDATA[
+      update t_test_subject(@{qualified},@{limityear})
+      where id=@{id}
+      ]]>
+                </update>
+            </sql>
+        </report>
     </page>
     
 </applications>

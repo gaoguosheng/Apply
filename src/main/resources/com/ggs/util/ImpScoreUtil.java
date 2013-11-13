@@ -1,6 +1,7 @@
 package com.ggs.util;
 
 import com.ggs.bean.Score;
+import com.ggs.dao.DataDao;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
@@ -25,7 +26,8 @@ public class ImpScoreUtil {
     public static List<Score> getScoreListByXml(){
         List<Score>scoreList = new ArrayList<Score>();
         SAXReader reader = new SAXReader();
-        String dirstr="d:/apply-score";
+        //读取导入路径
+        String dirstr= DataDao.getConf("IMP_SCORE_PATH");
         File dir = new File(dirstr);
         if(!dir.exists()){
             dir.mkdirs();
