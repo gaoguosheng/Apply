@@ -92,7 +92,7 @@ public class ImpScoreUtil {
             Score score = scoreList.get(i);
             sql[i]=" insert into t_score (id,test_no,test_subject,test_level,spec_class,test_status,score)";
             sql[i]+=" select seq_t_score.nextval,"
-                    +score.getTest_no()+","
+                    +"'"+score.getTest_no()+"',"
                     +score.getTest_subject()+","
                     +score.getTest_level()+","
                     +score.getSpec_class()+","
