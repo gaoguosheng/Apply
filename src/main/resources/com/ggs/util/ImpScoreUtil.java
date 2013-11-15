@@ -82,11 +82,13 @@ public class ImpScoreUtil {
     public static boolean impScoreToDb(List<Score>scoreList){
         String []sql = new String[scoreList.size()];
         //清空数据
+        /*
         for(int i=0;i<scoreList.size();i++){
             Score score = scoreList.get(i);
             sql[i]=" delete from  t_score where test_no="+score.getTest_no()+" and test_subject="+score.getTest_subject();
         }
         dbUtil.batchUpdate(sql);
+        */
         //导入数据
         for(int i=0;i<scoreList.size();i++){
             Score score = scoreList.get(i);
