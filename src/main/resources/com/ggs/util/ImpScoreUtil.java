@@ -65,7 +65,7 @@ public class ImpScoreUtil {
                 scoreBean.setSpec_class(spec_class);
                 scoreBean.setTest_status(test_status);
                 scoreBean.setScore(score);
-                //System.out.println(file.getName()+"："+test_no+" "+test_subject+" "+test_level+" "+spec_class+" "+test_status+" "+score);
+                System.out.println(file.getName()+"："+test_no+" "+test_subject+" "+test_level+" "+spec_class+" "+test_status+" "+score);
                 scoreList.add(scoreBean);
             }
         } catch (DocumentException e) {
@@ -82,16 +82,17 @@ public class ImpScoreUtil {
     public static boolean impScoreToDb(List<Score>scoreList){
         String []sql = new String[scoreList.size()];
         //清空数据
-        /*
+
         for(int i=0;i<scoreList.size();i++){
             Score score = scoreList.get(i);
-            sql[i]=" delete from  t_score where test_no="+score.getTest_no()+" and test_subject="+score.getTest_subject();
+            sql[i]=" delete from  t_score where test_no='"+score.getTest_no()+"' and test_subject="+score.getTest_subject();
         }
         dbUtil.batchUpdate(sql);
-        */
+
         //导入数据
         for(int i=0;i<scoreList.size();i++){
             Score score = scoreList.get(i);
+            score.setSpec_class(score.getSpec_class().equals("")?"0":score.getSpec_class());
             sql[i]=" insert into t_score (id,test_no,test_subject,test_level,spec_class,test_status,score)";
             sql[i]+=" select seq_t_score.nextval,"
                     +"'"+score.getTest_no()+"',"
