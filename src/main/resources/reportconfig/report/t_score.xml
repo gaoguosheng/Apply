@@ -15,7 +15,8 @@
         <col column="tech_name_name" label="报考级别" />
         <col column="test_subject_name" label="考试科目" />
         <col column="score" label="考试成绩" />
-        <col column="test_status_name" label="考试状态" />
+        <col column="test_status" displaytype="hidden"/>
+        <!--<col column="test_status_name" label="考试状态" />-->
         <col column="remark" label="备注" />
     </display>
     <sql>
@@ -87,6 +88,17 @@
           </value>
       </delete>
     </sql>
+    <format>
+        <value>
+            <![CDATA[
+                        if (test_status.equals("2")){
+                            score="缺考";
+                        }else if (test_status.equals("3")){
+                            score="违纪";
+                        }
+                    ]]>
+        </value>
+    </format>
   </report>
 </page>
 
@@ -151,7 +163,7 @@
 
     <page id="t_score_total">
         <report id="report1" extends="t_score_list.report1" type="list" title="成绩汇总表">
-            <print type="lodop" preview="true" printpagesize="2,2100,2970,''">
+            <print type="lodop" preview="true" printpagesize="2,2100,2970,''" include="report1{25}">
                 <![CDATA[relative{/template/dataexport/score_total.html}]]>
             </print>
             <dataexports>
@@ -168,14 +180,10 @@
 
 
     <page id="t_score_imp_log">
-        <report id="report1" extends="t_score_list.report1" type="list" title="成绩导入日志">
+        <report id="report1" extends="t_score_list.report1" title="成绩导入日志">
             <dataexports>
                 <dataexport  type="richexcel" filename="成绩汇总表"  template="relative{/template/dataexport/score_total.html}"></dataexport>
             </dataexports>
-            <interceptor>
-                <preaction>
-                </preaction>
-            </interceptor>
             <display>
                 <col column="{sequence:1}" label="序号" />
                 <col column="id" displaytype="hidden"/>
@@ -184,8 +192,10 @@
                 <col column="test_level_name" label="报考级别" />
                 <col column="test_subject_name" label="考试科目" />
                 <col column="score" label="考试成绩" />
-                <col column="test_status_name" label="考试状态" />
+                <col column="test_status" displaytype="hidden"/>
+                <!--<col column="test_status_name" label="考试状态" />-->
                 <col column="status" label="日志状态" />
+                <col column="remark" label="备注" />
             </display>
             <sql>
                 <select>
@@ -221,6 +231,7 @@
                         <value><![CDATA[     status=to_char(#data#)  ]]></value>
                     </condition>
                 </select>
+                <update pageurl="report{t_score_form_remark.report1}" urlparams="id=@{id}"  popupparams="{initsize:'max'}" />
             </sql>
             <format>
                 <value>
@@ -232,10 +243,38 @@
                             }else if(status.equals("3")){
                                   status="无科目成绩";
                             }
+
+
+                            if (test_status.equals("2")){
+                            score="缺考";
+                        }else if (test_status.equals("3")){
+                            score="违纪";
+                        }
                             ]]>
                 </value>
             </format>
         </report>
+    </page>
+
+    <page id="t_score_form_remark">
+        <report id="report1" extends="t_score_form.report1">
+            <sql>
+                <select>
+                    <value><![CDATA[      select * from v_score where {#condition#}       ]]></value>
+                    <condition name="id" hidden="true">
+                        <value><![CDATA[id=#data#]]></value>
+                    </condition>
+                </select>
+                <update>
+                    <![CDATA[
+                        update t_score(@{remark}) where id=@{id};
+                    ]]>
+                </update>
+            </sql>
+        </report>
+    </page>
+    <page id="t_score_imp_log_detail">
+        <report id="report1" extends="t_score_form_remark.report1" type="detail"/>
     </page>
 
 

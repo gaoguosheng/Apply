@@ -388,15 +388,31 @@
         <report id="report1" extends="t_score_list.report1" title="考生成绩查询" type="list">
             <header>
                 <![CDATA[
-                        <font color="red">说明：</font><font color='blue'>在成绩查询周期内可以查询单科成绩。</font>
+                        <font color="red">说明：</font><font color='blue'>在成绩查询周期内可以查询单科成绩，双击查看详细内容。</font>
                         ]]>
             </header>
-            <interceptor>
-                <preaction></preaction>
-            </interceptor>
+            <display>
+                <col column="{sequence:1}" label="序号" />
+                <col column="id" displaytype="hidden"/>
+                <col column="name" label="姓名" />
+                <col column="test_no" label="准考证号" />
+                <col column="spec_class_name" label="报考专业" />
+                <col column="tech_name_name" label="报考级别" />
+                <col column="test_subject_name" label="考试科目" />
+                <col column="score" label="考试成绩" />
+                <col column="test_status" displaytype="hidden"/>
+                <!--<col column="test_status_name" label="考试状态" />-->
+            </display>
             <sql>
                 <select>
-                    <value>select * from v_score  where {#condition#}</value>
+                    <value>
+                        <![CDATA[
+                        select * from v_score  where {#condition#}
+                            and to_char(sysdate,'yyyy-mm-dd')
+                            between (select value from t_conf where name='SCORE_STDATE')
+                            and (select value from t_conf where name='SCORE_EDDATE')
+                          ]]>
+                    </value>
                     <condition name="createid" hidden="true" defaultvalue="session{user_id}">
                         <value>
                             <![CDATA[
@@ -408,6 +424,11 @@
             </sql>
         </report>
     </page>
+
+    <page id="t_apply_score_detail">
+        <report id="report1" extends="t_score_form.report1"  type="detail"/>
+    </page>
+
 
     <!-- 打印准考证-->
     <page id="t_admin_admis_print">
