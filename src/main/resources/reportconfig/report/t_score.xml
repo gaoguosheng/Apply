@@ -214,13 +214,27 @@
                     <condition name="status" label="日志状态" labelposition="left" br="true">
                         <inputbox type="selectbox">
                             <option value="" label="全部"></option>
-                            <option value="数据错误" label="数据错误"></option>
-                            <option value="数据重复" label="数据重复"></option>
+                            <option value="1" label="准考证不存在"></option>
+                            <option value="2" label="科目成绩重复"></option>
+                            <option value="3" label="无科目成绩"></option>
                         </inputbox>
                         <value><![CDATA[     status=to_char(#data#)  ]]></value>
                     </condition>
                 </select>
             </sql>
+            <format>
+                <value>
+                    <![CDATA[
+                            if (status.equals("1")){
+                                status="准考证不存在";
+                            }else if(status.equals("2")){
+                                   status="科目成绩重复";
+                            }else if(status.equals("3")){
+                                  status="无科目成绩";
+                            }
+                            ]]>
+                </value>
+            </format>
         </report>
     </page>
 

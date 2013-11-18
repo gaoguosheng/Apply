@@ -85,6 +85,7 @@ public class ImpScoreUtil {
 
         for(int i=0;i<scoreList.size();i++){
             Score score = scoreList.get(i);
+            score.setTest_subject(score.getTest_subject().equals("")?"0":score.getTest_subject());
             sql[i]=" delete from  t_score where test_no='"+score.getTest_no()+"' and test_subject="+score.getTest_subject();
         }
         dbUtil.batchUpdate(sql);
@@ -92,7 +93,12 @@ public class ImpScoreUtil {
         //导入数据
         for(int i=0;i<scoreList.size();i++){
             Score score = scoreList.get(i);
+            score.setTest_subject(score.getTest_subject().equals("")?"0":score.getTest_subject());
+            score.setTest_level(score.getTest_level().equals("")?"0":score.getTest_level());
             score.setSpec_class(score.getSpec_class().equals("")?"0":score.getSpec_class());
+            score.setTest_status(score.getTest_status().equals("")?"0":score.getTest_status());
+            score.setScore(score.getScore().equals("")?"0":score.getScore());
+
             sql[i]=" insert into t_score (id,test_no,test_subject,test_level,spec_class,test_status,score)";
             sql[i]+=" select seq_t_score.nextval,"
                     +"'"+score.getTest_no()+"',"

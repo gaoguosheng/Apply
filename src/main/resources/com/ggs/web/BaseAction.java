@@ -55,6 +55,7 @@ public  class BaseAction extends ActionSupport implements
 	public void setServletResponse(HttpServletResponse res) {
 		this.response = res;		
 		this.response.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html;charset=UTF-8");
 	}
 
 	/**
