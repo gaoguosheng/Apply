@@ -101,20 +101,23 @@
     <format>
         <value>
             <![CDATA[
-                        if(test_status==null)
-                            test_status="";
-                        if (test_status.equals("2")){
-                            score="缺考";
-                        }else if (test_status.equals("3")){
-                            score="违纪";
-                        }
-                        if(isquali==null)
+                         if(isquali==null)
                             isquali="";
                         if (isquali.equals("1")){
                             isquali="合格";
                         }else if (isquali.equals("0")){
                             isquali="<font color='red'>不合格</font>";
                         }
+                        if(test_status==null)
+                            test_status="";
+                        if (test_status.equals("2")){
+                            score="缺考";
+                            isquali="<font color='red'>不合格</font>";
+                        }else if (test_status.equals("3")){
+                            score="违纪";
+                            isquali="<font color='red'>不合格</font>";
+                        }
+
                     ]]>
         </value>
     </format>

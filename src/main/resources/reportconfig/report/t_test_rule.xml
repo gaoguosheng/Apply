@@ -150,7 +150,9 @@
                 <col column="{sequence:1}" label="序号" />
                 <col column="id" displaytype="hidden"/>
                 <col column="name" label="科目名称"/>
-                <col column="qualified" label="合格线"/>
+                <col column="qualified" label="药士合格线"/>
+                <col column="qualified2" label="药师合格线"/>
+                <col column="qualified3" label="主管药师合格线"/>
                 <col column="limityear" label="有效年限"/>
             </display>
             <sql>
@@ -159,7 +161,7 @@
                 </select>
                 <update>
                     <![CDATA[
-      update t_test_subject(@{qualified},@{limityear})
+      update t_test_subject(@{qualified},@{qualified2},@{qualified3},@{limityear})
       where id=@{id}
       ]]>
                 </update>
