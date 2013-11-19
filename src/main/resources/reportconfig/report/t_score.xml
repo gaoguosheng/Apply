@@ -5,16 +5,17 @@
 <page id="t_score_list">
   <report id="report1" extends="basePage.editList"  title="成绩管理">
     <display>
-      <col column="{sequence:1}" label="序号" />
+      <!--<col column="{sequence:1}" label="序号" />-->
       <col column="id" displaytype="hidden"/>
         <col column="city_name" label="所在地" />
         <col column="name" label="姓名" />
         <col column="company" label="工作单位" />
-        <col column="test_no" label="准考证号" />
+        <col column="test_no" label="准考证号" valuestyleproperty="style='mso-number-format:\@' " />
         <col column="spec_class_name" label="报考专业" />
         <col column="tech_name_name" label="报考级别" />
         <col column="test_subject_name" label="考试科目" />
         <col column="score" label="考试成绩" />
+        <col column="isquali" label="是否合格"/>
         <col column="test_status" displaytype="hidden"/>
         <!--<col column="test_status_name" label="考试状态" />-->
         <col column="remark" label="备注" />
@@ -77,7 +78,16 @@
           <condition name="test_no" label="准考证号" labelposition="left">
               <value><![CDATA[     test_no like %#data#%  ]]></value>
           </condition>
+          <condition name="flag" label="数据类型" labelposition="left">
+              <inputbox type="selectbox">
+                  <option value="" label="全部"></option>
+                  <option value="0" label="文件导入"></option>
+                  <option value="1" label="手工录入"></option>
+              </inputbox>
+              <value><![CDATA[     flag=to_char(#data#)  ]]></value>
+          </condition>
       </select>
+       <insert pageurl="report{t_score_form_add.report1}"  popupparams="{initsize:'max'}" />
       <update pageurl="report{t_score_form.report1}" urlparams="id=@{id}"  popupparams="{initsize:'max'}" />
       <delete>
           <value>
@@ -91,10 +101,19 @@
     <format>
         <value>
             <![CDATA[
+                        if(test_status==null)
+                            test_status="";
                         if (test_status.equals("2")){
                             score="缺考";
                         }else if (test_status.equals("3")){
                             score="违纪";
+                        }
+                        if(isquali==null)
+                            isquali="";
+                        if (isquali.equals("1")){
+                            isquali="合格";
+                        }else if (isquali.equals("0")){
+                            isquali="<font color='red'>不合格</font>";
                         }
                     ]]>
         </value>
@@ -277,6 +296,55 @@
         <report id="report1" extends="t_score_form_remark.report1" type="detail"/>
     </page>
 
+
+
+    <page id="t_score_form_add">
+        <report id="report1" extends="t_score_form.report1">
+            <display>
+                <col column="id" displaytype="hidden"/>
+                <col column="test_no" label="准考证号" />
+                <col column="spec_class" label="专业" br="true" >
+                        <inputbox type="selectbox">
+                            <option value="1" label="药学"></option>
+                            <option value="2" label="中药学"></option>
+                        </inputbox>
+                </col>
+                <col column="test_level" label="考试级别" >
+                    <inputbox type="selectbox">
+                        <option value="1" label="药士"></option>
+                        <option value="2" label="药师"></option>
+                        <option value="3" label="主管药师"></option>
+                    </inputbox>
+                </col>
+                <col column="test_subject" label="考试科目" br="true" >
+                    <inputbox type="selectbox">
+                        <option source="@{select id,name from t_test_subject}" value="id" label="name"></option>
+                    </inputbox>
+                </col>
+                <col column="test_status" label="考试状态" >
+                    <inputbox type="selectbox">
+                        <option value="1" label="正常"></option>
+                        <option value="2" label="缺考"></option>
+                        <option value="3" label="违纪"></option>
+                    </inputbox>
+                </col>
+                <col column="score" label="考试成绩" br="true"/>
+                <col column="remark" label="备注" br="true" valuestyleproperty="colspan=3">
+                    <inputbox type="textareabox"/>
+                </col>
+            </display>
+            <sql>
+                <insert>
+                    <value>
+                        <![CDATA[
+                        insert into t_score(id=sequence{seq_t_score},
+@{test_no},@{spec_class},@{test_level},@{test_subject},@{test_status},@{score},@{remark},flag=1);
+                    ]]>
+                    </value>
+                </insert>
+            </sql>
+        </report>
+    </page>
 
 
 
