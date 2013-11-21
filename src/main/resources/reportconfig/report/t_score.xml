@@ -5,7 +5,7 @@
 <page id="t_score_list">
   <report id="report1" extends="basePage.editList"  title="成绩管理">
     <display>
-      <!--<col column="{sequence:1}" label="序号" />-->
+      <col column="{sequence:1}" label="序号" />
       <col column="id" displaytype="hidden"/>
         <col column="city_name" label="所在地" />
         <col column="name" label="姓名" />
