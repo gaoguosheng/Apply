@@ -2,6 +2,7 @@
 <applications xmlns="http://www.wabacus.com"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.wabacus.com ../xsd/wabacus.applications.xsd">
+    <!-- 成绩管理-->
 <page id="t_score_list">
   <report id="report1" extends="basePage.editList"  title="成绩管理">
     <display>
@@ -9,7 +10,7 @@
       <col column="id" displaytype="hidden"/>
         <col column="city_name" label="所在地" />
         <col column="name" label="姓名" />
-        <col column="company" label="工作单位" />
+        <col column="company" label="工作单位"  align="left"/>
         <col column="test_no" label="准考证号" valuestyleproperty="style='mso-number-format:\@' " />
         <col column="spec_class_name" label="报考专业" />
         <col column="tech_name_name" label="报考级别" />
@@ -18,11 +19,11 @@
         <col column="isquali" label="是否合格"/>
         <col column="test_status" displaytype="hidden"/>
         <!--<col column="test_status_name" label="考试状态" />-->
-        <col column="remark" label="备注" />
+        <col column="remark" label="备注"  align="left"/>
     </display>
     <sql>
       <select>
-        <value><![CDATA[      select * from v_score  where {#condition#}     ]]></value>
+        <value><![CDATA[      select * from v_score  where {#condition#}     order by cityid,spec_class_id,tech_name_id ]]></value>
           <condition name="test_subject_name" label="考试科目" labelposition="left">
               <inputbox type="selectbox">
                   <option value="" label="全部"></option>
@@ -123,7 +124,7 @@
     </format>
   </report>
 </page>
-
+<!--成绩管理修改表单 -->
 <page id="t_score_form">
   <report id="report1" type="editabledetail">
     <display>
@@ -177,12 +178,13 @@
     </report>
 </page>
 
+    <!--成绩管理弹出详细表单 -->
 <page id="t_score_list_detail">
   <report id="report1" extends="t_score_form.report1"  type="detail"/>
   <report id="report2" extends="t_score_form.report2"/>
 </page>
 
-
+    <!--成绩汇总表 -->
     <page id="t_score_total">
         <report id="report1" extends="t_score_list.report1" type="list" title="成绩汇总表">
             <print type="lodop" preview="true" printpagesize="2,2100,2970,''" include="report1{25}">
@@ -200,7 +202,7 @@
         </report>
     </page>
 
-
+    <!--成绩导入日志 -->
     <page id="t_score_imp_log">
         <report id="report1" extends="t_score_list.report1" title="成绩导入日志">
             <dataexports>
@@ -278,6 +280,7 @@
         </report>
     </page>
 
+    <!--成绩导入日志备注表单 -->
     <page id="t_score_form_remark">
         <report id="report1" extends="t_score_form.report1">
             <sql>
@@ -300,7 +303,7 @@
     </page>
 
 
-
+    <!--成绩管理添加表单 -->
     <page id="t_score_form_add">
         <report id="report1" extends="t_score_form.report1">
             <display>
@@ -345,6 +348,61 @@
                     ]]>
                     </value>
                 </insert>
+            </sql>
+        </report>
+    </page>
+
+
+
+    <!--合格人员成绩汇总表 -->
+    <page id="t_score_quali">
+        <report id="report1" type="list" title="合格人员成绩汇总表" dataexport="richexcel" cellresize="0">
+            <print type="lodop" preview="true" printpagesize="2,2100,2970,''" include="report1{15}">
+            </print>
+            <display>
+                <col column="{sequence:1}" label="序号" />
+                <col column="city_name" label="所在地" />
+                <col column="name" label="姓名" />
+                <col column="company" label="工作单位" align="left" />
+                <col column="test_no" label="准考证号" valuestyleproperty="style='mso-number-format:\@' " />
+                <col column="spec_class_name" label="报考专业" />
+                <col column="tech_name_name" label="报考级别" />
+                <col column="subjects" label="科目成绩" width="400" align="left"/>
+            </display>
+            <sql>
+                <select>
+                    <value><![CDATA[      select * from v_score_quali  where {#condition#}  order by cityid,spec_class_id,tech_name_id   ]]></value>
+                    <condition name="cityid" label="所在地" labelposition="left">
+                        <inputbox type="selectbox">
+                            <option value="" label="全部"></option>
+                            <option source="@{select name from t_city}" label="name" value="name"></option>
+                        </inputbox>
+                        <value><![CDATA[     city_name like %#data#%  ]]></value>
+                    </condition>
+                    <condition name="spec_class" label="报考专业" labelposition="left">
+                        <inputbox type="selectbox">
+                            <option value="" label="全部"></option>
+                            <option source="@{select id,name from t_data where datatype='SpecClass' order by id}" label="name" value="id"></option>
+                        </inputbox>
+                        <value><![CDATA[     spec_class_id=to_char(#data#)  ]]></value>
+                    </condition>
+                    <condition name="tech_name" label="报考级别" labelposition="left">
+                        <inputbox type="selectbox">
+                            <option value="" label="全部"></option>
+                            <option source="@{select id,name from t_data where datatype='TechName' order by id}" label="name" value="id"></option>
+                        </inputbox>
+                        <value><![CDATA[     tech_name_id =to_char(#data#)  ]]></value>
+                    </condition>
+                    <condition name="name" label="姓名" labelposition="left">
+                        <value><![CDATA[     name like %#data#%  ]]></value>
+                    </condition>
+                    <condition name="idcard" label="身份证" labelposition="left">
+                        <value><![CDATA[     idcard like %#data#%  ]]></value>
+                    </condition>
+                    <condition name="test_no" label="准考证号" labelposition="left">
+                        <value><![CDATA[     test_no like %#data#%  ]]></value>
+                    </condition>
+                </select>
             </sql>
         </report>
     </page>
