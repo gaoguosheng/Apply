@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<applications xmlns="http://www.wabacus.com"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.wabacus.com ../xsd/wabacus.applications.xsd">
+<page id="t_cert_list">
+  <report id="report1"  extends="basePage.editList2">
+    <display>
+      <col column="{sequence:1}" label="序号" />
+      <col column="id" displaytype="hidden"/>
+      <col column="certid" label="certid"/>
+      <col column="appr_no" label="appr_no"/>
+      <col column="appr_dept" label="appr_dept"/>
+      <col column="appr_time" label="appr_time"/>
+      <col column="userid" label="userid"/>
+      <col column="appr_org" label="appr_org"/>
+    </display>
+    <sql>
+      <select>
+      <value><![CDATA[      select * from t_cert       ]]></value>
+      </select>      
+      <update>
+      <![CDATA[
+      update t_cert(@{appr_no},@{appr_dept},@{appr_org})
+      where id=@{id}
+      ]]>
+      </update>   
+    </sql>
+  </report>
+</page>
+<!--证书备案表-->
+    <page id="t_cert_filing">
+        <report id="report1"  type="list"  title="证书备案表" dataexport="richexcel">
+            <print type="lodop" preview="true" printpagesize="2,2100,2970,''" include="report1{25}">
+                <![CDATA[relative{/template/dataexport/cert_filing.html}]]>
+            </print>
+            <dataexports>
+                <dataexport  type="richexcel" filename="证书备案表"  template="relative{/template/dataexport/cert_filing.html}"></dataexport>
+            </dataexports>
+            <display>
+                <col column="{sequence:1}" label="序号" />
+                <col column="tech_name_name" label="资格名称"/>
+                <col column="certid" label="证书编号"/>
+                <col column="appr_no" label="批准文号"/>
+                <col column="appr_dept" label="审批部门"/>
+                <col column="appr_time" label="审批时间"/>
+                <col column="spec_class_name" label="专业"/>
+                <col column="name" label="姓名"/>
+                <col column="company" label="工作单位"/>
+                <col column="sex" label="性别"/>
+                <col column="birthday" label="出生年月"/>
+                <col column="grad_scholl" label="毕业院校"/>
+                <col column="grad_spec" label="毕业专业"/>
+                <col column="education_name" label="学历"/>
+                <col column="grad_date" label="毕业时间"/>
+                <group label="原专业技术职务任职资格">
+                    <col column="conftime" label="取得时间"/>
+                    <col column="old_certid" label="证书编号"/>
+                </group>
+            </display>
+            <sql>
+                <select>
+                    <value><![CDATA[      select * from v_cert_filing       ]]></value>
+                </select>                
+            </sql>
+        </report>
+    </page>
+
+</applications>
