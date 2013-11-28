@@ -3,24 +3,39 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.wabacus.com ../xsd/wabacus.applications.xsd">
 <page id="t_cert_list">
-  <report id="report1"  extends="basePage.editList2">
+  <report id="report1"  extends="basePage.editList2" title="证书规则管理" rowselect="none">
+      <buttons>
+          <button autoreportdata="false" name="createCertBtn" label="生成证书" class="com.wabacus.system.buttons.ServerSQLActionButton"
+                  position="title" confirmessage="是否确认生成合格证书？" successprompt="操作成功" failedprompt="操作失败"   styleproperty="class='cls-button2'">
+              <![CDATA[
+							call p_create_cert_no;
+							]]>
+          </button>
+      </buttons>
     <display>
-      <col column="{sequence:1}" label="序号" />
-      <col column="id" displaytype="hidden"/>
-      <col column="certid" label="certid"/>
-      <col column="appr_no" label="appr_no"/>
-      <col column="appr_dept" label="appr_dept"/>
-      <col column="appr_time" label="appr_time"/>
-      <col column="userid" label="userid"/>
-      <col column="appr_org" label="appr_org"/>
+        <col column="id" displaytype="hidden" />
+      <col column="cert_year" label="年份"/>
+      <col column="appr_no" label="批准文号"/>
+      <col column="appr_dept" label="审批部门"/>
+      <col column="appr_org" label="评审组织"/>
+      <col column="certid" label="药士证书编号规则"/>
+      <col column="certid2" label="药师证书编号规则"/>
+      <col column="certid3" label="主管药师证书编号规则"/>
     </display>
     <sql>
       <select>
-      <value><![CDATA[      select * from t_cert       ]]></value>
-      </select>      
+      <value><![CDATA[
+              select * from t_cert_rule;
+              ]]></value>
+      </select>
+        <insert>
+            <![CDATA[
+              insert into t_cert_rule(id=sequence{seq_t_cert_rule},@{cert_year},@{appr_no},@{appr_dept},@{appr_org},@{certid},@{certid2},@{certid3})
+              ]]>
+        </insert>
       <update>
       <![CDATA[
-      update t_cert(@{appr_no},@{appr_dept},@{appr_org})
+      update t_cert_rule(@{cert_year},@{appr_no},@{appr_dept},@{appr_org},@{certid},@{certid2},@{certid3})
       where id=@{id}
       ]]>
       </update>   
@@ -29,8 +44,8 @@
 </page>
 <!--证书备案表-->
     <page id="t_cert_filing">
-        <report id="report1"  type="list"  title="证书备案表" dataexport="richexcel">
-            <print type="lodop" preview="true" printpagesize="2,2100,2970,''" include="report1{25}">
+        <report id="report1"  extends="basePage.list"  title="证书备案表">
+            <print type="lodop" preview="true" printpagesize="2,2100,2970,''" include="report1{10}">
                 <![CDATA[relative{/template/dataexport/cert_filing.html}]]>
             </print>
             <dataexports>
@@ -38,6 +53,7 @@
             </dataexports>
             <display>
                 <col column="{sequence:1}" label="序号" />
+                <col column="id" displaytype="hidden"/>
                 <col column="tech_name_name" label="资格名称"/>
                 <col column="certid" label="证书编号"/>
                 <col column="appr_no" label="批准文号"/>
@@ -59,10 +75,90 @@
             </display>
             <sql>
                 <select>
-                    <value><![CDATA[      select * from v_cert_filing       ]]></value>
-                </select>                
+                    <value><![CDATA[      select * from v_cert_filing  where {#condition#}      ]]></value>
+                   <condition name="tech_name" label="资格名称" labelposition="left">
+                        <inputbox type="selectbox">
+                            <option value="" label="全部"></option>
+                            <option source="@{select id,name from t_data where datatype='TechName' order by id}" label="name" value="id"></option>
+                        </inputbox>
+                        <value><![CDATA[     tech_name =to_char(#data#)  ]]></value>
+                    </condition>
+                    <condition name="certid" label="证书编号" labelposition="left">
+                        <value><![CDATA[     certid like %#data#%  ]]></value>
+                    </condition>
+                  <condition name="spec_class" label="专业" labelposition="left">
+                        <inputbox type="selectbox">
+                            <option value="" label="全部"></option>
+                            <option source="@{select id,name from t_data where datatype='SpecClass' order by id}" label="name" value="id"></option>
+                        </inputbox>
+                        <value><![CDATA[     spec_class=to_char(#data#)  ]]></value>
+                    </condition>
+                    <condition name="name" label="姓名" labelposition="left" br="true">
+                        <value><![CDATA[     name like %#data#%  ]]></value>
+                    </condition>
+                    <condition name="company" label="工作单位" labelposition="left">
+                        <value><![CDATA[     company like %#data#%  ]]></value>
+                    </condition>
+                    <condition name="grad_scholl" label="毕业院校" labelposition="left">
+                        <value><![CDATA[     grad_scholl like %#data#%  ]]></value>
+                    </condition>
+                    <condition name="grad_spec" label="毕业专业" labelposition="left">
+                        <value><![CDATA[     grad_spec like %#data#%  ]]></value>
+                    </condition>
+                </select>
+
             </sql>
         </report>
+    </page>
+    <!--证书备案表 双击详细信息-->
+    <page id="t_cert_filing_detail">
+        <report id="report1" type="detail" title="证书备案表详细信息">
+            <display>
+                <col column="tech_name_name" label="资格名称"/>
+                <col column="certid" label="证书编号" br="true"/>
+                <col column="appr_no" label="批准文号"/>
+                <col column="appr_dept" label="审批部门" br="true"/>
+                <col column="appr_time" label="审批时间"/>
+                <col column="spec_class_name" label="专业" br="true"/>
+                <col column="name" label="姓名"/>
+                <col column="company" label="工作单位" br="true"/>
+                <col column="sex" label="性别"/>
+                <col column="birthday" label="出生年月" br="true"/>
+                <col column="grad_scholl" label="毕业院校"/>
+                <col column="grad_spec" label="毕业专业" br="true"/>
+                <col column="education_name" label="学历"/>
+                <col column="grad_date" label="毕业时间" br="true"/>
+                <col column="conftime" label="原证书取得时间"/>
+                <col column="old_certid" label="原证书编号" br="true"/>
+                <col column="idcard" displaytype="hidden"></col>
+                <col column="work_date" displaytype="hidden"></col>
+                <col column="photo" displaytype="hidden"></col>
+                <col column="now_tech_name" displaytype="hidden"></col>
+                <col column="userid" displaytype="hidden"></col>
+            </display>
+            <sql>
+                <value><![CDATA[      select * from v_cert_filing  where {#condition#}      ]]></value>
+                <condition hidden="true" name="id">
+                    <value><![CDATA[      id=#data# ]]></value>
+                </condition>
+            </sql>
+        </report>
+    </page>
+    <!--合格人员登记表-->
+    <page id="t_cert_quali">
+        <report id="report1" extends="t_cert_filing.report1" title="合格人员登记表">
+        </report>
+    </page>
+    <page id="t_cert_quali_detail">
+        <vpanel id="vp1" border="1" bordercolor="#c0c0c0"  margin="10px" >
+        <print type="lodop" preview="true">
+            <![CDATA[
+							jsp{/template/dataexport/cert_quali.jsp}
+						]]>
+        </print>
+            <report id="report1" extends="t_cert_filing_detail.report1" title="合格人员登记表" template="/template/dataexport/cert_quali.jsp"></report>
+        </vpanel>
+
     </page>
 
 </applications>

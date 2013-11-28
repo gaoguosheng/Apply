@@ -311,4 +311,12 @@ public class DataDao {
         return dbUtil.queryForMap(sql);
     }
 
+    /**
+     * 获取某考生成绩列表
+     * */
+    public static  List getScoreList(String test_year,String userid){
+        String sql ="select test_subject_name,score from V_SCORE where substr(createtime,1,4)="+test_year+" and  createid="+userid+" order by test_subject";
+        return dbUtil.queryForList(sql);
+    }
+
 }
