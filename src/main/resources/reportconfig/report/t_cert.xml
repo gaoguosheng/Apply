@@ -135,6 +135,8 @@
                 <col column="photo" displaytype="hidden"></col>
                 <col column="now_tech_name" displaytype="hidden"></col>
                 <col column="userid" displaytype="hidden"></col>
+                <col column="appr_org" displaytype="hidden"></col>
+                <col column="test_level_name" displaytype="hidden"></col>
             </display>
             <sql>
                 <value><![CDATA[      select * from v_cert_filing  where {#condition#}      ]]></value>
@@ -158,7 +160,21 @@
         </print>
             <report id="report1" extends="t_cert_filing_detail.report1" title="合格人员登记表" template="/template/dataexport/cert_quali.jsp"></report>
         </vpanel>
-
     </page>
 
+    <!--资格证书打印-->
+    <page id="t_cert_print">
+        <report id="report1" extends="t_cert_filing.report1" title="资格证书打印">
+        </report>
+    </page>
+    <page id="t_cert_print_detail">
+        <vpanel id="vp1" border="1" bordercolor="#c0c0c0"  margin="10px" >
+            <print type="lodop" preview="true" printpagesize="2,2100,2970,''">
+                <![CDATA[
+							jsp{/template/dataexport/cert.jsp}
+						]]>
+            </print>
+            <report id="report1" extends="t_cert_filing_detail.report1" title="合格人员登记表" template="/template/dataexport/cert.jsp"></report>
+        </vpanel>
+    </page>
 </applications>

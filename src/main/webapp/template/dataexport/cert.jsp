@@ -1,3 +1,4 @@
+<%@ page import="com.wabacus.system.ReportRequest" %>
 <%--
   Created by IntelliJ IDEA.
   User: GGS
@@ -6,93 +7,86 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%
+    ReportRequest rrequest=(ReportRequest)request.getAttribute("WX_REPORTREQUEST");
+    int size=rrequest.getReportDataListSize("report1");
+    if(size>0){
+
+%>
 <style type="text/css">
-    body{margin:0px; padding:0px;}
-    .thinTable { background-color:black; font-size:9pt; }
-    .thinTable tr{ background-color:white;}
+    td{font-size: 12pt;}
+    .mytd{ border-bottom:1px solid #000000;}
 </style>
+<table width="1000px" border="0">
+    <tr>
+        <td width="50%" align="center" valign="top">
 
-<h3 align="center">2013年度福建省药学（非临床）专业初中级技术职务任职资格考试<br />
-    合格人员登记表</h3>
-<table class="thinTable" cellpadding="8" cellspacing="1" width="730" border="0">
-    <col width="83" />
-    <col width="72" />
-    <col width="87" />
-    <col width="90" />
-    <col width="79" />
-    <col width="80" />
-    <col width="157" />
-    <tr>
-        <td colspan="7" width="648">&nbsp;</td>
-    </tr>
-    <tr>
-        <td width="83">姓名</td>
-        <td width="72">　</td>
-        <td width="87">性别</td>
-        <td width="90">　</td>
-        <td width="79">出生年月</td>
-        <td width="80">　</td>
-        <td rowspan="6" width="157">照片</td>
-    </tr>
-    <tr>
-        <td width="83">工作时间</td>
-        <td width="72">　</td>
-        <td width="87">身份证号码</td>
-        <td colspan="3" width="249">　</td>
-    </tr>
-    <tr>
-        <td width="83">工作单位</td>
-        <td colspan="5" width="408">　</td>
-    </tr>
-    <tr>
-        <td width="83">毕业院校</td>
-        <td colspan="3" width="249">　</td>
-        <td width="79">所学专业</td>
-        <td width="80">　</td>
-    </tr>
-    <tr>
-        <td width="83">现专业技术职务</td>
-        <td colspan="2" width="159">　</td>
-        <td width="90">取得时间</td>
-        <td colspan="2" width="159">　</td>
-    </tr>
-    <tr>
-        <td width="83">报考层次</td>
-        <td colspan="2" width="159">　</td>
-        <td width="90">报考专业</td>
-        <td colspan="2" width="159">　</td>
-    </tr>
-    <tr>
-        <td rowspan="2" width="83">考试成绩</td>
-        <td width="72">&nbsp;</td>
-        <td width="87">&nbsp;</td>
-        <td width="90">&nbsp;</td>
-        <td colspan="2" width="159">&nbsp;</td>
-        <td width="157">&nbsp;</td>
-    </tr>
-    <tr>
-        <td width="72">　</td>
-        <td width="87">　</td>
-        <td width="90">　</td>
-        <td colspan="2" width="159">　</td>
-        <td width="157">　</td>
-    </tr>
-    <tr>
-        <td width="83">考试管理机构意见</td>
-        <td colspan="6" width="565"><p align="center">该同志经全省统一考试，全部规定科目成绩合格。<br>
-        </p>
-            <p align="right">   （章）                                                                                          年      月     日</p></td>
-    </tr>
+            <table cellpadding="10"  width="90%" align="center" border="0" >
+                <tr>
+                    <td colspan="2" align="center">
+                        <img src="<%=rrequest.getColDisplayValue("report1","photo",0) %>" style="width: 100px;height: 120px;">
+                    </td>
+                </tr>
+                <tr>
+                    <td width="100px">姓&nbsp;&nbsp;&nbsp;&nbsp;名：</td>
+                    <td class="mytd"><%=rrequest.getColDisplayValue("report1","name",0) %></td>
+                </tr>
+                <tr>
+                    <td>性&nbsp;&nbsp;&nbsp;&nbsp;别：</td>
+                    <td class="mytd"><%=rrequest.getColDisplayValue("report1","sex",0) %></td>
+                </tr>
+                <tr>
+                    <td>出生年月：</td>
+                    <td class="mytd"><%=rrequest.getColDisplayValue("report1","birthday",0) %></td>
+                </tr>
+                <tr>
+                    <td>工作单位：</td>
+                    <td class="mytd"><%=rrequest.getColDisplayValue("report1","company",0) %></td>
+                </tr>
+                <tr>
+                    <td>证书编号：</td>
+                    <td class="mytd"><%=rrequest.getColDisplayValue("report1","certid",0) %></td>
+                </tr>
+            </table>
 
-    <tr>
-        <td width="83">省职改办意见</td>
-        <td width="565" colspan="6"><p align="center">该同志具备             资格。<br>
-        </p>
-            <p align="right">                                                       （章）                                                  年        月      日</p></td>
-    </tr>
+        </td>
+        <td align="center" valign="top">
 
-    <tr>
-        <td width="83">证书编号</td>
-        <td colspan="6" width="565">　</td>
+            <table cellpadding="10"  width="90%" align="center" border="0" class="mytb">
+                <tr>
+                    <td  width="100px">级&nbsp;&nbsp;&nbsp;&nbsp;别：</td>
+                    <td class="mytd"><%=rrequest.getColDisplayValue("report1","test_level_name",0) %></td>
+                </tr>
+                <tr>
+                    <td>专业名称：</td>
+                    <td class="mytd"><%=rrequest.getColDisplayValue("report1","spec_class_name",0) %></td>
+                </tr>
+                <tr>
+                    <td>资格名称：</td>
+                    <td class="mytd"><%=rrequest.getColDisplayValue("report1","tech_name_name",0) %></td>
+                </tr>
+                <tr>
+                    <td>评审组织：</td>
+                    <td class="mytd"><%=rrequest.getColDisplayValue("report1","appr_org",0) %></td>
+                </tr>
+                <tr>
+                    <td>审批部门：</td>
+                    <td class="mytd"><%=rrequest.getColDisplayValue("report1","appr_dept",0) %></td>
+                </tr>
+                <tr>
+                    <td>批准文号：</td>
+                    <td class="mytd"><%=rrequest.getColDisplayValue("report1","appr_no",0) %></td>
+                </tr>
+                <tr>
+                    <td>批准日期：</td>
+                    <td class="mytd"><%=rrequest.getColDisplayValue("report1","appr_time",0) %></td>
+                </tr>
+            </table>
+
+        </td>
     </tr>
 </table>
+
+
+
+<%}%>
