@@ -4,6 +4,11 @@
   xsi:schemaLocation="http://www.wabacus.com ../xsd/wabacus.applications.xsd">
 <page id="t_cert_list">
   <report id="report1"  extends="basePage.editList2" title="证书规则管理" rowselect="none">
+      <header>
+          <![CDATA[
+                        <font color='blue'>注意：设置好规则后，点击生成证书按钮，可根据当前规则自动批量生成证书记录。</font>
+                        ]]>
+      </header>
       <buttons>
           <button autoreportdata="false" name="createCertBtn" label="生成证书" class="com.wabacus.system.buttons.ServerSQLActionButton"
                   position="title" confirmessage="是否确认生成合格证书？" successprompt="操作成功" failedprompt="操作失败"   styleproperty="class='cls-button2'">
@@ -44,7 +49,12 @@
 </page>
 <!--证书备案表-->
     <page id="t_cert_filing">
-        <report id="report1"  extends="basePage.list"  title="证书备案表">
+        <report id="report1"  extends="basePage.editList2"  title="证书备案表" width="2000px" scrollwidth="1150px" pagesize="10">
+            <header>
+                <![CDATA[
+                        <font color='blue'>注意：证书备案表可批量编辑证书编号、批准文号、审批部门，点击保存按钮保存数据。</font>
+                        ]]>
+            </header>
             <print type="lodop" preview="true" printpagesize="2,2100,2970,''" include="report1{10}">
                 <![CDATA[relative{/template/dataexport/cert_filing.html}]]>
             </print>
@@ -106,6 +116,14 @@
                         <value><![CDATA[     grad_spec like %#data#%  ]]></value>
                     </condition>
                 </select>
+                <update>
+                    <value>
+                        <![CDATA[
+                                         update t_cert(@{certid},@{appr_no},@{appr_dept})
+                                    where id=@{id}
+                                ]]>
+                    </value>
+                </update>
 
             </sql>
         </report>
@@ -148,7 +166,12 @@
     </page>
     <!--合格人员登记表-->
     <page id="t_cert_quali">
-        <report id="report1" extends="t_cert_filing.report1" title="合格人员登记表">
+        <report id="report1" extends="t_cert_filing.report1" title="合格人员登记表" type="list">
+            <header>
+            <![CDATA[
+                        <font color='blue'>注意：双击可打印该考生的合格人员登记表。</font>
+                        ]]>
+            </header>
         </report>
     </page>
     <page id="t_cert_quali_detail">
@@ -164,7 +187,12 @@
 
     <!--资格证书打印-->
     <page id="t_cert_print">
-        <report id="report1" extends="t_cert_filing.report1" title="资格证书打印">
+        <report id="report1" extends="t_cert_filing.report1" title="资格证书打印" type="list">
+            <header>
+            <![CDATA[
+                        <font color='blue'>注意：双击可打印该考生的资格证书。</font>
+                        ]]>
+            </header>
         </report>
     </page>
     <page id="t_cert_print_detail">
