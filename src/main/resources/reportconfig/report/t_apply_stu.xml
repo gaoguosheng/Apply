@@ -402,6 +402,7 @@
                 <col column="score" label="考试成绩" />
                 <col column="test_status" displaytype="hidden"/>
                 <col column="isquali" label="是否合格"/>
+                <col column="remark" label="备注"/>
                 <!--<col column="test_status_name" label="考试状态" />-->
             </display>
             <sql>
