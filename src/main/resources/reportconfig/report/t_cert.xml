@@ -22,7 +22,11 @@
       <col column="cert_year" label="年份"/>
       <col column="appr_no" label="批准文号"/>
       <col column="appr_dept" label="审批部门"/>
+        <col column="appr_time" label="审批时间">
+            <inputbox type="datepicker"></inputbox>
+        </col>
       <col column="appr_org" label="评审组织"/>
+
       <col column="certid" label="药士证书编号规则"/>
       <col column="certid2" label="药师证书编号规则"/>
       <col column="certid3" label="主管药师证书编号规则"/>
@@ -35,12 +39,12 @@
       </select>
         <insert>
             <![CDATA[
-              insert into t_cert_rule(id=sequence{seq_t_cert_rule},@{cert_year},@{appr_no},@{appr_dept},@{appr_org},@{certid},@{certid2},@{certid3})
+              insert into t_cert_rule(id=sequence{seq_t_cert_rule},@{cert_year},@{appr_no},@{appr_dept},@{appr_org},@{certid},@{certid2},@{certid3},@{appr_time})
               ]]>
         </insert>
       <update>
       <![CDATA[
-      update t_cert_rule(@{cert_year},@{appr_no},@{appr_dept},@{appr_org},@{certid},@{certid2},@{certid3})
+      update t_cert_rule(@{cert_year},@{appr_no},@{appr_dept},@{appr_org},@{certid},@{certid2},@{certid3},@{appr_time})
       where id=@{id}
       ]]>
       </update>   
@@ -49,10 +53,10 @@
 </page>
 <!--证书备案表-->
     <page id="t_cert_filing">
-        <report id="report1"  extends="basePage.editList2"  title="证书备案表" width="2000px" scrollwidth="1150px" pagesize="10">
+        <report id="report1"  extends="basePage.editList2"  title="证书备案表" >
             <header>
                 <![CDATA[
-                        <font color='blue'>注意：证书备案表可批量编辑证书编号、批准文号、审批部门，点击保存按钮保存数据。</font>
+                        <font color='blue'>注意：证书备案表可批量编辑证书编号、批准文号、审批部门、审批时间，点击保存按钮保存数据。</font>
                         ]]>
             </header>
             <print type="lodop" preview="true" printpagesize="2,2100,2970,''" include="report1{10}">
@@ -86,40 +90,44 @@
             <sql>
                 <select>
                     <value><![CDATA[      select * from v_cert_filing  where {#condition#}      ]]></value>
-                   <condition name="tech_name" label="资格名称" labelposition="left">
+                    <condition name="cityid" label="所在地" labelposition="left">
+                        <inputbox type="selectbox">
+                            <option value="" label="全部"></option>
+                            <option source="@{select name from t_city}" label="name" value="name"></option>
+                        </inputbox>
+                        <value><![CDATA[     city_name like %#data#%  ]]></value>
+                    </condition>
+                   <condition name="tech_name" label="报考级别" labelposition="left">
                         <inputbox type="selectbox">
                             <option value="" label="全部"></option>
                             <option source="@{select id,name from t_data where datatype='TechName' order by id}" label="name" value="id"></option>
                         </inputbox>
                         <value><![CDATA[     tech_name =to_char(#data#)  ]]></value>
                     </condition>
-                    <condition name="certid" label="证书编号" labelposition="left">
-                        <value><![CDATA[     certid like %#data#%  ]]></value>
-                    </condition>
-                  <condition name="spec_class" label="专业" labelposition="left">
+                  <condition name="spec_class" label="报考专业" labelposition="left" br="true">
                         <inputbox type="selectbox">
                             <option value="" label="全部"></option>
                             <option source="@{select id,name from t_data where datatype='SpecClass' order by id}" label="name" value="id"></option>
                         </inputbox>
                         <value><![CDATA[     spec_class=to_char(#data#)  ]]></value>
                     </condition>
-                    <condition name="name" label="姓名" labelposition="left" br="true">
+                    <condition name="certid" label="证书编号" labelposition="left">
+                        <value><![CDATA[     certid like %#data#%  ]]></value>
+                    </condition>
+                    <condition name="name" label="姓名" labelposition="left" >
                         <value><![CDATA[     name like %#data#%  ]]></value>
                     </condition>
-                    <condition name="company" label="工作单位" labelposition="left">
-                        <value><![CDATA[     company like %#data#%  ]]></value>
+                    <condition name="idcard" label="身份证" labelposition="left" >
+                        <value><![CDATA[     idcard like %#data#%  ]]></value>
                     </condition>
-                    <condition name="grad_scholl" label="毕业院校" labelposition="left">
-                        <value><![CDATA[     grad_scholl like %#data#%  ]]></value>
-                    </condition>
-                    <condition name="grad_spec" label="毕业专业" labelposition="left">
-                        <value><![CDATA[     grad_spec like %#data#%  ]]></value>
+                    <condition name="test_no" label="准考证" labelposition="left" >
+                        <value><![CDATA[     test_no like %#data#%  ]]></value>
                     </condition>
                 </select>
                 <update>
                     <value>
                         <![CDATA[
-                                         update t_cert(@{certid},@{appr_no},@{appr_dept})
+                                         update t_cert(@{certid},@{appr_no},@{appr_dept},@{appr_time})
                                     where id=@{id}
                                 ]]>
                     </value>
