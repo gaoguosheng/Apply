@@ -104,14 +104,14 @@
                         </inputbox>
                         <value><![CDATA[     tech_name =to_char(#data#)  ]]></value>
                     </condition>
-                  <condition name="spec_class" label="报考专业" labelposition="left" br="true">
+                  <condition name="spec_class" label="报考专业" labelposition="left" >
                         <inputbox type="selectbox">
                             <option value="" label="全部"></option>
                             <option source="@{select id,name from t_data where datatype='SpecClass' order by id}" label="name" value="id"></option>
                         </inputbox>
                         <value><![CDATA[     spec_class=to_char(#data#)  ]]></value>
                     </condition>
-                    <condition name="certid" label="证书编号" labelposition="left">
+                    <condition name="certid" label="证书编号" labelposition="left" br="true">
                         <value><![CDATA[     certid like %#data#%  ]]></value>
                     </condition>
                     <condition name="name" label="姓名" labelposition="left" >
