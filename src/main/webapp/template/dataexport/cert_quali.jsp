@@ -113,22 +113,22 @@
 
     <tr>
         <td >考试管理机构意见</td>
-        <td colspan="6" >
+        <td colspan="6"  style="height: 250px;">
             <p align="center" style="height: 50px;">该同志经全省统一考试，全部规定科目成绩合格。</p>
             <div style="height: 100px;text-align: right;margin-right: 30px;">
                 <p style="height: 50px;">（章）</p>
-                <p>年&nbsp;&nbsp;月&nbsp;&nbsp;日&nbsp;&nbsp;</p>
+                <p><%=rrequest.getColDisplayValue("report1","exam_manage_time",0) %></p>
             </div>
         </td>
     </tr>
 
     <tr>
         <td >省职改办意见</td>
-        <td  colspan="6">
+        <td  colspan="6" style="height: 250px;">
             <p align="center" style="height: 50px;">该同志具备 <b><%=rrequest.getColDisplayValue("report1","tech_name_name",0) %></b> 资格。 </p>
             <div style="height: 100px;text-align: right;margin-right: 30px;">
                 <p style="height: 50px;">（章）</p>
-                <p>年&nbsp;&nbsp;月&nbsp;&nbsp;日&nbsp;&nbsp;</p>
+                <p><%=rrequest.getColDisplayValue("report1","prov_time",0) %></p>
             </div>
         </td>
     </tr>
@@ -143,6 +143,9 @@
                 }
             %>
         </td>
+    </tr>
+    <tr>
+        <td colspan="7">备注：此表一式二份，一份考试管理机构留底，一份存入个人档案内。</td>
     </tr>
 </table>
 <%}%>

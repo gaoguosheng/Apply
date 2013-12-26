@@ -66,8 +66,11 @@
                     <td class="mytd"><%=rrequest.getColDisplayValue("report1","tech_name_name",0) %></td>
                 </tr>
                 <tr>
-                    <td>评审组织：</td>
+                    <td rowspan="2" valign="top">评审组织：</td>
                     <td class="mytd"><%=rrequest.getColDisplayValue("report1","appr_org",0) %></td>
+                </tr>
+                <tr>
+                    <td class="mytd">&nbsp;</td>
                 </tr>
                 <tr>
                     <td>审批部门：</td>

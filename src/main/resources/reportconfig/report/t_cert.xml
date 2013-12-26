@@ -6,7 +6,9 @@
   <report id="report1"  extends="basePage.editList2" title="证书规则管理" rowselect="none">
       <header>
           <![CDATA[
-                        <font color='blue'>注意：设置好规则后，点击生成证书按钮，可根据当前规则自动批量生成证书记录。</font>
+                        <font color='blue'>规则说明：<br/>
+                        证书编号由证书前缀规则+证书起始编号进行生成，证书起始编号格式为（药学专业起始编号,中药学专业起始编号），如：(1,1000)<br/>
+                        设置好规则后，点击生成证书按钮，可根据当前规则自动批量生成证书记录。</font>
                         ]]>
       </header>
       <buttons>
@@ -19,17 +21,28 @@
       </buttons>
     <display>
         <col column="id" displaytype="hidden" />
-      <col column="cert_year" label="年份"/>
+      <col column="cert_year" label="年份">
+          <inputbox type="datepicker" dateformat="yyyy"></inputbox>
+      </col>
       <col column="appr_no" label="批准文号"/>
       <col column="appr_dept" label="审批部门"/>
         <col column="appr_time" label="审批时间">
-            <inputbox type="datepicker"></inputbox>
+            <inputbox type="datepicker" dateformat="yyyy年MM月dd日"></inputbox>
+        </col>
+        <col column="exam_manage_time" label="考试管理机构意见时间" >
+            <inputbox type="datepicker" dateformat="yyyy年MM月dd日"></inputbox>
+        </col>
+        <col column="prov_time" label="省职改办意见时间">
+            <inputbox type="datepicker" dateformat="yyyy年MM月dd日"></inputbox>
         </col>
       <col column="appr_org" label="评审组织"/>
 
-      <col column="certid" label="药士证书编号规则"/>
-      <col column="certid2" label="药师证书编号规则"/>
-      <col column="certid3" label="主管药师证书编号规则"/>
+      <col column="certid" label="药士编号前缀"/>
+      <col column="certid_start" label="药士起始编号"/>
+      <col column="certid2" label="药师编号前缀"/>
+      <col column="certid2_start" label="药师起始编号"/>
+      <col column="certid3" label="主管药师编号前缀"/>
+      <col column="certid3_start" label="主管药师起始编号"/>
     </display>
     <sql>
       <select>
@@ -39,12 +52,16 @@
       </select>
         <insert>
             <![CDATA[
-              insert into t_cert_rule(id=sequence{seq_t_cert_rule},@{cert_year},@{appr_no},@{appr_dept},@{appr_org},@{certid},@{certid2},@{certid3},@{appr_time})
+              insert into t_cert_rule(id=sequence{seq_t_cert_rule},@{cert_year},@{appr_no},@{appr_dept},@{appr_org},
+              @{certid},@{certid2},@{certid3},@{appr_time},@{exam_manage_time},@{prov_time},
+              @{certid_start},@{certid2_start},@{certid3_start})
               ]]>
         </insert>
       <update>
       <![CDATA[
-      update t_cert_rule(@{cert_year},@{appr_no},@{appr_dept},@{appr_org},@{certid},@{certid2},@{certid3},@{appr_time})
+      update t_cert_rule(@{cert_year},@{appr_no},@{appr_dept},@{appr_org},
+      @{certid},@{certid2},@{certid3},@{appr_time},@{exam_manage_time},@{prov_time},
+      @{certid_start},@{certid2_start},@{certid3_start})
       where id=@{id}
       ]]>
       </update>   
@@ -56,7 +73,7 @@
         <report id="report1"  extends="basePage.editList2"  title="证书备案表" >
             <header>
                 <![CDATA[
-                        <font color='blue'>注意：证书备案表可批量编辑证书编号、批准文号、审批部门、审批时间，点击保存按钮保存数据。</font>
+                        <font color='blue'>注意：证书备案表可手动编辑证书编号。</font>
                         ]]>
             </header>
             <print type="lodop" preview="true" printpagesize="2,2100,2970,''" include="report1{10}">
@@ -69,7 +86,7 @@
                 <col column="{sequence:1}" label="序号" />
                 <col column="id" displaytype="hidden"/>
                 <col column="tech_name_name" label="资格名称"/>
-                <col column="certid" label="证书编号"/>
+                <col column="certid" label="证书编号" width="120"/>
                 <col column="appr_no" label="批准文号"/>
                 <col column="appr_dept" label="审批部门"/>
                 <col column="appr_time" label="审批时间"/>
@@ -127,7 +144,7 @@
                 <update>
                     <value>
                         <![CDATA[
-                                         update t_cert(@{certid},@{appr_no},@{appr_dept},@{appr_time})
+                                         update t_cert(@{certid})
                                     where id=@{id}
                                 ]]>
                     </value>
@@ -163,6 +180,8 @@
                 <col column="userid" displaytype="hidden"></col>
                 <col column="appr_org" displaytype="hidden"></col>
                 <col column="test_level_name" displaytype="hidden"></col>
+                <col column="exam_manage_time" displaytype="hidden"></col>
+                <col column="prov_time" displaytype="hidden"></col>
             </display>
             <sql>
                 <value><![CDATA[      select * from v_cert_filing  where {#condition#}      ]]></value>
@@ -180,6 +199,18 @@
                         <font color='blue'>注意：双击可打印该考生的合格人员登记表。</font>
                         ]]>
             </header>
+            <display>
+                <col column="{sequence:1}" label="序号" />
+                <col column="id" displaytype="hidden"/>
+                <col column="name" label="姓名"/>
+                <col column="sex" label="性别"/>
+                <col column="birthday" label="出生年月"/>
+                <col column="company" label="工作单位"/>
+                <col column="certid" label="证书编号"/>
+                <col column="tech_name_name" label="资格名称"/>
+                <col column="exam_manage_time" label="考试管理机构意见时间"/>
+                <col column="prov_time" label="省职改办意见时间"/>
+            </display>
         </report>
     </page>
     <page id="t_cert_quali_detail">
@@ -201,6 +232,17 @@
                         <font color='blue'>注意：双击可打印该考生的资格证书。</font>
                         ]]>
             </header>
+            <display>
+                <col column="{sequence:1}" label="序号" />
+                <col column="id" displaytype="hidden"/>
+                <col column="name" label="姓名"/>
+                <col column="sex" label="性别"/>
+                <col column="birthday" label="出生年月"/>
+                <col column="company" label="工作单位"/>
+                <col column="certid" label="证书编号"/>
+                <col column="tech_name_name" label="资格名称"/>
+                <col column="spec_class_name" label="专业"/>
+            </display>
         </report>
     </page>
     <page id="t_cert_print_detail">
