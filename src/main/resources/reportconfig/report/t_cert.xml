@@ -35,7 +35,7 @@
         <col column="prov_time" label="省职改办意见时间">
             <inputbox type="datepicker" dateformat="yyyy年MM月dd日"></inputbox>
         </col>
-      <col column="appr_org" label="评审组织"/>
+
 
       <col column="certid" label="药士编号前缀"/>
       <col column="certid_start" label="药士起始编号"/>
@@ -52,14 +52,14 @@
       </select>
         <insert>
             <![CDATA[
-              insert into t_cert_rule(id=sequence{seq_t_cert_rule},@{cert_year},@{appr_no},@{appr_dept},@{appr_org},
+              insert into t_cert_rule(id=sequence{seq_t_cert_rule},@{cert_year},@{appr_no},@{appr_dept},
               @{certid},@{certid2},@{certid3},@{appr_time},@{exam_manage_time},@{prov_time},
               @{certid_start},@{certid2_start},@{certid3_start})
               ]]>
         </insert>
       <update>
       <![CDATA[
-      update t_cert_rule(@{cert_year},@{appr_no},@{appr_dept},@{appr_org},
+      update t_cert_rule(@{cert_year},@{appr_no},@{appr_dept},
       @{certid},@{certid2},@{certid3},@{appr_time},@{exam_manage_time},@{prov_time},
       @{certid_start},@{certid2_start},@{certid3_start})
       where id=@{id}
@@ -178,7 +178,6 @@
                 <col column="photo" displaytype="hidden"></col>
                 <col column="now_tech_name" displaytype="hidden"></col>
                 <col column="userid" displaytype="hidden"></col>
-                <col column="appr_org" displaytype="hidden"></col>
                 <col column="test_level_name" displaytype="hidden"></col>
                 <col column="exam_manage_time" displaytype="hidden"></col>
                 <col column="prov_time" displaytype="hidden"></col>
@@ -208,6 +207,7 @@
                 <col column="company" label="工作单位"/>
                 <col column="certid" label="证书编号"/>
                 <col column="tech_name_name" label="资格名称"/>
+                <col column="spec_class_name" label="专业"/>
                 <col column="exam_manage_time" label="考试管理机构意见时间"/>
                 <col column="prov_time" label="省职改办意见时间"/>
             </display>

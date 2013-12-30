@@ -17,6 +17,7 @@
     td{font-size: 12pt;}
     .mytd{ border-bottom:1px solid #000000;}
 </style>
+<center>
 <table width="1000px" border="0">
     <tr>
         <td width="50%" align="center" valign="top">
@@ -54,42 +55,30 @@
 
             <table cellpadding="10"  width="90%" align="center" border="0" class="mytb">
                 <tr>
-                    <td  width="100px">级&nbsp;&nbsp;&nbsp;&nbsp;别：</td>
+                    <td>专业名称：</td>
+                    <td class="mytd"><%=rrequest.getColDisplayValue("report1","spec_class_name",0).replaceAll("专业","")  %></td>
+                </tr>
+                <tr>
+                    <td  width="100px">资格级别：</td>
                     <td class="mytd"><%=rrequest.getColDisplayValue("report1","test_level_name",0) %></td>
                 </tr>
                 <tr>
-                    <td>专业名称：</td>
-                    <td class="mytd"><%=rrequest.getColDisplayValue("report1","spec_class_name",0) %></td>
-                </tr>
-                <tr>
                     <td>资格名称：</td>
-                    <td class="mytd"><%=rrequest.getColDisplayValue("report1","tech_name_name",0) %></td>
-                </tr>
-                <tr>
-                    <td rowspan="2" valign="top">评审组织：</td>
-                    <td class="mytd"><%=rrequest.getColDisplayValue("report1","appr_org",0) %></td>
-                </tr>
-                <tr>
-                    <td class="mytd">&nbsp;</td>
-                </tr>
-                <tr>
-                    <td>审批部门：</td>
-                    <td class="mytd"><%=rrequest.getColDisplayValue("report1","appr_dept",0) %></td>
-                </tr>
-                <tr>
-                    <td>批准文号：</td>
-                    <td class="mytd"><%=rrequest.getColDisplayValue("report1","appr_no",0) %></td>
+                    <td class="mytd"><%=rrequest.getColDisplayValue("report1","tech_name_name",0)%></td>
                 </tr>
                 <tr>
                     <td>批准日期：</td>
                     <td class="mytd"><%=rrequest.getColDisplayValue("report1","appr_time",0) %></td>
+                </tr>
+                <tr style="height: 150px;">
+                    <td colspan="2">签发单位（盖章）：</td>
                 </tr>
             </table>
 
         </td>
     </tr>
 </table>
-
+</center>
 
 
 <%}%>
