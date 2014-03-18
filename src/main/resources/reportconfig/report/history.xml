@@ -1,0 +1,934 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<applications xmlns="http://www.wabacus.com"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.wabacus.com ../xsd/wabacus.applications.xsd">
+
+    <!--报名汇总-->
+
+    <page id="t_his_apply_total">
+
+        <report id="report1"  title="报名人员汇总" dataexport="richexcel">
+            <dataexports>
+                <dataexport  type="richexcel" filename="报名人员汇总"  template="relative{/template/dataexport/apply_total.html}"></dataexport>
+            </dataexports>
+            <interceptor>
+                <imports>
+                    <import>com.ggs.bean.User</import>
+                    <import>com.ggs.dao.DataDao</import>
+                    <import>com.ggs.util.DateUtil</import>
+                </imports>
+                <preaction>
+                    User user = (User)rrequest.getRequest().getSession().getAttribute("admin");
+                    String city_name=DataDao.getCity(user.getCityid());
+                    String tech_name=rrequest.getStringAttribute("tech_name","");
+                    if(tech_name==null || tech_name.trim().equals("")){
+                    tech_name="■药士 ■药师    ■主管药师";
+                    }else{
+                    tech_name=DataDao.getDataCode(tech_name);
+                    if(tech_name.equals("10")){
+                    tech_name="■药士 □药师    □主管药师";
+                    }else if(tech_name.equals("11")){
+                    tech_name="□药士 ■药师    □主管药师";
+                    }else if(tech_name.equals("20")){
+                    tech_name="□药士 □药师    ■主管药师";
+                    }
+                    }
+
+                    String spec_class=rrequest.getStringAttribute("spec_class","");
+                    if(spec_class==null || spec_class.trim().equals("")){
+                    spec_class="■药学 ■中药学";
+                    }else{
+                    spec_class=DataDao.getDataCode(spec_class);
+                    if(spec_class.equals("10")){
+                    spec_class="■药学 □中药学";
+
+                    }else if(spec_class.equals("20")){
+                    spec_class="□药学 ■中药学";
+                    }
+                    }
+                    String write_date=DateUtil.getDatebyFormat("yyyy年MM月dd日");
+                    rrequest.getRequest().setAttribute("city_name",city_name);
+                    rrequest.getRequest().setAttribute("tech_name",tech_name);
+                    rrequest.getRequest().setAttribute("spec_class",spec_class);
+                    rrequest.getRequest().setAttribute("write_date",write_date);
+                </preaction>
+            </interceptor>
+            <display>
+                <col column="{sequence:1}" label="序号" width="40" />
+                <col column="id" displaytype="hidden"/>
+                <col column="name" label="姓名" width="60"/>
+                <col column="sex" label="性别" width="40"/>
+                <col column="birthday" label="出生年月" width="80" />
+                <col column="work_date" label="参加工作时间"  width="80"/>
+                <col column="idcard" label="身份证号码" width="130" valuestyleproperty="style='mso-number-format:\@' "/>
+                <col column="company" label="工作单位" />
+                <col column="grad_scholl" label="毕业院校"/>
+                <col column="grad_spec" label="毕业专业" />
+                <col column="grad_date" label="毕业时间" width="80"/>
+                <col column="education" label="学历" width="40"/>
+                <col column="now_tech_name" label="现技术职务" />
+                <col column="conftime" label="现技术职务确认时间" width="80" />
+                <col column="cont_edu" label="继续教育合格年度" width="40" />
+                <col column="mobile" label="联系方式" width="100"/>
+                <col column="remark" label="备注"/>
+            </display>
+            <sql>
+                <select>
+                    <value>
+                        <![CDATA[
+                            select * from t_his_apply where {#condition#} order by committime
+                        ]]>
+                    </value>
+                    <condition name="createid" hidden="true" defaultvalue="session{user_id}">
+                        <value>
+                            <![CDATA[
+                                               createid=#data# or createid in(
+                                    select id from t_user
+                                        where usertype=0
+                                        and(
+                                        (areaid =(select areaid from t_user where  id=#data# and datarole=1))
+                                         or (cityid =(select cityid from t_user where  id=#data# and datarole=2))
+                                        or (provid =(select provid from t_user where  id=#data# and datarole=3))))
+                                ]]>
+                        </value>
+                    </condition>
+
+                    <condition name="status" hidden="true">
+                        <value>
+                            <![CDATA[
+                                   (
+                                   (status=#data#)
+                                     or  (status>#data# and mod(#data#,2)=1)
+                                     or (status=#data#  and mod(#data#,2)=0)
+                                     )
+                                    ]]>
+                        </value>
+                    </condition>
+                    <condition name="test_year" label="年度" labelposition="left">
+                        <inputbox type="selectbox">
+                            <option source="@{select distinct test_year from t_his_apply}" label="test_year" value="test_year"></option>
+                        </inputbox>
+                        <value>
+                            <![CDATA[
+                                        test_year=#data#
+                                    ]]>
+                        </value>
+                    </condition>
+                    <condition name="name" label="姓名" labelposition="left">
+                        <value>
+                            <![CDATA[
+                                       name like '%#data#%'
+                                ]]>
+                        </value>
+                    </condition>
+                    <condition name="idcard" label="身份证号码" labelposition="left">
+                        <value>
+                            <![CDATA[
+                                       idcard like '%#data#%'
+                                ]]>
+                        </value>
+                    </condition>
+                    <condition name="test_level" label="报考层次" labelposition="left">
+                        <inputbox type="selectbox">
+                            <option value="" label="全部"></option>
+                            <option source="@{select distinct test_level,test_level_name from V_VALID_RULE}" label="test_level_name" value="test_level"></option>
+                        </inputbox>
+                        <value>
+                            <![CDATA[
+                                       test_level=#data#
+                                    ]]>
+                        </value>
+                    </condition>
+                    <condition name="tech_name" label="报考资格" labelposition="left">
+                        <inputbox type="selectbox">
+                            <option value="" label="全部"></option>
+                            <option source="@{select distinct tech_name_name,tech_name from V_VALID_RULE }" label="tech_name_name" value="tech_name"></option>
+                        </inputbox>
+                        <value>
+                            <![CDATA[
+                                       tech_name=#data#
+                                    ]]>
+                        </value>
+                    </condition>
+                    <condition name="spec_class" label="报考专业" labelposition="left">
+                        <inputbox type="selectbox" >
+                            <option value="" label="全部"></option>
+                            <option source="@{select distinct spec_class_name,spec_class from V_VALID_RULE }" label="spec_class_name" value="spec_class"></option>
+                        </inputbox>
+                        <value>
+                            <![CDATA[
+                                      spec_class=#data#
+                                    ]]>
+                        </value>
+                    </condition>
+                    <condition name="cityid" label="城市" labelposition="left">
+                        <inputbox type="selectbox">
+                            <option  label="全部" value=""></option>
+                            <option source="@{select * from t_city}" label="name" value="id"></option>
+                        </inputbox>
+                        <value>
+                            <![CDATA[
+                                       createid in(
+                                            select id from t_user
+                                                where usertype=0
+                                                and  cityid =#data#
+                                        )
+                                ]]>
+                        </value>
+                    </condition>
+                </select>
+
+            </sql>
+            <format>
+                <imports>
+                    <import>com.ggs.dao.DataDao</import>
+                </imports>
+                <value>
+                    <![CDATA[
+                                      education=DataDao.getDataName(education);
+                                       cont_edu =DataDao.getDataName(cont_edu);
+                    ]]>
+                </value>
+            </format>
+        </report>
+    </page>
+
+
+    <!--考场考生情况查询-->
+    <page id="t_his_exam_site_stu_list">
+        <report id="report1" type="list"
+                dataexport="richexcel"  title="考生分配及查询">
+            <print type="lodop" preview="true"/>
+
+            <display>
+                <col column="{sequence:1}" label="序号" width="40" />
+
+                <col column="site_name" label="考区"/>
+                <col column="addr_name" label="考点"/>
+                <col column="room_name" label="考场"/>
+                <col column="seatnum" label="座号"/>
+                <col column="name" label="姓名"/>
+                <col column="sex" label="性别"/>
+                <col column="city_name" label="城市"/>
+                <col column="test_no" label="准考证号" valuestyleproperty="style='mso-number-format:\@' "/>
+                <col column="idcard" label="身份证号" valuestyleproperty="style='mso-number-format:\@' "/>
+                <col column="test_level_name" label="报考级别"/>
+                <col column="tech_name_name" label="报考资格"/>
+                <col column="spec_class_name" label="专业"/>
+
+            </display>
+            <sql>
+                <select>
+                    <value>
+                        <![CDATA[
+                            select * from t_his_exam_site_stu where {#condition#}   order by siteid,addrid,roomid,seatnum
+                            ]]>
+                    </value>
+                    <condition name="test_year" label="年度" labelposition="left">
+                        <inputbox type="selectbox">
+                            <option source="@{select distinct test_year from t_his_exam_site_stu}" label="test_year" value="test_year"></option>
+                        </inputbox>
+                        <value>
+                            <![CDATA[
+                                        test_year=#data#
+                                    ]]>
+                        </value>
+                    </condition>
+                    <condition name="siteid" label="考区" labelposition="left">
+                        <inputbox type="selectbox">
+                            <option value="" label="全部"></option>
+                            <option source="@{select * from t_exam_site}" label="name" value="id"></option>
+                        </inputbox>
+                        <value><![CDATA[siteid=#data# ]]></value>
+                    </condition>
+                    <condition name="addrid" label="考点" labelposition="left">
+                        <inputbox type="selectbox"  depends="siteid">
+                            <option value="" label="全部"></option>
+                            <option source="@{select * from t_exam_addr where to_char(siteid)='#[siteid]#'}" label="name" value="id"></option>
+                        </inputbox>
+                        <value><![CDATA[addrid=#data# ]]></value>
+                    </condition>
+                    <condition name="roomid" label="考场" labelposition="left">
+                        <inputbox type="selectbox"  depends="addrid">
+                            <option value="" label="全部"></option>
+                            <option source="@{select * from t_exam_room where to_char(addrid)='#addrid#'}" label="name" value="id"></option>
+                        </inputbox>
+                        <value><![CDATA[roomid=#data# ]]></value>
+                    </condition>
+                    <condition name="name" label="姓名" labelposition="left">
+                        <value><![CDATA[name like %#data#% ]]></value>
+                    </condition>
+                    <condition name="idcard" label="身份证" labelposition="left">
+                        <value><![CDATA[idcard like %#data#% ]]></value>
+                    </condition>
+                    <condition name="test_no" label="准考证" labelposition="left">
+                        <value><![CDATA[test_no like %#data#% ]]></value>
+                    </condition>
+                </select>
+            </sql>
+        </report>
+    </page>
+
+
+    <!-- 成绩汇总表-->
+    <page id="t_his_score_total">
+        <report id="report1" extends="basePage.editList"  title="成绩汇总表">
+            <display>
+                <col column="{sequence:1}" label="序号" />
+                <col column="id" displaytype="hidden"/>
+                <col column="city_name" label="所在地" />
+                <col column="name" label="姓名" />
+                <col column="company" label="工作单位"  align="left"/>
+                <col column="test_no" label="准考证号" valuestyleproperty="style='mso-number-format:\@' " />
+                <col column="spec_class_name" label="报考专业" />
+                <col column="tech_name_name" label="报考级别" />
+                <col column="test_subject_name" label="考试科目" />
+                <col column="score" label="考试成绩" />
+                <col column="isquali" label="是否合格"/>
+                <col column="test_status" displaytype="hidden"/>
+                <!--<col column="test_status_name" label="考试状态" />-->
+                <col column="remark" label="备注"  align="left"/>
+            </display>
+            <sql>
+                <select>
+                    <value><![CDATA[      select * from t_his_score  where {#condition#}     order by cityid,spec_class_id,tech_name_id ]]></value>
+                    <condition name="test_year" label="年度" labelposition="left">
+                        <inputbox type="selectbox">
+                            <option source="@{select distinct test_year from t_his_score}" label="test_year" value="test_year"></option>
+                        </inputbox>
+                        <value>
+                            <![CDATA[
+                                        test_year=#data#
+                                    ]]>
+                        </value>
+                    </condition>
+                    <condition name="test_subject_name" label="考试科目" labelposition="left">
+                        <inputbox type="selectbox">
+                            <option value="" label="全部"></option>
+                            <option source="@{select id,name from t_test_subject}" label="name" value="name"></option>
+                        </inputbox>
+                        <value><![CDATA[     test_subject_name = to_char(#data#)  ]]></value>
+                    </condition>
+                    <condition name="cityid" label="所在地" labelposition="left">
+                        <inputbox type="selectbox">
+                            <option value="" label="全部"></option>
+                            <option source="@{select name from t_city}" label="name" value="name"></option>
+                        </inputbox>
+                        <value><![CDATA[     city_name like %#data#%  ]]></value>
+                    </condition>
+                    <condition name="spec_class" label="报考专业" labelposition="left">
+                        <inputbox type="selectbox">
+                            <option value="" label="全部"></option>
+                            <option source="@{select id,name from t_data where datatype='SpecClass' order by id}" label="name" value="id"></option>
+                        </inputbox>
+                        <value><![CDATA[     spec_class_id=to_char(#data#)  ]]></value>
+                    </condition>
+                    <condition name="tech_name" label="报考级别" labelposition="left">
+                        <inputbox type="selectbox">
+                            <option value="" label="全部"></option>
+                            <option source="@{select id,name from t_data where datatype='TechName' order by id}" label="name" value="id"></option>
+                        </inputbox>
+                        <value><![CDATA[     tech_name_id =to_char(#data#)  ]]></value>
+                    </condition>
+                    <condition name="isquali" label="是否合格" labelposition="left" br="true">
+                        <inputbox type="selectbox">
+                            <option value="" label="全部"></option>
+                            <option value="1" label="合格"></option>
+                            <option value="0" label="不合格"></option>
+                        </inputbox>
+                        <value><![CDATA[     isquali=to_char(#data#)  ]]></value>
+                    </condition>
+                    <condition name="test_status" label="考试状态" labelposition="left" >
+                        <inputbox type="selectbox">
+                            <option value="" label="全部"></option>
+                            <option value="1" label="正常"></option>
+                            <option value="2" label="缺考"></option>
+                            <option value="3" label="违纪"></option>
+                        </inputbox>
+                        <value><![CDATA[     test_status=to_char(#data#)  ]]></value>
+                    </condition>
+
+                    <condition name="name" label="姓名" labelposition="left">
+                        <value><![CDATA[     name like %#data#%  ]]></value>
+                    </condition>
+                    <condition name="idcard" label="身份证" labelposition="left">
+                        <value><![CDATA[     idcard like %#data#%  ]]></value>
+                    </condition>
+                    <condition name="test_no" label="准考证号" labelposition="left">
+                        <value><![CDATA[     test_no like %#data#%  ]]></value>
+                    </condition>
+                    <condition name="flag" label="数据类型" labelposition="left">
+                        <inputbox type="selectbox">
+                            <option value="" label="全部"></option>
+                            <option value="0" label="文件导入"></option>
+                            <option value="1" label="手工录入"></option>
+                        </inputbox>
+                        <value><![CDATA[     flag=to_char(#data#)  ]]></value>
+                    </condition>
+                </select>
+            </sql>
+            <format>
+                <value>
+                    <![CDATA[
+                         if(isquali==null)
+                            isquali="";
+                        if (isquali.equals("1")){
+                            isquali="合格";
+                        }else if (isquali.equals("0")){
+                            isquali="<font color='red'>不合格</font>";
+                        }
+                        if(test_status==null)
+                            test_status="";
+                        if (test_status.equals("2")){
+                            score="缺考";
+                            isquali="<font color='red'>不合格</font>";
+                        }else if (test_status.equals("3")){
+                            score="违纪";
+                            isquali="<font color='red'>不合格</font>";
+                        }
+
+                    ]]>
+                </value>
+            </format>
+        </report>
+    </page>
+
+
+    <!--成绩导入日志 -->
+    <page id="t_his_score_imp_log">
+        <report id="report1" extends="t_score_list.report1" title="成绩导入日志">
+            <dataexports>
+                <dataexport  type="richexcel" filename="成绩汇总表"  template="relative{/template/dataexport/score_total.html}"></dataexport>
+            </dataexports>
+            <display>
+                <col column="{sequence:1}" label="序号" />
+                <col column="id" displaytype="hidden"/>
+                <col column="test_no" label="准考证号" />
+                <col column="spec_class_name" label="报考专业" />
+                <col column="test_level_name" label="报考级别" />
+                <col column="test_subject_name" label="考试科目" />
+                <col column="score" label="考试成绩" />
+                <col column="test_status" displaytype="hidden"/>
+                <!--<col column="test_status_name" label="考试状态" />-->
+                <col column="status" label="日志状态" />
+                <col column="remark" label="备注" />
+            </display>
+            <sql>
+                <select>
+                    <value><![CDATA[      select * from t_his_score_imp_log  where {#condition#}     ]]></value>
+                    <condition name="test_year" label="年度" labelposition="left">
+                        <inputbox type="selectbox">
+                            <option source="@{select distinct test_year from t_his_score_imp_log}" label="test_year" value="test_year"></option>
+                        </inputbox>
+                        <value>
+                            <![CDATA[
+                                        test_year=#data#
+                                    ]]>
+                        </value>
+                    </condition>
+                    <condition name="test_subject_name" label="考试科目" labelposition="left">
+                        <inputbox type="selectbox">
+                            <option value="" label="全部"></option>
+                            <option source="@{select id,name from t_test_subject}" label="name" value="name"></option>
+                        </inputbox>
+                        <value><![CDATA[     test_subject_name = to_char(#data#)  ]]></value>
+                    </condition>
+                    <condition name="spec_class" label="报考专业" labelposition="left">
+                        <inputbox type="selectbox">
+                            <option value="" label="全部"></option>
+                            <option source="@{select id,name from t_data where datatype='SpecClass' order by id}" label="name" value="id"></option>
+                        </inputbox>
+                        <value><![CDATA[     spec_class_id=to_char(#data#)  ]]></value>
+                    </condition>
+                    <condition name="tech_name" label="报考级别" labelposition="left">
+                        <inputbox type="selectbox">
+                            <option value="" label="全部"></option>
+                            <option source="@{select id,name from t_data where datatype='TechName' order by id}" label="name" value="id"></option>
+                        </inputbox>
+                        <value><![CDATA[     tech_name_id =to_char(#data#)  ]]></value>
+                    </condition>
+                    <condition name="status" label="日志状态" labelposition="left" br="true">
+                        <inputbox type="selectbox">
+                            <option value="" label="全部"></option>
+                            <option value="1" label="准考证不存在"></option>
+                            <option value="2" label="科目成绩重复"></option>
+                            <option value="3" label="无科目成绩"></option>
+                        </inputbox>
+                        <value><![CDATA[     status=to_char(#data#)  ]]></value>
+                    </condition>
+                </select>
+            </sql>
+            <format>
+                <value>
+                    <![CDATA[
+                            if (status.equals("1")){
+                                status="准考证不存在";
+                            }else if(status.equals("2")){
+                                   status="科目成绩重复";
+                            }else if(status.equals("3")){
+                                  status="无科目成绩";
+                            }
+
+
+                            if (test_status.equals("2")){
+                            score="缺考";
+                        }else if (test_status.equals("3")){
+                            score="违纪";
+                        }
+                            ]]>
+                </value>
+            </format>
+        </report>
+    </page>
+
+
+
+    <!--证书备案表-->
+    <page id="t_his_cert_filing">
+        <report id="report1"  type="list" dataexport="richexcel"  title="证书备案表" >
+            <print type="lodop" preview="true" printpagesize="2,2100,2970,''" include="report1{10}">
+                <![CDATA[relative{/template/dataexport/cert_filing.html}]]>
+            </print>
+            <dataexports>
+                <dataexport  type="richexcel" filename="证书备案表"  template="relative{/template/dataexport/cert_filing.html}"></dataexport>
+            </dataexports>
+            <display>
+                <col column="{sequence:1}" label="序号" />
+                <col column="id" displaytype="hidden"/>
+                <col column="tech_name_name" label="资格名称"/>
+                <col column="certid" label="证书编号" width="120"/>
+                <col column="appr_no" label="批准文号"/>
+                <col column="appr_dept" label="审批部门"/>
+                <col column="appr_time" label="审批时间"/>
+                <col column="spec_class_name" label="专业"/>
+                <col column="name" label="姓名"/>
+                <col column="company" label="工作单位"/>
+                <col column="sex" label="性别"/>
+                <col column="birthday" label="出生年月"/>
+                <col column="grad_scholl" label="毕业院校"/>
+                <col column="grad_spec" label="毕业专业"/>
+                <col column="education_name" label="学历"/>
+                <col column="grad_date" label="毕业时间"/>
+                <group label="原专业技术职务任职资格">
+                    <col column="conftime" label="取得时间"/>
+                    <col column="old_certid" label="证书编号"/>
+                </group>
+            </display>
+            <sql>
+                <select>
+                    <value><![CDATA[      select * from t_his_cert_filing  where {#condition#}      ]]></value>
+                    <condition name="test_year" label="年度" labelposition="left">
+                        <inputbox type="selectbox">
+                            <option source="@{select distinct test_year from t_his_cert_filing}" label="test_year" value="test_year"></option>
+                        </inputbox>
+                        <value>
+                            <![CDATA[
+                                        test_year=#data#
+                                    ]]>
+                        </value>
+                    </condition>
+                    <condition name="cityid" label="所在地" labelposition="left">
+                        <inputbox type="selectbox">
+                            <option value="" label="全部"></option>
+                            <option source="@{select name from t_city}" label="name" value="name"></option>
+                        </inputbox>
+                        <value><![CDATA[     city_name like %#data#%  ]]></value>
+                    </condition>
+                    <condition name="tech_name" label="报考级别" labelposition="left">
+                        <inputbox type="selectbox">
+                            <option value="" label="全部"></option>
+                            <option source="@{select id,name from t_data where datatype='TechName' order by id}" label="name" value="id"></option>
+                        </inputbox>
+                        <value><![CDATA[     tech_name =to_char(#data#)  ]]></value>
+                    </condition>
+                    <condition name="spec_class" label="报考专业" labelposition="left" >
+                        <inputbox type="selectbox">
+                            <option value="" label="全部"></option>
+                            <option source="@{select id,name from t_data where datatype='SpecClass' order by id}" label="name" value="id"></option>
+                        </inputbox>
+                        <value><![CDATA[     spec_class=to_char(#data#)  ]]></value>
+                    </condition>
+                    <condition name="certid" label="证书编号" labelposition="left" br="true">
+                        <value><![CDATA[     certid like %#data#%  ]]></value>
+                    </condition>
+                    <condition name="name" label="姓名" labelposition="left" >
+                        <value><![CDATA[     name like %#data#%  ]]></value>
+                    </condition>
+                    <condition name="idcard" label="身份证" labelposition="left" >
+                        <value><![CDATA[     idcard like %#data#%  ]]></value>
+                    </condition>
+                    <condition name="test_no" label="准考证" labelposition="left" >
+                        <value><![CDATA[     test_no like %#data#%  ]]></value>
+                    </condition>
+                </select>
+            </sql>
+        </report>
+    </page>
+    <!--证书备案表 双击详细信息-->
+    <page id="t_his_cert_filing_detail">
+        <report id="report1" type="detail" title="证书备案表详细信息">
+            <display>
+                <col column="tech_name_name" label="资格名称"/>
+                <col column="certid" label="证书编号" br="true"/>
+                <col column="appr_no" label="批准文号"/>
+                <col column="appr_dept" label="审批部门" br="true"/>
+                <col column="appr_time" label="审批时间"/>
+                <col column="spec_class_name" label="专业" br="true"/>
+                <col column="name" label="姓名"/>
+                <col column="company" label="工作单位" br="true"/>
+                <col column="sex" label="性别"/>
+                <col column="birthday" label="出生年月" br="true"/>
+                <col column="grad_scholl" label="毕业院校"/>
+                <col column="grad_spec" label="毕业专业" br="true"/>
+                <col column="education_name" label="学历"/>
+                <col column="grad_date" label="毕业时间" br="true"/>
+                <col column="conftime" label="原证书取得时间"/>
+                <col column="old_certid" label="原证书编号" br="true"/>
+                <col column="idcard" displaytype="hidden"></col>
+                <col column="work_date" displaytype="hidden"></col>
+                <col column="photo" displaytype="hidden"></col>
+                <col column="now_tech_name" displaytype="hidden"></col>
+                <col column="userid" displaytype="hidden"></col>
+                <col column="test_level_name" displaytype="hidden"></col>
+                <col column="exam_manage_time" displaytype="hidden"></col>
+                <col column="prov_time" displaytype="hidden"></col>
+            </display>
+            <sql>
+                <value><![CDATA[      select * from t_his_cert_filing  where {#condition#}      ]]></value>
+                <condition hidden="true" name="id">
+                    <value><![CDATA[      id=#data# ]]></value>
+                </condition>
+            </sql>
+        </report>
+    </page>
+
+<!--系统配置-->
+    <page id="t_his_conf_list">
+        <report id="report1"   type="list" title="系统配置">
+            <display>
+                <col column="{sequence:1}" label="序号" />
+                <col column="test_year" label="年度"/>
+                <col column="name" label="键"/>
+                <col column="value" label="值"/>
+                <col column="remark" label="备注"/>
+            </display>
+            <sql>
+                <select>
+                    <value><![CDATA[      select * from t_his_conf  where {#condition#}     ]]></value>
+                    <condition name="test_year" label="年度" labelposition="left">
+                        <inputbox type="selectbox">
+                            <option source="@{select distinct test_year from t_his_conf}" label="test_year" value="test_year"></option>
+                        </inputbox>
+                        <value>
+                            <![CDATA[      test_year=#data#       ]]>
+                        </value>
+                    </condition>
+                </select>
+            </sql>
+        </report>
+    </page>
+
+
+    <!--考试规则-->
+    <page id="t_his_test_rule_list">
+        <report id="report1" type="list" title="考试规则" rowselect="none" pagesize="-1">
+            <display treeborder="0">
+                <col column="id" displaytype="hidden"/>
+                <col column="test_year" label="年度" treerowgroup="true"/>
+                <col column="test_level_name" label="开考层次" treerowgroup="true"/>
+                <col column="tech_name_name" label="资格名称" treerowgroup="true"/>
+                <col column="spec_class_name" label="专业类别" />
+                <col column="test_subject_name" label="考试科目" />
+                <col column="test_date" label="考试日期" />
+                <col column="test_time" label="考试时间" />
+            </display>
+            <sql>
+                <select>
+                    <value>
+                        <![CDATA[select * from t_his_test_rule where  {#condition#}]]>
+                    </value>
+                    <condition name="test_year" label="年度" labelposition="left">
+                        <inputbox type="selectbox">
+                            <option source="@{select distinct test_year from t_his_test_rule}" label="test_year" value="test_year"></option>
+                        </inputbox>
+                        <value>
+                            <![CDATA[      test_year=#data#       ]]>
+                        </value>
+                    </condition>
+                    <condition name="test_level" label="开考层次" labelposition="left">
+                        <value><![CDATA[test_level =#data#]]></value>
+                        <inputbox type="selectbox">
+                            <option value="" label="全部"></option>
+                            <option source="@{select * from v_data where datatype='TestLevel'}" label="name" value="id"></option>
+                        </inputbox>
+                    </condition>
+                    <condition name="tech_name" label="资格名称" labelposition="left">
+                        <value><![CDATA[tech_name =#data#]]></value>
+                        <inputbox type="selectbox">
+                            <option value="" label="全部"></option>
+                            <option source="@{select * from v_data where datatype='TechName'}" label="name" value="id"></option>
+                        </inputbox>
+                    </condition>
+                    <condition name="spec_class" label="专业类别" labelposition="left">
+                        <value><![CDATA[spec_class =#data#]]></value>
+                        <inputbox type="selectbox">
+                            <option value="" label="全部"></option>
+                            <option source="@{select * from v_data where datatype='SpecClass'}" label="name" value="id"></option>
+                        </inputbox>
+                    </condition>
+                    <condition name="test_subject" label="考试科目" labelposition="left">
+                        <value><![CDATA[test_subject =#data#]]></value>
+                        <inputbox type="selectbox">
+                            <option value="" label="全部"></option>
+                            <option source="@{select * from v_data where datatype='TestSubject'}" label="name" value="id"></option>
+                        </inputbox>
+                    </condition>
+                </select>
+            </sql>
+        </report>
+    </page>
+
+    <!-- 科目合格线管理-->
+    <page id="t_his_test_subject_list">
+        <report id="report1"  type="list" title="科目合格线" rowselect="none">
+            <display>
+                <col column="{sequence:1}" label="序号" />
+                <col column="id" displaytype="hidden"/>
+                <col column="test_year" label="年度"/>
+                <col column="name" label="科目名称"/>
+                <col column="qualified" label="药士合格线"/>
+                <col column="qualified2" label="药师合格线"/>
+                <col column="qualified3" label="主管药师合格线"/>
+                <col column="limityear" label="有效年限" displaytype="hidden"/>
+            </display>
+            <sql>
+                <select>
+                    <value><![CDATA[      select * from t_his_test_subject       ]]></value>
+                    <condition name="test_year" label="年度" labelposition="left">
+                        <inputbox type="selectbox">
+                            <option source="@{select distinct test_year from t_his_test_subject}" label="test_year" value="test_year"></option>
+                        </inputbox>
+                        <value>
+                            <![CDATA[      test_year=#data#       ]]>
+                        </value>
+                    </condition>
+                </select>
+            </sql>
+        </report>
+    </page>
+
+<!--证书规则-->
+    <page id="t_his_cert_list">
+        <report id="report1"  type="list" title="证书规则" rowselect="none">
+            <header>
+                <![CDATA[
+                        <font color='blue'>规则说明：<br/>
+                        证书编号由证书前缀规则+证书起始编号进行生成，证书起始编号格式为（药学专业起始编号,中药学专业起始编号），如：(1,1000)<br/>
+                        </font>
+                        ]]>
+            </header>
+            <display>
+                <col column="id" displaytype="hidden" />
+                <col column="test_year" label="年份">
+                    <inputbox type="datepicker" dateformat="yyyy"></inputbox>
+                </col>
+                <col column="appr_no" label="批准文号"/>
+                <col column="appr_dept" label="审批部门"/>
+                <col column="appr_time" label="审批时间">
+                    <inputbox type="datepicker" dateformat="yyyy年MM月dd日"></inputbox>
+                </col>
+                <col column="exam_manage_time" label="考试管理机构意见时间" >
+                    <inputbox type="datepicker" dateformat="yyyy年MM月dd日"></inputbox>
+                </col>
+                <col column="prov_time" label="省职改办意见时间">
+                    <inputbox type="datepicker" dateformat="yyyy年MM月dd日"></inputbox>
+                </col>
+
+
+                <col column="certid" label="药士编号前缀"/>
+                <col column="certid_start" label="药士起始编号"/>
+                <col column="certid2" label="药师编号前缀"/>
+                <col column="certid2_start" label="药师起始编号"/>
+                <col column="certid3" label="主管药师编号前缀"/>
+                <col column="certid3_start" label="主管药师起始编号"/>
+            </display>
+            <sql>
+                <select>
+                    <value><![CDATA[
+              select * from t_his_cert_rule;
+              ]]></value>
+                </select>
+            </sql>
+        </report>
+    </page>
+
+
+    <!--考区考点管理-->
+    <page id="t_his_exam_site_list">
+        <report id="report1"  type="list" title="考区信息" rowselect="single|true" pagesize="5">
+            <display>
+                <col column="{sequence:1}" label="序号" />
+                <col column="id" displaytype="hidden"/>
+                <col column="test_year" label="年度"></col>
+                <col column="code" label="代码">
+
+                </col>
+                <col column="name" label="名称">
+
+                </col>
+                <col column="city_name" label="城市">
+
+                </col>
+                <col column="maxuser" label="容纳人数"/>
+                <col column="hasuser" label="已分配人数"/>
+                <col column="remark" label="备注"/>
+            </display>
+            <sql>
+                <select>
+                    <value><![CDATA[      select * from t_his_exam_site where {#condition#}      ]]></value>
+                    <condition name="test_year" label="年度" labelposition="left">
+                        <inputbox type="selectbox">
+                            <option source="@{select distinct test_year from t_his_exam_site}" label="test_year" value="test_year"></option>
+                        </inputbox>
+                        <value>
+                            <![CDATA[      test_year=#data#       ]]>
+                        </value>
+                    </condition>
+                </select>
+            </sql>
+
+        </report>
+        <report id="report2"   depends="report1" dependsparams="siteid=@{id}" type="list" title="考点列表">
+            <display>
+                <col column="{sequence:1}" label="序号" />
+                <col column="id" displaytype="hidden"/>
+                <col column="siteid" displaytype="hidden" defaultvalue="url{siteid}"/>
+                <col column="code" label="代码">
+                </col>
+                <col column="name" label="名称">
+                </col>
+                <col column="address" label="考点地址">
+                </col>
+                <col column="roomcount" label="考场数量">
+                </col>
+                <col column="def_maxuser" label="考场默认容纳人数" defaultvalue="30">
+                </col>
+                <col column="remark" label="备注"/>
+            </display>
+            <sql>
+                <select>
+                    <value><![CDATA[      select * from t_his_exam_addr   where {#condition#}    ]]></value>
+                    <condition name="siteid" hidden="true">
+                        <value>siteid=#data#</value>
+                    </condition>
+                </select>
+            </sql>
+        </report>
+
+    </page>
+
+
+    <!--考室管理-->
+    <page id="t_his_exam_room_list">
+        <report id="report1"  type="list" title="考场管理">
+            <display>
+                <col column="{sequence:1}" label="序号" />
+                <col column="id" displaytype="hidden"/>
+
+                <col column="siteid" label="考区" displaytype="hidden">
+
+                </col>
+                <col column="site_name" label="考区"/>
+                <col column="addrid" label="考点" displaytype="hidden">
+                </col>
+                <col column="addr_name" label="考点"/>
+
+                <col column="name" label="名称">
+
+                </col>
+                <col column="maxuser" label="容纳人数">
+
+                </col>
+                <col column="hasuser" label="已分配人数"/>
+                <col column="remark" label="备注"/>
+            </display>
+            <sql>
+                <select>
+                    <value><![CDATA[      select * from t_his_EXAM_ROOM  where {#condition#}     ]]></value>
+                    <condition name="test_year" label="年度" labelposition="left">
+                        <inputbox type="selectbox">
+                            <option source="@{select distinct test_year from t_his_EXAM_ROOM}" label="test_year" value="test_year"></option>
+                        </inputbox>
+                        <value>
+                            <![CDATA[      test_year=#data#       ]]>
+                        </value>
+                    </condition>
+                    <condition name="siteid" label="考区" labelposition="left">
+                        <inputbox type="selectbox" depends="test_year">
+                            <option value="" label="全部"></option>
+                            <option source="@{select * from t_his_exam_site where test_year=#test_year#}" label="name" value="id"></option>
+                        </inputbox>
+                        <value><![CDATA[siteid=#data# ]]></value>
+                    </condition>
+                    <condition name="addrid" label="考点" labelposition="left">
+                        <inputbox type="selectbox"  depends="siteid" >
+                            <option value="" label="全部"></option>
+                            <option source="@{select * from t_his_exam_addr where to_char(siteid)='#[siteid]#'}" label="name" value="id"></option>
+                        </inputbox>
+                        <value><![CDATA[addrid=#data# ]]></value>
+                    </condition>
+                    <condition name="id" label="考场" labelposition="left">
+                        <inputbox type="selectbox"  depends="addrid">
+                            <option value="" label="全部"></option>
+                            <option source="@{select * from t_his_exam_room where to_char(addrid)='#addrid#'}" label="name" value="id"></option>
+                        </inputbox>
+                        <value><![CDATA[id=#data# ]]></value>
+                    </condition>
+                </select>
+            </sql>
+        </report>
+    </page>
+
+
+    <!--考区分配管理-->
+    <page id="t_his_exam_site_city_list">
+        <report id="report1"  type="list" title="考区分配管理">
+            <display>
+                <col column="{sequence:1}" label="序号" />
+                <col column="test_year" label="年度"/>
+                <col column="site_name" label="考区"/>
+                <col column="city_name" label="地市"/>
+                <col column="spec_type_name" label="考试级别"/>
+            </display>
+            <sql>
+                <select>
+                    <value><![CDATA[
+                      select distinct t.* from (
+                            select
+                            t.test_year,
+                            t.siteid,
+                            t.cityid,
+                            t1.name site_name,
+                            t2.name city_name,
+                            decode(t.spec_type,0,'全部',1,'初级',2,'高级')spec_type_name
+                            from T_HIS_EXAM_SITE_CITY t
+                            left join t_his_exam_site t1 on t.siteid=t1.id
+                            left join t_city t2 on t.cityid=t2.id
+                            )t
+                            where {#condition#}
+                            order by t.test_year,t.siteid,t.cityid
+                          ]]></value>
+                    <condition name="test_year" label="年度" labelposition="left">
+                        <inputbox type="selectbox">
+                            <option source="@{select distinct test_year from t_his_exam_site_city}" label="test_year" value="test_year"></option>
+                        </inputbox>
+                        <value>
+                            <![CDATA[      test_year=#data#       ]]>
+                        </value>
+                    </condition>
+                </select>
+            </sql>
+        </report>
+    </page>
+</applications>

@@ -24,4 +24,57 @@
   </report>
 </page>
 
+<!--准考证规则设置-->
+    <page id="t_test_no_conf_list">
+        <report id="report1"   extends="t_conf_list.report1" title="准考证规则设置">
+            <display>
+                <col column="{sequence:1}" label="序号" />
+                <col column="name" label="键"/>
+                <col column="value" label="值"/>
+                <col column="remark" label="备注"/>
+            </display>
+            <sql>
+                <select>
+                    <value><![CDATA[      select * from t_conf where  name='TEST_NO_DIGIT'       ]]></value>
+                </select>
+                <update>
+                    <![CDATA[
+      update t_conf(@{value},@{remark})
+      where name=@{name}
+      ]]>
+                </update>
+            </sql>
+        </report>
+    </page>
+
+    <!--地市管理-->
+    <page id="t_city_list">
+        <report id="report1"   extends="basePage.editList2" title="地市管理">
+            <display>
+                <col column="{sequence:1}" label="序号" />
+                <col column="id" label="ID"/>
+                <col column="zipcode" label="区号"/>
+                <col column="code" label="简拼"/>
+                <col column="name" label="名称"/>
+                <col column="pid" displaytype="hidden" defaultvalue="350000"/>
+            </display>
+            <sql>
+                <select>
+                    <value><![CDATA[      select * from T_CITY t      ]]></value>
+                </select>
+                <insert>
+                    <![CDATA[
+      insert into T_CITY(@{id},@{zipcode},@{code},@{name},@{pid})
+      ]]>
+                </insert>
+                <update>
+                    <![CDATA[
+      update T_CITY(@{zipcode},@{code},@{name})
+      where id=@{id}
+      ]]>
+                </update>
+            </sql>
+        </report>
+    </page>
+
 </applications>

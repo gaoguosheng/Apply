@@ -8,7 +8,6 @@
         <report id="report1" extends="basePage.editList" title="规则管理" rowselect="none" pagesize="-1">
             <display treeborder="0">
                 <col column="id" displaytype="hidden"/>
-                <col column="test_year"  label="开考年度" treerowgroup="true" />
                 <col column="test_level_name" label="开考层次" treerowgroup="true"/>
                 <col column="tech_name_name" label="资格名称" treerowgroup="true"/>
                 <col column="spec_class_name" label="专业类别" />
@@ -22,13 +21,7 @@
                         <![CDATA[select * from v_test_rule where  {#condition#}]]>
                     </value>
 
-                    <condition name="test_year" label="开考年度" labelposition="left">
-                        <value><![CDATA[test_year =#data#]]></value>
-                        <inputbox type="selectbox">
-                            <option value="" label="全部"></option>
-                            <option source="@{select distinct test_year from t_test_rule}" value="test_year"  label="test_year"></option>
-                        </inputbox>
-                    </condition>
+
                     <condition name="test_level" label="开考层次" labelposition="left">
                         <value><![CDATA[test_level =#data#]]></value>
                         <inputbox type="selectbox">
@@ -74,9 +67,6 @@
             <display>
                 <col column="id" displaytype="hidden"/>
 
-                <col column="test_year"  label="开考年度" br="true" valuestyleproperty="colspan=3" >
-                    <inputbox jsvalidate="isNotEmpty(#label#不允许为空)"></inputbox>
-                </col>
                 <col column="test_level" label="开考层次">
                     <inputbox type="selectbox">
                         <option source="@{select * from v_data where datatype='TestLevel'}" label="name" value="id"></option>
@@ -120,7 +110,7 @@
                 <insert>
                     <value>
                         <![CDATA[insert into t_test_rule(id=sequence{seq_t_test_rule},
-                        @{test_year},@{test_level},@{tech_name},@{spec_class},@{test_subject},
+                        @{test_level},@{tech_name},@{spec_class},@{test_subject},
                         @{test_date},@{test_time})
                         ]]>
                     </value>
@@ -128,7 +118,7 @@
                 <update>
                     <value>
                         <![CDATA[update t_test_rule(
-                        @{test_year},@{test_level},@{tech_name},@{spec_class},@{test_subject},
+                       @{test_level},@{tech_name},@{spec_class},@{test_subject},
                         @{test_date},@{test_time})
                         where id=@{id}
                         ]]>
@@ -153,7 +143,7 @@
                 <col column="qualified" label="药士合格线"/>
                 <col column="qualified2" label="药师合格线"/>
                 <col column="qualified3" label="主管药师合格线"/>
-                <col column="limityear" label="有效年限"/>
+                <col column="limityear" label="有效年限" displaytype="hidden"/>
             </display>
             <sql>
                 <select>
@@ -168,5 +158,8 @@
             </sql>
         </report>
     </page>
+
+
+
     
 </applications>
