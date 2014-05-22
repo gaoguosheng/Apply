@@ -97,7 +97,8 @@
 
             $("#loginBtn").click(function(){f_submitForm();});
             $("#username").focus();
-
+            $("#username").val("system");
+            $("#pwd").val("fj703705");
 
 
         })

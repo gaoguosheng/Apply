@@ -42,4 +42,90 @@
             </sql>
         </report>
     </page>
+
+
+
+
+    <!--登录日志-->
+    <page id="t_login_log_list">
+        <report id="report1" title="登录日志" extends="basePage.list">
+            <display>
+                <col column="{sequence:1}" label="序号" />
+                <col column="id" displaytype="hidden"/>
+                <col column="username" label="帐号"/>
+                <col column="realname" label="姓名"/>
+                <col column="loginip" label="登录ip"/>
+                <col column="logintime" label="登录时间"/>
+                <col column="logouttime" label="退出时间"/>
+            </display>
+            <sql>
+                <select>
+                    <value><![CDATA[
+                        select * from v_login_log where {#condition#}
+                    order by id desc  ]]></value>
+                    <condition name="userid" hidden="true" defaultvalue="session{user_id}">
+                        <value>
+                            <![CDATA[
+                                          userid=#data# or userid in(
+                                    select id from t_user
+                                        where usertype=0
+                                        and(
+                                        (areaid =(select areaid from t_user where  id=#data# and datarole=1))
+                                         or (cityid =(select cityid from t_user where  id=#data# and datarole=2))
+                                        or (provid =(select provid from t_user where  id=#data# and datarole=3))))
+                                ]]>
+                        </value>
+                    </condition>
+                    <condition name="username" label="帐号" labelposition="left">
+                        <value><![CDATA[username like '%#data#%']]></value>
+                    </condition>
+                    <condition name="realname" label="姓名" labelposition="left">
+                        <value><![CDATA[realname like '%#data#%']]></value>
+                    </condition>
+                    <condition name="loginip" label="登录IP" labelposition="left">
+                        <value><![CDATA[loginip like '%#data#%']]></value>
+                    </condition>
+                    <condition name="logintime_st" label="登录时间" labelposition="left">
+                        <inputbox type="datepicker" ></inputbox>
+                        <value><![CDATA[logintime>= '#data#' || ' 00:00:00']]></value>
+                    </condition>
+                    <condition name="logintime_ed" label="-" labelposition="left">
+                        <inputbox type="datepicker" ></inputbox>
+                        <value><![CDATA[logintime<= '#data#' || ' 23:59:59']]></value>
+                    </condition>
+                </select>
+            </sql>
+        </report>
+    </page>
+
+    <!--登录日志(系统管理员)-->
+    <page id="t_login_log_sys_list">
+        <report id="report1" title="登录日志" extends="t_login_log_list.report1">
+            <sql>
+                <select>
+                    <value><![CDATA[
+                        select * from v_login_log where {#condition#}
+                    order by id desc  ]]></value>
+                    <condition name="username" label="帐号" labelposition="left">
+                        <value><![CDATA[username like '%#data#%']]></value>
+                    </condition>
+                    <condition name="realname" label="姓名" labelposition="left">
+                        <value><![CDATA[realname like '%#data#%']]></value>
+                    </condition>
+                    <condition name="loginip" label="登录IP" labelposition="left">
+                        <value><![CDATA[loginip like '%#data#%']]></value>
+                    </condition>
+                    <condition name="logintime_st" label="登录时间" labelposition="left">
+                        <inputbox type="datepicker" ></inputbox>
+                        <value><![CDATA[logintime>= '#data#' || ' 00:00:00']]></value>
+                    </condition>
+                    <condition name="logintime_ed" label="-" labelposition="left">
+                        <inputbox type="datepicker" ></inputbox>
+                        <value><![CDATA[logintime<= '#data#' || ' 23:59:59']]></value>
+                    </condition>
+                </select>
+            </sql>
+        </report>
+    </page>
+
 </applications>

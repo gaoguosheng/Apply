@@ -86,6 +86,8 @@ public class LoginAction extends  BaseAction implements ModelDriven<User> {
                 session.setAttribute("user_id",userBean.getId());
                 session.setAttribute("admin",userBean);
                 session.setAttribute("sys_conf", DataDao.getConf());
+                //保存登录日志
+                this.applyDao.saveLoginLog(userBean.getId(),request.getRemoteAddr());
             }else{
                 this.outSuccess(false,0);
             }

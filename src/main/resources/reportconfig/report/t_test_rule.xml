@@ -8,8 +8,8 @@
         <report id="report1" extends="basePage.editList" title="规则管理" rowselect="none" pagesize="-1">
             <display treeborder="0">
                 <col column="id" displaytype="hidden"/>
-                <col column="test_level_name" label="开考层次" treerowgroup="true"/>
-                <col column="tech_name_name" label="资格名称" treerowgroup="true"/>
+                <col column="test_level_name" label="开考层次" rowgroup="true"/>
+                <col column="tech_name_name" label="资格名称" rowgroup="true"/>
                 <col column="spec_class_name" label="专业类别" />
                 <col column="test_subject_name" label="考试科目" />
                 <col column="test_date" label="考试日期" />

@@ -8,11 +8,21 @@
     <page id="basePage">
         <report id="list"  type="list"
                 dataexport="richexcel"  interceptor="com.ggs.intercept.AbsInterceptor">
+				<print type="lodop" preview="true" printpagesize="2,2100,2970,''" >
+                    <![CDATA[
+							relative{/template/dataexport/default.html}
+						]]>
+                </print>
             <display></display>
             <sql></sql>
         </report>
         <report id="editList"  type="editablelist" rowselect="checkbox"
                 dataexport="richexcel"  interceptor="com.ggs.intercept.AbsInterceptor" contextmenu="false">
+				<print type="lodop" preview="true" printpagesize="2,2100,2970,''">
+                    <![CDATA[
+							relative{/template/dataexport/default.html}
+						]]>
+            </print>
             <display></display>
             <sql></sql>
         </report>
@@ -22,7 +32,12 @@
         </report>
         <report id="editList2"  type="editablelist2" rowselect="checkbox"
                 dataexport="richexcel" interceptor="com.ggs.intercept.AbsInterceptor" contextmenu="false">
-            <display></display>
+<print type="lodop" preview="true" printpagesize="2,2100,2970,''">
+    <![CDATA[
+							relative{/template/dataexport/default.html}
+						]]>
+            </print>
+			<display></display>
             <sql></sql>
         </report>
     </page>

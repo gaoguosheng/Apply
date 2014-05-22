@@ -425,5 +425,22 @@ public class ApplyDao {
 
     }
 
+    /**
+     *  保存登录日志
+     * */
+    public void saveLoginLog(String userid,String ip){
+        this.dbUtil.update("insert into t_login_log (id,userid,loginip,logintime,logouttime) values(seq_t_login_log.nextval,?,?,to_char(sysdate,'yyyy-mm-dd hh24:mi:ss'),'')",
+                userid,
+                ip);
+    }
 
+
+    /**
+     *  保存退出日志
+     * */
+    public void saveLogoutLog(String userid,String ip){
+        this.dbUtil.update("update t_login_log set logouttime=to_char(sysdate,'yyyy-mm-dd hh24:mi:ss') where id= (select max(id) from t_login_log where  userid=? and loginip=?) ",
+                userid,
+                ip);
+    }
 }

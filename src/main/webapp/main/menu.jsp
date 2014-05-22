@@ -23,7 +23,8 @@
             },
             callback: {
                 onClick:function(event, treeId, treeNode){
-                    document.all.menuFrame.src="${ctx}/ShowReport.wx?PAGEID=t_menu_list&id="+treeNode.id+"&pid="+treeNode.id;
+                    var url="${ctx}/ShowReport.wx?PAGEID=t_menu_list&id="+treeNode.id+"&pid="+treeNode.id;
+                            $("#menuFrame").attr("src",url);
                 }
 
             }

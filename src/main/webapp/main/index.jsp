@@ -31,7 +31,7 @@
                 callback: {
                     onClick: function(event, treeId, treeNode, clickFlag){
                         if(!treeNode.isParent && treeNode.uri){
-                            document.all.mainFrame.src="${ctx}/"+treeNode.uri;
+                            $("#mainFrame").attr("src","${ctx}/"+treeNode.uri);
                         }
 
                     }
