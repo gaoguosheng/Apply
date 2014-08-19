@@ -10,6 +10,7 @@
       <col column="id" displaytype="hidden"/>
         <col column="city_name" label="所在地" />
         <col column="name" label="姓名" />
+        <col column="mobile" label="手机" />
         <col column="company" label="工作单位"  align="left"/>
         <col column="test_no" label="准考证号" valuestyleproperty="style='mso-number-format:\@' " />
         <col column="spec_class_name" label="报考专业" />

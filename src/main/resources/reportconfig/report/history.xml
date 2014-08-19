@@ -287,6 +287,7 @@
                 <col column="id" displaytype="hidden"/>
                 <col column="city_name" label="所在地" />
                 <col column="name" label="姓名" />
+                <col column="mobile" label="手机" />
                 <col column="company" label="工作单位"  align="left"/>
                 <col column="test_no" label="准考证号" valuestyleproperty="style='mso-number-format:\@' " />
                 <col column="spec_class_name" label="报考专业" />
@@ -298,6 +299,9 @@
                 <!--<col column="test_status_name" label="考试状态" />-->
                 <col column="remark" label="备注"  align="left"/>
             </display>
+            <interceptor>
+                <preaction></preaction>
+            </interceptor>
             <sql>
                 <select>
                     <value><![CDATA[      select * from t_his_score  where {#condition#}     order by cityid,spec_class_id,tech_name_id ]]></value>
@@ -309,6 +313,19 @@
                             <![CDATA[
                                         test_year=#data#
                                     ]]>
+                        </value>
+                    </condition>
+                    <condition name="createid" hidden="true" defaultvalue="session{user_id}">
+                        <value>
+                            <![CDATA[
+                                               createid=#data# or createid in(
+                                    select id from t_user
+                                        where usertype=0
+                                        and(
+                                        (areaid =(select areaid from t_user where  id=#data# and datarole=1))
+                                         or (cityid =(select cityid from t_user where  id=#data# and datarole=2))
+                                        or (provid =(select provid from t_user where  id=#data# and datarole=3))))
+                                ]]>
                         </value>
                     </condition>
                     <condition name="test_subject_name" label="考试科目" labelposition="left">
@@ -536,6 +553,15 @@
                             <![CDATA[
                                         test_year=#data#
                                     ]]>
+                        </value>
+                    </condition>
+                    <condition name="createid" hidden="true" defaultvalue="session{user_id}">
+                        <value>
+                            <![CDATA[
+                                                 cityid =(select cityid from t_user where  id=#data# and datarole=2)
+                                                 or cityid  in(select cityid from t_user where  id=#data# and datarole=3)
+
+                                ]]>
                         </value>
                     </condition>
                     <condition name="cityid" label="所在地" labelposition="left">
