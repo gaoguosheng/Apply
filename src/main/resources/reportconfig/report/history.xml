@@ -66,6 +66,7 @@
                 <col column="name" label="姓名" width="60"/>
                 <col column="sex" label="性别" width="40"/>
                 <col column="birthday" label="出生年月" width="80" />
+                <col column="fn" label="档案号" width="100" />
                 <col column="work_date" label="参加工作时间"  width="80"/>
                 <col column="idcard" label="身份证号码" width="130" valuestyleproperty="style='mso-number-format:\@' "/>
                 <col column="company" label="工作单位" />
@@ -194,9 +195,31 @@
                     <![CDATA[
                                       education=DataDao.getDataName(education);
                                        cont_edu =DataDao.getDataName(cont_edu);
+                                       String pageid = rrequest.getPagebean().getId();
+                                       String url="ShowReport.wx?PAGEID="+pageid+"_detail&id="+id;
+                                       name="<a href=\"javascript:wx_winpage('"+url+"',{initsize:'max'})\">"+name+"</a>";
                     ]]>
                 </value>
             </format>
+        </report>
+    </page>
+
+    <page id="t_his_apply_total_detail" >
+        <report id="report1" extends="t_apply_list_detail.report1"  type="detail" title="报名信息">
+            <sql>
+                <select>
+                    <value>
+                        <![CDATA[
+                        select * from t_his_apply where {#condition#}
+                        ]]>
+                    </value>
+                    <condition name="id" hidden="true">
+                        <value>
+                            <![CDATA[id=#data#]]>
+                        </value>
+                    </condition>
+                </select>
+            </sql>
         </report>
     </page>
 

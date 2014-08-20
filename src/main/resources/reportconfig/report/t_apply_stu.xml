@@ -4,6 +4,32 @@
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:schemaLocation="http://www.wabacus.com ../xsd/wabacus.applications.xsd">
 
+  <!-- 历史报名表-->
+    <page id="t_his_apply_stu">
+        <report id="report1" extends="t_apply_list.report1" type="list" title="历史报名表">
+            <sql>
+                <select>
+                    <value>
+                        <![CDATA[
+                            select * from t_his_apply
+                            where {#condition#}
+                        ]]>
+                    </value>
+                    <condition name="createid" hidden="true" defaultvalue="session{user_id}">
+                        <value>
+                            <![CDATA[
+                                               createid=#data#
+                                ]]>
+                        </value>
+                    </condition>
+                </select>
+            </sql>
+        </report>
+    </page>
+
+    <page id="t_his_apply_stu_detail">
+        <report id="report1" extends="t_his_apply_total_detail.report1"></report>
+    </page>
 
     <!--已提交列表-->
     <page id="t_apply_commit">
