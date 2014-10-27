@@ -28,8 +28,10 @@
     int size =userList.size();
 
 
+    System.out.println("getRoomUserList:"+size);
+    int pages=((size-1)/10+1)*2-1;
 
-    for(int k=1;k<=5;k=k+2){
+    for(int k=1;k<=pages;k=k+2){
         //循环三次
 
 %>
